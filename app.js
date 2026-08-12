@@ -5,6 +5,27 @@ const toast=document.querySelector('.toast');let toastTimer;
 function showToast(text){if(!toast)return;toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1300)}
 document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{const value=btn.dataset.copy||'';try{await navigator.clipboard.writeText(value);showToast(`Скопировано: ${value}`)}catch{showToast(value)}}));
 
+const copyIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>';
+const downloadIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17V3zM5 19h14v2H5z"/></svg>';
+
+/* Etalon-style copy control: compact icon to the left of the HEX code. */
+document.querySelectorAll('.color-primary').forEach(primary=>{
+  const hex=primary.querySelector('.color-hex');
+  const button=primary.querySelector('.color-copy');
+  if(!hex||!button)return;
+  button.classList.remove('color-copy');
+  button.classList.add('color-copy-icon');
+  button.setAttribute('aria-label',`Скопировать ${hex.textContent.trim()}`);
+  button.setAttribute('title',`Скопировать ${hex.textContent.trim()}`);
+  button.innerHTML=copyIcon;
+  primary.insertBefore(button,hex);
+  primary.classList.add('color-primary-etalon');
+});
+
+/* Guild A Display sample should demonstrate editorial typography, not repeat the logo. */
+const guildSample=document.querySelector('.guild-sample');
+if(guildSample)guildSample.textContent='О проекте';
+
 const logoGallery=document.querySelector('[data-logo-gallery]');
 const logoThemeButtons=document.querySelectorAll('[data-logo-theme]');
 function setLogoTheme(theme){
@@ -60,7 +81,11 @@ document.querySelectorAll('.file-list a').forEach(link=>{
   const definition=materialDefinitions.find(item=>link.href.includes(item.match));
   if(!definition)return;
   link.classList.add('material-download');
-  link.innerHTML=`<span class="material-copy"><strong>${definition.title}</strong><small>${definition.formats} · <em data-file-size>—</em></small></span><b class="material-download-icon" aria-hidden="true">↓</b>`;
+  link.innerHTML=`<span class="material-copy"><strong>${definition.title}</strong><small>${definition.formats} · <em data-file-size>—</em></small></span><b class="material-download-icon" aria-hidden="true">${downloadIcon}</b>`;
   const sizeTarget=link.querySelector('[data-file-size]');
   resolveFileSize(link.href).then(bytes=>{if(sizeTarget)sizeTarget.textContent=formatFileSize(bytes)});
 });
+
+/* Replace every remaining plain download arrow with the same Etalon pictogram. */
+document.querySelectorAll('.logo-variant-meta a b').forEach(icon=>{icon.classList.add('inline-download-icon');icon.innerHTML=downloadIcon});
+document.querySelectorAll('.text-link span').forEach(icon=>{icon.classList.add('round-download-icon');icon.innerHTML=downloadIcon});
