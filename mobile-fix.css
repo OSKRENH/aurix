@@ -12,18 +12,28 @@ section[id]{scroll-margin-top:92px}
 /* Palette intro uses the brand's light lilac instead of plain white. */
 .colors-head{background:var(--mist);color:var(--purple)}
 
-/* Palette cards: large HEX at the upper right with a dedicated copy action, like the Etalon brand page. */
+/* Palette cards: large HEX at the upper right with the Etalon copy pictogram to its left. */
 .color{justify-content:flex-start}
 .color-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
 .color-index{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 .color-primary{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:14px;text-align:right}
+.color-primary.color-primary-etalon{flex-direction:row;align-items:center;justify-content:flex-end;gap:14px}
 .color-hex{font-family:"TT Hoves Pro",Arial,sans-serif;font-size:clamp(38px,4.2vw,76px);font-weight:400;line-height:.9;letter-spacing:-.035em}
-.color-copy{appearance:none;border:1px solid currentColor;background:transparent;color:inherit;padding:8px 13px;cursor:pointer;font-size:10px;line-height:1;text-transform:uppercase;letter-spacing:.08em}
-.color-copy:hover{background:currentColor}
-.color-deep .color-copy:hover{color:var(--purple)}
-.color-lilac .color-copy:hover,.color-mist .color-copy:hover{color:var(--white)}
+.color-copy-icon{appearance:none;border:0;background:transparent;color:inherit;width:32px;height:32px;padding:0;display:grid;place-items:center;cursor:pointer;opacity:.9;flex:0 0 auto}
+.color-copy-icon svg{width:21px;height:21px;display:block;fill:currentColor}
+.color-copy-icon:hover{opacity:.58}
+.color-copy-icon:focus-visible{outline:1px solid currentColor;outline-offset:5px}
 .color-name{margin-top:30px;text-align:right;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 .color .codes{margin-top:auto;padding-top:52px}
+
+/* Etalon download pictogram, recolored entirely by currentColor for AURIX light/dark surfaces. */
+.inline-download-icon{display:inline-grid!important;place-items:center;margin-left:10px;vertical-align:middle}
+.inline-download-icon svg{width:16px;height:16px;display:block;fill:currentColor}
+.round-download-icon{display:inline-grid!important;place-items:center;width:54px;height:54px;border:1px solid currentColor;border-radius:50%;flex:0 0 54px;transition:background .2s,color .2s}
+.round-download-icon svg{width:23px;height:23px;display:block;fill:currentColor}
+.text-link:hover .round-download-icon{background:currentColor}
+.text-link:hover .round-download-icon svg{color:var(--white)}
+.theme-dark .text-link:hover .round-download-icon svg{color:var(--purple)}
 
 /* Materials follow the Etalon download-center pattern: title, exact formats, live file size and a circular download control. */
 .file-list a.material-download{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:28px;padding:26px 0;border-top:1px solid rgba(255,255,255,.55)}
@@ -32,7 +42,8 @@ section[id]{scroll-margin-top:92px}
 .file-list .material-copy strong{font-size:clamp(25px,2.2vw,36px);font-weight:400;line-height:1.05;letter-spacing:-.02em}
 .file-list .material-copy small{font-size:12px;line-height:1.35;opacity:.72;letter-spacing:.01em}
 .file-list .material-copy em{font-style:normal;white-space:nowrap}
-.file-list .material-download-icon{display:grid;place-items:center;width:58px;height:58px;border:1px solid rgba(255,255,255,.55);border-radius:50%;font-size:28px;line-height:1;font-weight:300;transition:background .2s,color .2s,border-color .2s}
+.file-list .material-download-icon{display:grid;place-items:center;width:58px;height:58px;border:1px solid rgba(255,255,255,.55);border-radius:50%;line-height:1;font-weight:300;transition:background .2s,color .2s,border-color .2s}
+.file-list .material-download-icon svg{width:24px;height:24px;display:block;fill:currentColor}
 .file-list a.material-download:hover .material-download-icon{background:var(--white);color:var(--purple);border-color:var(--white)}
 
 @media(max-width:560px){
@@ -78,8 +89,10 @@ section[id]{scroll-margin-top:92px}
   .color-top{gap:14px}
   .color-index{font-size:10px}
   .color-primary{gap:9px}
+  .color-primary.color-primary-etalon{gap:10px}
   .color-hex{font-size:clamp(40px,10.5vw,52px);line-height:.9}
-  .color-copy{padding:7px 11px;font-size:9px}
+  .color-copy-icon{width:27px;height:27px}
+  .color-copy-icon svg{width:18px;height:18px}
   .color-name{margin-top:16px;font-size:10px}
   .color .codes{margin-top:0;padding-top:28px}
   .codes button{padding:13px 0}
@@ -91,6 +104,9 @@ section[id]{scroll-margin-top:92px}
   .hoves-block{margin-left:calc(var(--page) * -1);margin-right:calc(var(--page) * -1);min-height:auto;padding:28px var(--page) 30px}
   .hoves-sample{margin:34px 0;font-size:9.5vw;line-height:1.03}
   .font-download{grid-column:1/5;grid-template-columns:1fr;gap:18px;padding:24px 0 48px}
+  .font-download .text-link{justify-content:space-between;width:100%}
+  .round-download-icon{width:50px;height:50px;flex-basis:50px}
+  .round-download-icon svg{width:21px;height:21px}
 
   .files{min-height:auto;grid-template-rows:auto auto auto auto;padding-top:46px;padding-bottom:calc(44px + env(safe-area-inset-bottom))}
   .files h2{margin-top:32px;font-size:14vw}
@@ -99,7 +115,8 @@ section[id]{scroll-margin-top:92px}
   .file-list .material-copy{gap:6px}
   .file-list .material-copy strong{font-size:clamp(25px,7.2vw,31px);line-height:1}
   .file-list .material-copy small{font-size:11px;line-height:1.4;opacity:.7}
-  .file-list .material-download-icon{width:58px;height:58px;font-size:27px}
+  .file-list .material-download-icon{width:58px;height:58px}
+  .file-list .material-download-icon svg{width:23px;height:23px}
   .files-footer{grid-column:1/5;margin-top:22px;padding-top:14px}
 
   .footer{min-height:0;grid-template-columns:1fr;gap:16px;padding:28px var(--page) calc(34px + env(safe-area-inset-bottom))}
