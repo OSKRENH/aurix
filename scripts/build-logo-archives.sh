@@ -8,6 +8,7 @@ BUILD_DIR="/tmp/AURIX_Logos_All_Formats"
 
 rm -rf "$BUILD_DIR"
 mkdir -p "$DOWNLOADS_DIR" "$BUILD_DIR"
+ABS_DOWNLOADS="$(cd "$DOWNLOADS_DIR" && pwd)"
 
 export_asset() {
   local input="$1"
@@ -118,22 +119,22 @@ White — #FFFFFF
 EOF
 
 rm -f \
-  "$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip" \
-  "$DOWNLOADS_DIR/AURIX_Logos.zip"
+  "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" \
+  "$ABS_DOWNLOADS/AURIX_Logos.zip"
 
 (
   cd /tmp
-  zip -qr "$GITHUB_WORKSPACE/$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip" "$(basename "$BUILD_DIR")"
+  zip -qr "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" "$(basename "$BUILD_DIR")"
 )
 
-cp "$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip" "$DOWNLOADS_DIR/AURIX_Logos.zip"
+cp "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" "$ABS_DOWNLOADS/AURIX_Logos.zip"
 
-unzip -t "$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip" >/dev/null
-unzip -t "$DOWNLOADS_DIR/AURIX_Logos.zip" >/dev/null
+unzip -t "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" >/dev/null
+unzip -t "$ABS_DOWNLOADS/AURIX_Logos.zip" >/dev/null
 
-test -s "$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip"
-test -s "$DOWNLOADS_DIR/AURIX_Logos.zip"
+test -s "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip"
+test -s "$ABS_DOWNLOADS/AURIX_Logos.zip"
 
 # 3 types × 4 colors × 4 formats = 48 exported files, plus README.
-count=$(unzip -Z1 "$DOWNLOADS_DIR/AURIX_Logos_All_Formats.zip" | grep -E '\.(svg|png|pdf|eps)$' | wc -l)
+count=$(unzip -Z1 "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" | grep -E '\.(svg|png|pdf|eps)$' | wc -l)
 test "$count" -eq 48
