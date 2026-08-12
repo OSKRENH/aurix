@@ -1,7 +1,7 @@
 (() => {
   const fonts = [
     { family: 'Guild A Display', base: './fonts/guild', parts: 1 },
-    { family: 'TT Hoves Pro', base: './fonts/hoves', parts: 4 }
+    { family: 'TT Hoves Pro', base: './fonts/hoves', parts: 1 }
   ];
 
   function decodeBase64(value) {
