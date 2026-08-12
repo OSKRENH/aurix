@@ -1,126 +1,185 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#1F0048" />
-  <meta name="color-scheme" content="light" />
-  <meta name="description" content="Центр бренда AURIX: логотипы, фирменные цвета, типографика, правила и материалы." />
-  <title>AURIX — центр бренда</title>
-  <link rel="icon" href="./assets/logos/symbol-purple.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./fonts.css" />
-  <script src="./font-loader.js" defer></script>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#1F0048">
+  <meta name="description" content="AURIX Brand Center — логотипы, фирменная палитра, типографика и материалы бренда.">
+  <title>AURIX — Brand Center</title>
+  <link rel="icon" href="./assets/logos/symbol-purple.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./fonts.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#overview">Перейти к содержанию</a>
-  <div class="sr-only" id="ui-status" role="status" aria-live="polite" aria-atomic="true"></div>
-  <noscript><div class="noscript-banner">Для переключения логотипов и копирования цветовых кодов необходимо включить JavaScript.</div></noscript>
-
-  <aside class="sidebar">
-    <a class="wordmark" href="#top" aria-label="AURIX"><img src="./assets/logos/wordmark-purple.svg" alt="AURIX" /></a>
-    <nav aria-label="Разделы центра бренда">
-      <a href="#overview">Обзор</a>
+  <a class="skip-link" href="#content">К содержанию</a>
+  <header class="site-header">
+    <a class="brand-lockup" href="#top" aria-label="AURIX — Discover Stars">
+      <img src="./assets/logos/lockup-purple.svg" alt="AURIX — Discover Stars">
+    </a>
+    <nav class="desktop-nav" aria-label="Разделы">
       <a href="#logos">Логотип</a>
-      <a href="#colors">Палитра</a>
-      <a href="#type">Шрифт</a>
-      <a href="#graphics">Графика</a>
+      <a href="#colors">Цвета</a>
+      <a href="#type">Шрифты</a>
       <a href="#downloads">Материалы</a>
     </nav>
-    <a class="sidebar-download button" href="#downloads">Скачать материалы</a>
-  </aside>
+    <a class="header-cta" href="#downloads">Скачать</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Меню</button>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация">
+    <a href="#logos">Логотип</a>
+    <a href="#colors">Цвета</a>
+    <a href="#type">Шрифты</a>
+    <a href="#downloads">Материалы</a>
+  </nav>
 
-  <main id="top">
-    <header class="topbar">
-      <div class="mobile-logo"><img src="./assets/logos/wordmark-purple.svg" alt="AURIX" /></div>
-      <a class="button button-small" href="#downloads">Скачать материалы</a>
-    </header>
-    <nav class="mobile-section-nav" aria-label="Разделы центра бренда">
-      <a href="#overview">Обзор</a><a href="#logos">Логотип</a><a href="#colors">Палитра</a><a href="#type">Шрифт</a><a href="#graphics">Графика</a><a href="#downloads">Материалы</a>
-    </nav>
-
-    <div class="brand-intro">
-      <section class="hero" id="overview">
-        <div class="hero-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
-        <img class="hero-mark" src="./assets/logos/symbol-white.svg" alt="" aria-hidden="true" />
-        <div class="hero-copy">
-          <p class="eyebrow">ЦЕНТР БРЕНДА</p>
-          <h1>Все о бренде<br>AURIX</h1>
-          <p class="lead">Правила фирменного стиля, логотипы, цвета, шрифты и готовые материалы — в одном месте.</p>
-          <div class="actions"><a class="button" href="#downloads">Скачать материалы</a><a class="button button-ghost" href="#rules">Изучить правила</a></div>
-        </div>
-      </section>
-
-      <section class="stats" aria-label="AURIX в системе бренда">
-        <article><strong>3</strong><span>ключевые ценности</span></article>
-        <article><strong>5</strong><span>черт характера</span></article>
-        <article><strong>10</strong><span>колонок в сетке</span></article>
-        <article><strong>2</strong><span>фирменных шрифта</span></article>
-      </section>
-    </div>
-
-    <section class="quick-links" aria-label="Разделы центра бренда">
-      <a href="#logos"><span class="quick-meta"><b>01</b><i></i></span><strong>Логотип</strong><span class="quick-desc">Все фирменные версии</span></a>
-      <a href="#colors"><span class="quick-meta"><b>02</b><i></i></span><strong>Палитра</strong><span class="quick-desc">Для экрана и печати</span></a>
-      <a href="#type"><span class="quick-meta"><b>03</b><i></i></span><strong>Шрифт</strong><span class="quick-desc">Guild A + TT Hoves</span></a>
-      <a href="#graphics"><span class="quick-meta"><b>04</b><i></i></span><strong>Графика</strong><span class="quick-desc">Рамка, звезда, свечение</span></a>
-    </section>
-
-    <section class="section" id="logos">
-      <div class="section-heading"><div><p class="eyebrow section-kicker"><span>01</span><i></i><span>ОСНОВА БРЕНДА</span></p><h2>Логотип</h2></div><p>Используйте только оригинальные файлы. Не меняйте пропорции, цвет и взаимное расположение элементов.</p></div>
-      <div class="logo-grid">
-        <article class="logo-card logo-card-wide" data-logo-key="wordmark"><div class="logo-preview tone-purple"><img src="./assets/logos/wordmark-purple.svg" alt="Логотип AURIX" /></div><footer><div><b>AURIX</b><small>Основная версия</small></div><button class="logo-download-icon" type="button" data-download="logos/wordmark-purple.svg" aria-label="Скачать логотип AURIX"></button></footer></article>
-        <article class="logo-card" data-logo-key="symbol"><div class="logo-preview symbol-preview tone-purple"><img src="./assets/logos/symbol-purple.svg" alt="Фирменный знак AURIX" /></div><footer><div><b>Фирменный знак</b><small>Для компактных форматов</small></div><button class="logo-download-icon" type="button" data-download="logos/symbol-purple.svg" aria-label="Скачать фирменный знак"></button></footer></article>
-        <article class="logo-card" data-logo-key="lockup"><div class="logo-preview tone-purple"><img src="./assets/logos/lockup-purple.svg" alt="AURIX Discover Stars" /></div><footer><div><b>AURIX + DISCOVER STARS</b><small>Версия с дескриптором</small></div><button class="logo-download-icon" type="button" data-download="logos/lockup-purple.svg" aria-label="Скачать логотип с дескриптором"></button></footer></article>
+  <main id="content">
+    <section class="hero" id="top">
+      <div class="hero-topline">
+        <span>ЦЕНТР БРЕНДА</span>
+        <span>AURIX / 2026</span>
       </div>
-      <div class="type-download logo-archive-download"><a class="button button-blue" href="./downloads/AURIX_Logos_All_Versions.svg" download>Скачать все версии</a><span>Оригинальный векторный файл</span></div>
-
-      <div class="logo-rules" id="rules">
-        <div class="logo-rules-heading"><div><p class="eyebrow">ПРАВИЛА ИСПОЛЬЗОВАНИЯ</p><h3>Охранное поле</h3></div><p>Охранное поле вокруг логотипа соответствует размеру и пропорциям буквы «A». Оно необходимо для сохранения целостного восприятия логотипа.</p></div>
-        <div class="rules-grid">
-          <div class="safe-area"><div class="safe-area-lockup"><img class="safe-logo" src="./assets/logos/safe-logo.svg" alt="AURIX" /><img class="safe-a safe-a-top" src="./assets/logos/logo-a.svg" alt="" /><img class="safe-a safe-a-right" src="./assets/logos/logo-a.svg" alt="" /><img class="safe-a safe-a-bottom" src="./assets/logos/logo-a.svg" alt="" /><img class="safe-a safe-a-left" src="./assets/logos/logo-a.svg" alt="" /></div><small>Охранное поле равно размеру буквы «A»</small></div>
-          <div class="dont"><b>Не допускается</b><ul><li>Искажать пропорции</li><li>Менять расстояние между элементами</li><li>Добавлять обводки, тени и эффекты</li><li>Использовать некорпоративные цвета</li></ul></div>
-        </div>
+      <div class="hero-copy">
+        <p>Визуальная система премиального девелопера</p>
+        <h1>Бренд,<br>в котором<br><em>есть магия</em></h1>
+      </div>
+      <div class="hero-bottom">
+        <p>Логотипы, палитра, типографика и готовые файлы — в одной живой системе.</p>
+        <a href="#logos" class="round-link" aria-label="Перейти к правилам"><span>↓</span></a>
       </div>
     </section>
 
-    <section class="section dark" id="colors">
-      <div class="section-heading light"><div><p class="eyebrow section-kicker"><span>02</span><i></i><span>ВИЗУАЛЬНЫЙ ЯЗЫК</span></p><h2>Палитра</h2></div><p>Сине-фиолетовый оттенок — доминирующий цвет бренда. Сиреневые оттенки, черный и белый дополняют его.</p></div>
-      <div class="color-grid"></div>
+    <section class="manifesto section-pad">
+      <div class="section-label"><span>00</span><span>ЗАМЫСЕЛ</span></div>
+      <div class="manifesto-grid">
+        <h2>Продуманность<br>каждой детали</h2>
+        <p>AURIX формирует узнаваемый язык через точность, контраст и выразительную типографику. Каждый элемент работает на ощущение безупречности, изысканности и эффектности.</p>
+      </div>
+      <div class="statement-line"><span>СОЗДАЕМ</span><span>НОВЫЕ ЗВЕЗДЫ</span></div>
+      <div class="statement-line statement-line-alt"><span>ВПЕЧАТЛЯЕМ</span><span>БЕЗ ЛИШНЕГО</span></div>
     </section>
 
-    <section class="section" id="type">
-      <div class="section-heading"><div><p class="eyebrow section-kicker"><span>03</span><i></i><span>ТИПОГРАФИКА</span></p><h2>Guild A Display<br>+ TT Hoves Pro</h2></div><p>Guild A Display используется как акцентный шрифт. TT Hoves Pro — наборный шрифт для основного текста и интерфейсных элементов.</p></div>
-      <div class="type-demo"><div class="alphabet"><span>Aa</span><p>Аа Бб Вв Гг Дд Ее Жж Зз Ии Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф Хх Цц Чч Шш Щщ</p></div><div class="type-columns"><div><small>Guild A Display · 56</small><h3>Магия<br>премиального<br>девелопмента</h3></div><div><small>TT Hoves Pro · 18</small><p>AURIX — девелопер как создатель новых звезд. Продуманность каждой детали, выверенность решений и мастерство исполнения формируют особую магию премиальной недвижимости.</p></div></div></div>
-      <div class="type-download"><a class="button button-blue" href="./fonts.css" download>Скачать настройку шрифтов</a><span>Guild A Display + TT Hoves Pro · локальное подключение</span></div>
+    <section class="logos section-pad" id="logos">
+      <div class="section-head">
+        <div class="section-label"><span>01</span><span>ОСНОВА БРЕНДА</span></div>
+        <h2>Логотип</h2>
+        <p>Используйте только оригинальные файлы. Не меняйте пропорции и взаимное расположение элементов.</p>
+      </div>
+
+      <div class="logo-showcase">
+        <article class="logo-card logo-card-wide" data-logo-card>
+          <div class="logo-stage"><img src="./assets/logos/wordmark-purple.svg" alt="Логотип AURIX"></div>
+          <div class="logo-meta">
+            <div><span>01 / ОСНОВНОЙ</span><strong>AURIX</strong></div>
+            <div class="logo-actions">
+              <button class="stage-toggle" type="button" aria-label="Сменить фон">Сменить фон</button>
+              <a href="./assets/logos/wordmark-purple.svg" download>SVG ↓</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="logo-card" data-logo-card>
+          <div class="logo-stage logo-stage-symbol"><img src="./assets/logos/symbol-purple.svg" alt="Фирменный знак AURIX"></div>
+          <div class="logo-meta">
+            <div><span>02 / ЗНАК</span><strong>Фирменный знак</strong></div>
+            <div class="logo-actions">
+              <button class="stage-toggle" type="button" aria-label="Сменить фон">Сменить фон</button>
+              <a href="./assets/logos/symbol-purple.svg" download>SVG ↓</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="logo-card" data-logo-card>
+          <div class="logo-stage logo-stage-lockup"><img src="./assets/logos/lockup-purple.svg" alt="AURIX — Discover Stars"></div>
+          <div class="logo-meta">
+            <div><span>03 / ДЕСКРИПТОР</span><strong>Discover Stars</strong></div>
+            <div class="logo-actions">
+              <button class="stage-toggle" type="button" aria-label="Сменить фон">Сменить фон</button>
+              <a href="./assets/logos/lockup-purple.svg" download>SVG ↓</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="rules-strip">
+        <div>
+          <span>ОХРАННОЕ ПОЛЕ</span>
+          <strong>Минимум одна «A» вокруг логотипа</strong>
+        </div>
+        <div>
+          <span>НЕ ДОПУСКАЕТСЯ</span>
+          <strong>Искажения, обводки, тени, случайные цвета</strong>
+        </div>
+      </div>
     </section>
 
-    <section class="section map-section" id="graphics">
-      <img class="map-background" src="./assets/creative-frame.svg" alt="" aria-hidden="true" />
-      <div class="map-overlay"><p class="eyebrow section-kicker"><span>04</span><i></i><span>ГРАФИЧЕСКАЯ СИСТЕМА</span></p><h2>Креативная<br>рамка</h2><p>Адаптивный контейнер на основе основного штриха логотипа объединяет рендеры, фотографии и имиджи. Звезда и градиентное свечение усиливают идею новой звезды.</p><a class="button button-blue" href="./assets/creative-frame.svg" download>Скачать графику</a></div>
+    <section class="palette" id="colors">
+      <div class="palette-intro section-pad">
+        <div class="section-label"><span>02</span><span>ФИРМЕННАЯ ПАЛИТРА</span></div>
+        <h2>Три оттенка.<br>Одна система.</h2>
+      </div>
+      <div class="swatch-list">
+        <article class="swatch swatch-primary" data-copy="#1F0048">
+          <div><span>Основной</span><strong>#1F0048</strong></div>
+          <button type="button">Копировать HEX</button>
+        </article>
+        <article class="swatch swatch-lilac" data-copy="#A7A4DF">
+          <div><span>Сиреневый</span><strong>#A7A4DF</strong></div>
+          <button type="button">Копировать HEX</button>
+        </article>
+        <article class="swatch swatch-light" data-copy="#E9E9F5">
+          <div><span>Светло-сиреневый</span><strong>#E9E9F5</strong></div>
+          <button type="button">Копировать HEX</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="type section-pad" id="type">
+      <div class="section-head">
+        <div class="section-label"><span>03</span><span>ТИПОГРАФИКА</span></div>
+        <h2>Два голоса<br>одного бренда</h2>
+        <p>Guild A Display отвечает за характер и крупные акценты. TT Hoves Pro — за ясность, навигацию и наборный текст.</p>
+      </div>
+
+      <article class="font-specimen guild-specimen">
+        <div class="font-name"><span>DISPLAY</span><strong>Guild A Display</strong></div>
+        <div class="font-sample">AURIX<br><em>Discover stars</em></div>
+        <div class="font-footer"><span>Regular / Italic / Bold</span><span>Аа Бб Вв Гг Дд Ее / Aa Bb Cc Dd</span></div>
+      </article>
+
+      <article class="font-specimen hoves-specimen">
+        <div class="font-name"><span>TEXT / UI</span><strong>TT Hoves Pro</strong></div>
+        <div class="hoves-grid">
+          <p>ПРОДУМАННОСТЬ ДЕТАЛЕЙ<br>ВЫВЕРЕННОСТЬ РЕШЕНИЙ<br>МАСТЕРСТВО ИСПОЛНЕНИЯ</p>
+          <p>Аа Бб Вв Гг Дд Ее Жж Зз<br>0123456789<br>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </article>
+
+      <div class="font-download-row">
+        <div><span>АРХИВ ШРИФТОВ</span><strong>Guild A Display + TT Hoves Pro</strong></div>
+        <a class="pill-button" href="./downloads/AURIX_Fonts.zip" download>Скачать ZIP</a>
+      </div>
     </section>
 
     <section class="downloads" id="downloads">
-      <div><p class="eyebrow">МАТЕРИАЛЫ</p><h2>Все необходимое<br>для работы</h2><p>Логотипы, фирменная палитра и руководство по стилю AURIX собраны в одном месте.</p></div>
-      <div class="download-list compact-downloads">
-        <a href="./brandbook.html"><span><strong>Фирменный стиль</strong><i>Ключевые правила брендбука</i></span><b>→</b></a>
-        <a href="./downloads/AURIX_Logos_All_Versions.svg" download><span><strong>Логотип</strong><i>SVG · исходный вектор</i></span><b>↓</b></a>
-        <a href="./assets/logos/symbol-purple.svg" download><span><strong>Фирменный знак</strong><i>SVG · основной цвет</i></span><b>↓</b></a>
-        <a href="./assets/creative-frame.svg" download><span><strong>Креативная рамка</strong><i>SVG · фирменная графика</i></span><b>↓</b></a>
-        <a href="./fonts.css" download><span><strong>Типографика</strong><i>CSS · Guild A Display + TT Hoves Pro</i></span><b>↓</b></a>
+      <div class="downloads-head">
+        <div class="section-label section-label-light"><span>04</span><span>МАТЕРИАЛЫ</span></div>
+        <h2>Все нужное<br>для работы</h2>
+      </div>
+      <div class="download-list">
+        <a href="./brandbook.html"><span>Фирменный стиль</span><small>Web-версия брендбука</small><b>→</b></a>
+        <a href="./downloads/AURIX_Logos.zip" download><span>Логотипы</span><small>SVG · все версии</small><b>↓</b></a>
+        <a href="./downloads/AURIX_Fonts.zip" download><span>Шрифты</span><small>Guild A Display + TT Hoves Pro</small><b>↓</b></a>
+        <a href="./downloads/AURIX_Palette.css" download><span>Палитра</span><small>CSS-переменные</small><b>↓</b></a>
       </div>
     </section>
-
-    <footer class="page-footer">
-      <img class="footer-logo" src="./assets/logos/wordmark-purple.svg" alt="AURIX" />
-      <div class="footer-release-grid">
-        <div class="footer-release-item"><small>Версия</small><strong>1.0</strong></div>
-        <div class="footer-release-item"><small>Обновлено</small><strong>12 августа 2026</strong></div>
-        <details class="footer-changelog"><summary><small>Релиз</small><strong>Что изменилось</strong></summary><div class="footer-changelog-body"><p>Первый стабильный релиз AURIX Brand Center: адаптивная структура страницы Эталон, фирменные логотипы, палитра, типографика, графическая система и загрузки.</p></div></details>
-      </div>
-    </footer>
   </main>
-  <a class="back-to-top" href="#top" aria-label="Наверх"><svg viewBox="0 0 24 24"><path d="M12 5l7 7-1.41 1.41L13 8.83V20h-2V8.83l-4.59 4.58L5 12l7-7z"/></svg></a>
+
+  <footer class="site-footer">
+    <img src="./assets/logos/lockup-purple.svg" alt="AURIX — Discover Stars">
+    <span>Brand Center · 2026</span>
+    <a href="https://aurix-development.ru/" target="_blank" rel="noopener">aurix-development.ru ↗</a>
+  </footer>
+  <div class="toast" role="status" aria-live="polite"></div>
   <script src="./app.js"></script>
 </body>
 </html>
