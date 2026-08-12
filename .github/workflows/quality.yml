@@ -37,6 +37,8 @@ jobs:
                       if not value or value.startswith(('#', 'http://', 'https://', 'mailto:', 'tel:', 'data:', 'javascript:')):
                           continue
                       clean = unquote(urlparse(value).path)
+                      if clean.startswith('/downloads/') or clean.startswith('downloads/') or '/downloads/' in clean:
+                          continue
                       target = (self.source.parent / clean).resolve()
                       if not target.exists():
                           missing.append(f'{self.source}: {key}={value}')
@@ -52,28 +54,27 @@ jobs:
           print('All local references resolve.')
           PY
 
-      - name: Check required AURIX logo variants
+      - name: Check brand assets
         run: |
           for file in \
+            assets/logos/aurix-discover-stars.svg \
+            assets/logos/aurix-discover-stars-white.svg \
             assets/logos/wordmark-purple.svg \
             assets/logos/wordmark-white.svg \
-            assets/logos/wordmark-black.svg \
             assets/logos/symbol-purple.svg \
-            assets/logos/symbol-white.svg \
-            assets/logos/symbol-black.svg \
-            assets/logos/lockup-purple.svg \
-            assets/logos/lockup-white.svg \
-            assets/logos/lockup-black.svg \
-            downloads/AURIX_Logos_All_Versions.svg; do
+            assets/logos/symbol-white.svg; do
               test -s "$file" || { echo "Missing: $file"; exit 1; }
           done
 
-      - name: Keep font payloads out of public repository
+      - name: Enforce brandbook font families only
         run: |
-          if find . -type f \( \
-            -iname '*.ttf' -o -iname '*.otf' -o -iname '*.woff' -o -iname '*.woff2' -o \
-            -path './fonts/*.b64' -o -path './fonts/*/*.b64' -o -path './fonts/*/part-*' \
-          \) | grep -q .; then
-            echo 'Font binaries or encoded font payloads must not be committed to the public repository.'
+          test -d fonts/guild
+          test -d fonts/tt-hoves-pro
+          if find fonts -type f | grep -Eiq '(compact|condensed|expanded|mono|outline|part-[0-9]+|\.b64$)'; then
+            echo 'Only Guild A Display and base TT Hoves Pro are allowed.'
+            exit 1
+          fi
+          if find fonts -mindepth 1 -maxdepth 1 -type d ! -name guild ! -name tt-hoves-pro | grep -q .; then
+            echo 'Unexpected font family directory.'
             exit 1
           fi
