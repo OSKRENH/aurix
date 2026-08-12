@@ -4,3 +4,22 @@ mobile?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobile.
 const toast=document.querySelector('.toast');let toastTimer;
 function showToast(text){if(!toast)return;toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1300)}
 document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{const value=btn.dataset.copy||'';try{await navigator.clipboard.writeText(value);showToast(`Скопировано: ${value}`)}catch{showToast(value)}}));
+
+const logoGallery=document.querySelector('[data-logo-gallery]');
+const logoThemeButtons=document.querySelectorAll('[data-logo-theme]');
+function setLogoTheme(theme){
+  if(!logoGallery)return;
+  logoGallery.dataset.theme=theme;
+  logoGallery.querySelectorAll('img[data-purple][data-white]').forEach(img=>{
+    img.src=theme==='white'?img.dataset.white:img.dataset.purple;
+  });
+  logoGallery.querySelectorAll('[data-logo-download]').forEach(link=>{
+    link.href=theme==='white'?link.dataset.white:link.dataset.purple;
+  });
+  logoThemeButtons.forEach(button=>{
+    const active=button.dataset.logoTheme===theme;
+    button.classList.toggle('is-active',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+}
+logoThemeButtons.forEach(button=>button.addEventListener('click',()=>setLogoTheme(button.dataset.logoTheme||'purple')));
