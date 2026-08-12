@@ -5,6 +5,10 @@ section[id]{scroll-margin-top:92px}
 /* Keep the materials hierarchy quieter: only the section title is display-sized. */
 .file-list span{font-family:"TT Hoves Pro",Arial,sans-serif;font-size:clamp(26px,2.4vw,40px);line-height:1;font-weight:400;letter-spacing:-.02em}
 
+/* Materials cleanup: no duplicate page number on the right and no extra divider above the footer label. */
+.files .page-no{display:none}
+.files-footer{border-top:0}
+
 @media(max-width:560px){
   :root{--page:20px}
   body{overflow-x:hidden}
