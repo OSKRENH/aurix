@@ -1,5 +1,19 @@
 /* Финальная синхронизация поведения с Etalon Brand Center */
 
+/* Шапка и ключевые значения используют единый медленно движущийся фирменный фон. */
+.brand-intro{
+  background:linear-gradient(118deg,#1F0048 0%,#260454 33%,#35106A 52%,#1F0048 72%,#2A075B 100%)!important;
+  background-size:260% 260%!important;
+  animation:aurixBrandFlow 16s ease-in-out infinite!important;
+}
+.hero{
+  background:transparent!important;
+}
+@keyframes aurixBrandFlow{
+  0%,100%{background-position:0% 48%}
+  50%{background-position:100% 52%}
+}
+
 /* На десктопе навигация уже есть в сайдбаре — пустая верхняя панель не нужна. */
 @media (min-width:901px){
   .topbar{display:none!important}
@@ -10,7 +24,8 @@
 .logo-download-icon,
 .back-to-top,
 .logo-card,
-.card-tone-switch button{
+.card-tone-switch button,
+.footer-changelog-body{
   box-shadow:none!important;
 }
 .button:hover,
@@ -30,14 +45,40 @@
   background:linear-gradient(110deg,rgba(255,255,255,.06),rgba(167,164,223,.14))!important;
 }
 
-/* Быстрые разделы: фон остается белым, подсвечивается только заголовок. */
+/* Быстрые разделы: номер + короткая диагональ сверху, без заливки карточки. */
 .quick-links a,
 .quick-links a:hover,
 .quick-links a:focus-visible{
   background:#fff!important;
+  grid-template-columns:1fr!important;
+  grid-template-rows:auto auto auto!important;
+  gap:11px!important;
+}
+.quick-links a:before{display:none!important}
+.quick-meta{
+  display:flex!important;
+  grid-column:1!important;
+  grid-row:1!important;
+  align-items:center!important;
+  gap:10px!important;
+  color:#9993a1!important;
+}
+.quick-meta i{
+  display:block!important;
+  width:15px!important;
+  height:1px!important;
+  background:#b0abba!important;
+  transform:rotate(-52deg)!important;
+  transform-origin:center!important;
 }
 .quick-links strong{
+  grid-column:1!important;
+  grid-row:2!important;
   transition:color .28s ease!important;
+}
+.quick-links .quick-desc{
+  grid-column:1!important;
+  grid-row:3!important;
 }
 .quick-links a:hover strong,
 .quick-links a:focus-visible strong{
@@ -104,6 +145,26 @@
 }
 .copy-icon svg{width:14px!important;height:14px!important}
 
+/* Центр загрузок: строка не двигается, hover только у круглой иконки. */
+.download-list a:hover{
+  padding-left:0!important;
+}
+.compact-downloads a:hover span,
+.compact-downloads a:hover strong,
+.compact-downloads a:hover i{
+  color:inherit!important;
+}
+.compact-downloads b{
+  transition:background-color .28s ease,color .28s ease,border-color .28s ease!important;
+}
+
+/* Окно релиза всегда читает слева. */
+.footer-changelog-body,
+.footer-changelog-body p,
+.footer-changelog-body a{
+  text-align:left!important;
+}
+
 /* На широких экранах — одна сетка для четырех верхних колонок. */
 @media (min-width:1440px){
   .stats,
@@ -143,7 +204,8 @@
 /* Мобильная шапка и меню повторяют механику Эталона. */
 @media (max-width:900px){
   .topbar{
-    position:relative!important;
+    position:sticky!important;
+    top:0!important;
   }
   .mobile-section-nav{
     overscroll-behavior-x:contain;
@@ -157,25 +219,12 @@
   .back-to-top{
     transition:opacity .34s ease,background-color .28s ease,color .28s ease!important;
   }
-}
-
-/* Центр загрузок: hover только на круглой иконке. */
-.compact-downloads a:hover span,
-.compact-downloads a:hover strong,
-.compact-downloads a:hover i{
-  color:inherit!important;
-}
-.compact-downloads b{
-  transition:background-color .28s ease,color .28s ease,border-color .28s ease!important;
-}
-
-/* Окно релиза всегда читает слева. */
-.footer-changelog-body,
-.footer-changelog-body p,
-.footer-changelog-body a{
-  text-align:left!important;
+  .back-to-top{
+    bottom:calc(70px + env(safe-area-inset-bottom))!important;
+  }
 }
 
 @media (prefers-reduced-motion:reduce){
+  .brand-intro{animation:none!important}
   .mobile-section-nav{scroll-behavior:auto}
 }

@@ -1,4 +1,3 @@
-Web-optimized AURIX brand fonts generated from the supplied TTF files.
+AURIX uses Guild A Display for display/accent typography and TT Hoves Pro for body/interface typography.
 
-- GuildA-Display-Regular.woff2 — display/accent font
-- TTHoves-Regular.woff2 — body/interface font
+The public repository intentionally does not contain font binaries. `fonts.css` resolves the supplied family names locally and provides safe fallbacks. Production webfont files should only be connected through the appropriate licensed webfont delivery mechanism.

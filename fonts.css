@@ -1,3 +1,4 @@
+@import url('./aurix-polish.css');
 @font-face{font-family:'Guild A Display';src:local('Guild A Display'),local('GuildA Display');font-style:normal;font-weight:400;font-display:swap}
 @font-face{font-family:'TT Hoves Pro';src:local('TT Hoves Pro'),local('TT Hoves'),local('TTHoves');font-style:normal;font-weight:400;font-display:swap}
 :root{--display:'Guild A Display',Georgia,'Times New Roman',serif;--body:'TT Hoves Pro',Arial,Helvetica,sans-serif}
