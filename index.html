@@ -47,15 +47,49 @@
       <div class="eyebrow">01 / ЛОГОТИП</div>
       <div class="page-no">02</div>
       <h2>Логотип</h2>
-      <p class="section-intro">Основная версия используется на светлом фоне. Инверсная — на фирменном тёмно-фиолетовом.</p>
-      <div class="logo-display light-panel">
-        <img src="./assets/logos/aurix-discover-stars.svg" alt="Основная версия AURIX — Discover Stars">
-        <span>Основная версия</span>
+      <p class="section-intro">В системе используются две версии логотипа — с дескриптором и без него. Фирменный символ может применяться самостоятельно.</p>
+
+      <div class="logo-color-switch" role="group" aria-label="Цвет логотипов">
+        <span>Цвет</span>
+        <button type="button" class="is-active" data-logo-theme="purple" aria-pressed="true"><i class="switch-dot switch-dot-purple"></i>Фиолетовый</button>
+        <button type="button" data-logo-theme="white" aria-pressed="false"><i class="switch-dot switch-dot-white"></i>Белый</button>
       </div>
-      <div class="logo-display dark-panel">
-        <img src="./assets/logos/aurix-discover-stars-white.svg" alt="Инверсная версия AURIX — Discover Stars">
-        <span>Инверсная версия</span>
+
+      <div class="logo-variants" data-logo-gallery data-theme="purple">
+        <article class="logo-variant">
+          <div class="logo-canvas">
+            <img class="logo-art logo-art-lockup" src="./assets/logos/aurix-discover-stars.svg" data-purple="./assets/logos/aurix-discover-stars.svg" data-white="./assets/logos/aurix-discover-stars-white.svg" alt="AURIX — Discover Stars">
+            <span class="canvas-index">01</span>
+          </div>
+          <div class="logo-variant-meta">
+            <div><span>ЛОГОТИП / 01</span><strong>С дескриптором</strong></div>
+            <a data-logo-download href="./assets/logos/aurix-discover-stars.svg" data-purple="./assets/logos/aurix-discover-stars.svg" data-white="./assets/logos/aurix-discover-stars-white.svg" download>SVG <b>↓</b></a>
+          </div>
+        </article>
+
+        <article class="logo-variant">
+          <div class="logo-canvas">
+            <img class="logo-art logo-art-wordmark" src="./assets/logos/wordmark-purple.svg" data-purple="./assets/logos/wordmark-purple.svg" data-white="./assets/logos/wordmark-white.svg" alt="Логотип AURIX без дескриптора">
+            <span class="canvas-index">02</span>
+          </div>
+          <div class="logo-variant-meta">
+            <div><span>ЛОГОТИП / 02</span><strong>Без дескриптора</strong></div>
+            <a data-logo-download href="./assets/logos/wordmark-purple.svg" data-purple="./assets/logos/wordmark-purple.svg" data-white="./assets/logos/wordmark-white.svg" download>SVG <b>↓</b></a>
+          </div>
+        </article>
+
+        <article class="logo-variant logo-variant-symbol">
+          <div class="logo-canvas">
+            <img class="logo-art logo-art-symbol" src="./assets/logos/symbol-purple.svg" data-purple="./assets/logos/symbol-purple.svg" data-white="./assets/logos/symbol-white.svg" alt="Фирменный символ AURIX">
+            <span class="canvas-index">03</span>
+          </div>
+          <div class="logo-variant-meta">
+            <div><span>СИМВОЛ</span><strong>Фирменный знак</strong></div>
+            <a data-logo-download href="./assets/logos/symbol-purple.svg" data-purple="./assets/logos/symbol-purple.svg" data-white="./assets/logos/symbol-white.svg" download>SVG <b>↓</b></a>
+          </div>
+        </article>
       </div>
+
       <div class="logo-rule rule-a">
         <span>Дескриптор</span>
         <p>Высота — ½ высоты логотипа. Интервал до логотипа равен межбуквенному расстоянию внутри знака.</p>
@@ -64,7 +98,7 @@
         <span>Использование</span>
         <p>Не изменять пропорции, взаимное расположение элементов и фирменные цвета.</p>
       </div>
-      <a class="text-link logo-download" href="./downloads/AURIX_Logos.zip" download>Скачать логотипы <span>↓</span></a>
+      <a class="text-link logo-download" href="./downloads/AURIX_Logos.zip" download>Скачать все версии <span>↓</span></a>
     </section>
 
     <section class="colors-head page-grid" id="colors">
@@ -133,7 +167,7 @@
       <div class="page-no">05</div>
       <h2>Материалы</h2>
       <div class="file-list">
-        <a href="./downloads/AURIX_Logos.zip" download><span>Логотипы</span><small>SVG · основная и инверсная версии</small><b>↓</b></a>
+        <a href="./downloads/AURIX_Logos.zip" download><span>Логотипы</span><small>SVG · две версии + символ · фиолетовый и белый</small><b>↓</b></a>
         <a href="./downloads/AURIX_Fonts.zip" download><span>Шрифты</span><small>Guild A Display · TT Hoves Pro</small><b>↓</b></a>
       </div>
       <div class="files-footer">AURIX · DISCOVER STARS</div>
