@@ -1,4 +1,7 @@
-@import url('./aurix-polish.css');
-@font-face{font-family:'Guild A Display';src:local('Guild A Display'),local('GuildA Display');font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:'TT Hoves Pro';src:local('TT Hoves Pro'),local('TT Hoves'),local('TTHoves');font-style:normal;font-weight:400;font-display:swap}
-:root{--display:'Guild A Display',Georgia,'Times New Roman',serif;--body:'TT Hoves Pro',Arial,Helvetica,sans-serif}
+@font-face{font-family:'Guild A Display';src:url('./fonts/hoves/GuildA-Display-Regular-Web.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'Guild A Display';src:url('./fonts/hoves/GuildA-Display-Italic-Web.woff2') format('woff2');font-style:italic;font-weight:400;font-display:swap}
+@font-face{font-family:'Guild A Display';src:url('./fonts/hoves/GuildA-Display-Bold-Web.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap}
+@font-face{font-family:'TT Hoves Pro Mono';src:url('./fonts/hoves/TT_Hoves_Pro_Mono_Trial_Regular.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'TT Hoves Pro Mono';src:url('./fonts/hoves/TT_Hoves_Pro_Mono_Trial_Medium.woff2') format('woff2');font-style:normal;font-weight:500;font-display:swap}
+@font-face{font-family:'TT Hoves Pro Mono';src:url('./fonts/hoves/TT_Hoves_Pro_Mono_Trial_DemiBold.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap}
+@font-face{font-family:'TT Hoves Pro Mono';src:url('./fonts/hoves/TT_Hoves_Pro_Mono_Trial_Bold.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap}
