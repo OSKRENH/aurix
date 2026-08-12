@@ -9,6 +9,22 @@ section[id]{scroll-margin-top:92px}
 .files .page-no{display:none}
 .files-footer{border-top:0}
 
+/* Palette intro uses the brand's light lilac instead of plain white. */
+.colors-head{background:var(--mist);color:var(--purple)}
+
+/* Palette cards: large HEX at the upper right with a dedicated copy action, like the Etalon brand page. */
+.color{justify-content:flex-start}
+.color-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.color-index{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.color-primary{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:14px;text-align:right}
+.color-hex{font-family:"TT Hoves Pro",Arial,sans-serif;font-size:clamp(38px,4.2vw,76px);font-weight:400;line-height:.9;letter-spacing:-.035em}
+.color-copy{appearance:none;border:1px solid currentColor;background:transparent;color:inherit;padding:8px 13px;cursor:pointer;font-size:10px;line-height:1;text-transform:uppercase;letter-spacing:.08em}
+.color-copy:hover{background:currentColor}
+.color-deep .color-copy:hover{color:var(--purple)}
+.color-lilac .color-copy:hover,.color-mist .color-copy:hover{color:var(--white)}
+.color-name{margin-top:30px;text-align:right;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.color .codes{margin-top:auto;padding-top:52px}
+
 @media(max-width:560px){
   :root{--page:20px}
   body{overflow-x:hidden}
@@ -48,6 +64,13 @@ section[id]{scroll-margin-top:92px}
 
   .palette{grid-template-columns:1fr;min-height:0}
   .color{min-height:62svh;padding:30px var(--page) 34px}
+  .color-top{gap:16px}
+  .color-index{font-size:10px}
+  .color-primary{gap:11px}
+  .color-hex{font-size:clamp(42px,11vw,54px);line-height:.9}
+  .color-copy{padding:8px 12px;font-size:9px}
+  .color-name{margin-top:22px;font-size:10px}
+  .color .codes{padding-top:44px}
   .codes button{padding:15px 0}
 
   .font-block{grid-column:1/5;margin-top:48px;padding-top:24px}
