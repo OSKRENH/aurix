@@ -23,3 +23,11 @@ function setLogoTheme(theme){
   });
 }
 logoThemeButtons.forEach(button=>button.addEventListener('click',()=>setLogoTheme(button.dataset.logoTheme||'purple')));
+
+const fullLogoArchive='./downloads/AURIX_Logos_All_Formats.zip';
+document.querySelectorAll('a[href$="AURIX_Logos.zip"]').forEach(link=>{link.href=fullLogoArchive});
+const materialsLogoLink=document.querySelector('.file-list a[href$="AURIX_Logos_All_Formats.zip"]');
+if(materialsLogoLink){
+  const meta=materialsLogoLink.querySelector('small');
+  if(meta)meta.textContent='ZIP · SVG / PNG / EPS / PDF · 3 типа · 4 цветовые версии';
+}
