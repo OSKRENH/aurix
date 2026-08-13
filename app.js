@@ -7,17 +7,33 @@ const refinements=document.createElement('style');
 refinements.textContent=`
   body{font-synthesis:none}
 
-  /* Hero: compact 88px title, copy on the left, full-height brand symbol on the right. */
+  /* Translucent blurred navigation, like a glass layer above the page. */
+  .topbar{
+    background:rgba(31,0,72,.72)!important;
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    backdrop-filter:blur(20px) saturate(140%);
+    border-bottom:1px solid rgba(255,255,255,.24)!important;
+  }
+  .mobile-nav{
+    background:rgba(31,0,72,.88)!important;
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    backdrop-filter:blur(20px) saturate(140%);
+  }
+
+  /* Every piece of typography set in Guild A Display is uppercase. */
+  .hero h1,.section-heading h2,.guild-sample{text-transform:uppercase}
+
+  /* Hero: 88px title and full-height oversized AURIX symbol on the right. */
   .hero{position:relative;overflow:hidden}
   .hero::after{
     content:"";
     position:absolute;
-    z-index:2;
-    right:-5vw;
-    top:0;
-    bottom:0;
-    width:min(62vw,1080px);
-    height:100%;
+    z-index:3;
+    right:-8vw;
+    top:-1px;
+    bottom:-1px;
+    width:72vw;
+    height:calc(100% + 2px);
     background:var(--lilac);
     -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
     mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
@@ -43,18 +59,73 @@ refinements.textContent=`
   }
   .hero-foot{grid-column:1/11}
 
-  /* Footer: all three items sit on one visual vertical center line. */
+  /* Footer: all three items share one vertical center line. */
   .footer{align-items:center!important}
   .footer img,.footer span,.footer a{align-self:center}
 
   /* Guild specimen: the whole left card demonstrates Guild, including the alphabet. */
-  .guild-block .alphabet{font-family:"Guild A Display",Arial,sans-serif;font-weight:400}
+  .guild-block .alphabet{font-family:"Guild A Display",Arial,sans-serif;font-weight:400;text-transform:uppercase}
 
   /* Typography download area: no divider and a smaller download control. */
   .font-download{border-top:0!important;padding-top:0!important}
   .font-download .text-link{min-width:184px;min-height:48px;gap:14px}
   .font-download .round-download-icon{width:40px!important;height:40px!important;flex-basis:40px!important}
   .font-download .round-download-icon svg{width:18px;height:18px}
+
+  /* Hide the old global logo switch: each card now has its own independent switch. */
+  .logo-color-switch{display:none!important}
+  .logo-canvas{overflow:hidden}
+  .logo-art{display:none!important}
+  .logo-mask-preview{
+    display:block;
+    background:var(--purple);
+    -webkit-mask-position:center;
+    mask-position:center;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-size:contain;
+    mask-size:contain;
+    transition:background var(--transition),opacity var(--transition);
+  }
+  .logo-mask-preview.logo-art-lockup{width:64%;height:58%}
+  .logo-mask-preview.logo-art-wordmark{width:64%;height:54%}
+  .logo-mask-preview.logo-art-symbol{width:32%;height:58%}
+  .logo-card-tones{
+    position:absolute;
+    z-index:5;
+    top:16px;
+    right:16px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .logo-tone-button{
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    padding:0;
+    border:1px solid currentColor;
+    border-radius:999px;
+    background:transparent;
+    color:var(--purple);
+    cursor:pointer;
+    transition:transform var(--transition),background var(--transition);
+  }
+  .logo-tone-button::before{
+    content:"";
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--tone);
+    border:1px solid rgba(31,0,72,.28);
+    box-sizing:border-box;
+  }
+  .logo-tone-button:hover,.logo-tone-button:focus-visible{transform:scale(1.08)}
+  .logo-tone-button.is-active{background:rgba(255,255,255,.78);box-shadow:0 0 0 1px currentColor inset}
+  .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white);border-color:rgba(255,255,255,.72)}
+  .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:rgba(255,255,255,.18)}
+  .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:rgba(255,255,255,.45)}
 
   /* Etalon-style HEX copy circles. */
   .color-copy-icon{
@@ -76,7 +147,7 @@ refinements.textContent=`
   .color-lilac .color-copy-icon:hover,.color-lilac .color-copy-icon:focus-visible,
   .color-mist .color-copy-icon:hover,.color-mist .color-copy-icon:focus-visible{background:var(--purple)!important;color:var(--white)!important}
 
-  /* Download-circle hover fix: explicit contrasting colors, never currentColor-on-currentColor. */
+  /* Download-circle hover fix: explicit contrasting colors. */
   .text-link:hover{opacity:1!important}
   .material-download:hover .material-download-icon{background:var(--white)!important;color:var(--purple)!important;opacity:1!important}
   .section-type .text-link:hover .round-download-icon,
@@ -85,11 +156,13 @@ refinements.textContent=`
   .theme-dark .text-link:hover .round-download-icon{background:var(--white)!important;color:var(--purple)!important;opacity:1!important}
 
   @media(max-width:900px){
-    .hero::after{right:-32vw;top:0;bottom:0;width:98vw;height:100%;opacity:.38;-webkit-mask-size:auto 100%;mask-size:auto 100%}
+    .hero::after{right:-42vw;top:-1px;bottom:-1px;width:118vw;height:calc(100% + 2px);opacity:.34;-webkit-mask-size:auto 100%;mask-size:auto 100%}
     .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(58px,17vw,88px)}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
     .font-download .text-link{min-width:0;width:auto!important;justify-self:start}
+    .logo-card-tones{top:12px;right:12px;gap:6px}
+    .logo-tone-button{width:28px;height:28px}
   }
 `;
 document.head.appendChild(refinements);
@@ -144,22 +217,69 @@ document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('clic
 
 /* Keep the editorial Guild specimen. */
 const guildSample=document.querySelector('.guild-sample');
-if(guildSample)guildSample.textContent='О проекте';
+if(guildSample)guildSample.textContent='О ПРОЕКТЕ';
 
-const logoGallery=document.querySelector('[data-logo-gallery]');
-const logoThemeButtons=document.querySelectorAll('[data-logo-theme]');
-function setLogoTheme(theme){
-  if(!logoGallery)return;
-  logoGallery.dataset.theme=theme;
-  logoGallery.querySelectorAll('img[data-purple][data-white]').forEach(img=>{img.src=theme==='white'?img.dataset.white:img.dataset.purple});
-  logoGallery.querySelectorAll('[data-logo-download]').forEach(link=>{link.href=theme==='white'?link.dataset.white:link.dataset.purple});
-  logoThemeButtons.forEach(button=>{
-    const active=button.dataset.logoTheme===theme;
-    button.classList.toggle('is-active',active);
-    button.setAttribute('aria-pressed',String(active));
+/* Independent Etalon-style color switching inside each logo card. */
+const logoTones=[
+  {key:'Deep_Purple',label:'Тёмно-фиолетовый',hex:'#1F0048',preview:'#E9E9F5'},
+  {key:'Lilac',label:'Сиреневый',hex:'#A7A4DF',preview:'#FFFFFF'},
+  {key:'Mist',label:'Светло-сиреневый',hex:'#E9E9F5',preview:'#1F0048',dark:true},
+  {key:'White',label:'Белый',hex:'#FFFFFF',preview:'#1F0048',dark:true}
+];
+const logoTypes=['AURIX_With_Descriptor','AURIX_Wordmark','AURIX_Symbol'];
+
+document.querySelectorAll('.logo-variant').forEach((card,index)=>{
+  const canvas=card.querySelector('.logo-canvas');
+  const img=canvas?.querySelector('.logo-art');
+  const download=card.querySelector('[data-logo-download]');
+  if(!canvas||!img||!download)return;
+
+  const source=img.dataset.purple||img.getAttribute('src');
+  const preview=document.createElement('span');
+  preview.className=`logo-mask-preview ${[...img.classList].find(c=>c.startsWith('logo-art-'))||''}`;
+  preview.style.webkitMaskImage=`url("${source}")`;
+  preview.style.maskImage=`url("${source}")`;
+  canvas.appendChild(preview);
+
+  const controls=document.createElement('div');
+  controls.className='logo-card-tones';
+  controls.setAttribute('role','group');
+  controls.setAttribute('aria-label','Цвет этой версии логотипа');
+
+  function applyTone(tone,button){
+    preview.style.background=tone.hex;
+    canvas.style.background=tone.preview;
+    canvas.classList.toggle('is-dark-preview',Boolean(tone.dark));
+    controls.querySelectorAll('.logo-tone-button').forEach(b=>{
+      const active=b===button;
+      b.classList.toggle('is-active',active);
+      b.setAttribute('aria-pressed',String(active));
+    });
+    const type=logoTypes[index]||logoTypes[0];
+    download.href=`./downloads/${type}_${tone.key}.zip`;
+    download.setAttribute('download',`${type}_${tone.key}.zip`);
+    download.firstChild && (download.firstChild.textContent='ZIP ');
+    download.setAttribute('aria-label',`Скачать ${tone.label}: SVG, PNG и PDF`);
+    download.setAttribute('title',`Скачать ${tone.label}: SVG, PNG и PDF`);
+  }
+
+  logoTones.forEach((tone,toneIndex)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='logo-tone-button';
+    button.style.setProperty('--tone',tone.hex);
+    button.setAttribute('aria-label',tone.label);
+    button.setAttribute('title',tone.label);
+    button.setAttribute('aria-pressed','false');
+    button.addEventListener('click',()=>applyTone(tone,button));
+    controls.appendChild(button);
+    if(toneIndex===0)requestAnimationFrame(()=>applyTone(tone,button));
   });
-}
-logoThemeButtons.forEach(button=>button.addEventListener('click',()=>setLogoTheme(button.dataset.logoTheme||'purple')));
+
+  canvas.appendChild(controls);
+});
+
+document.querySelector('.logo-color-switch')?.remove();
 
 const fullLogoArchive='./downloads/AURIX_Logos_All_Formats.zip';
 document.querySelectorAll('a[href$="AURIX_Logos.zip"]').forEach(link=>{link.href=fullLogoArchive});
