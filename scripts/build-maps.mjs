@@ -1,18 +1,32 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { brotliDecompressSync } from 'node:zlib';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 
 const ROOT=process.cwd();
 const DIST=path.join(ROOT,'dist-site');
-const SRC=path.join(ROOT,'assets','maps');
+const PACKED=path.join(ROOT,'assets','maps-packed');
 const OUT_ASSETS=path.join(DIST,'assets','maps');
 const OUT_DOWNLOADS=path.join(DIST,'downloads','maps');
 
+async function readMoscow(){
+  const names=['00','01','02','03','04','05','06','07','08','09'];
+  const parts=await Promise.all(names.map(name=>fs.readFile(path.join(PACKED,`moscow.${name}.b64`),'utf8')));
+  const encoded=parts.join('')+'h+irAA==';
+  return brotliDecompressSync(Buffer.from(encoded,'base64')).toString('utf8');
+}
+async function readSpb(){
+  const packed=await fs.readFile(path.join(PACKED,'spb-dark.svg.br'));
+  return brotliDecompressSync(packed).toString('utf8');
+}
+function lightVersion(svg){return svg.replaceAll('#1f0048','#e5e5f3').replaceAll('#3d226f','#ffffff')}
+
 const MAPS={
-  Moscow:{label:'Москва',light:'moscow-light.svg',dark:'moscow-dark.svg'},
-  Saint_Petersburg:{label:'Санкт-Петербург',light:'spb-light.svg',dark:'spb-dark.svg'}
+  Moscow:{label:'Москва',dark:await readMoscow()},
+  Saint_Petersburg:{label:'Санкт-Петербург',dark:await readSpb()}
 };
+for(const cfg of Object.values(MAPS))cfg.light=lightVersion(cfg.dark);
 
 const SECTION=`
 <section class="brand-section section-maps theme-white" id="maps">
@@ -53,17 +67,6 @@ const SECTION=`
 </section>`;
 
 async function ensure(dir){await fs.mkdir(dir,{recursive:true})}
-
-async function readSvg(sourceName){
-  const raw=await fs.readFile(path.join(SRC,sourceName));
-  const head=raw.subarray(0,128).toString('utf8').trimStart();
-  if(head.startsWith('<svg')||head.startsWith('<?xml'))return raw;
-  const decoded=Buffer.from(raw.toString('utf8').trim(),'base64');
-  const decodedHead=decoded.subarray(0,128).toString('utf8').trimStart();
-  if(!decodedHead.startsWith('<svg')&&!decodedHead.startsWith('<?xml'))throw new Error(`Invalid map source: ${sourceName}`);
-  return decoded;
-}
-
 async function makePdf(jpg,width,height){
   const doc=await PDFDocument.create();
   const image=await doc.embedJpg(jpg);
@@ -73,9 +76,8 @@ async function makePdf(jpg,width,height){
   page.drawImage(image,{x:0,y:0,width:pageWidth,height:pageHeight});
   return Buffer.from(await doc.save());
 }
-
-async function exportMap(cityKey,tone,sourceName){
-  const svg=await readSvg(sourceName);
+async function exportMap(cityKey,tone,svgText){
+  const svg=Buffer.from(svgText,'utf8');
   const rendered=await sharp(svg).resize({width:3840,withoutEnlargement:false}).jpeg({quality:94,chromaSubsampling:'4:4:4'}).toBuffer({resolveWithObject:true});
   const titleTone=tone==='light'?'Light':'Dark';
   const base=`AURIX_Map_${cityKey}_${titleTone}`;
@@ -86,7 +88,6 @@ async function exportMap(cityKey,tone,sourceName){
     fs.writeFile(path.join(OUT_DOWNLOADS,`${base}.pdf`),pdf)
   ]);
 }
-
 async function inject(file){
   const target=path.join(DIST,file);
   let html=await fs.readFile(target,'utf8');
@@ -103,16 +104,14 @@ await Promise.all([
   fs.copyFile(path.join(ROOT,'maps.css'),path.join(DIST,'maps.css')),
   fs.copyFile(path.join(ROOT,'maps.js'),path.join(DIST,'maps.js'))
 ]);
-for(const name of await fs.readdir(SRC)){
-  if(!name.endsWith('.svg'))continue;
-  await fs.writeFile(path.join(OUT_ASSETS,name),await readSvg(name));
-}
 for(const [cityKey,cfg] of Object.entries(MAPS)){
+  const cityFile=cityKey==='Moscow'?'moscow':'spb';
+  await fs.writeFile(path.join(OUT_ASSETS,`${cityFile}-light.svg`),cfg.light);
+  await fs.writeFile(path.join(OUT_ASSETS,`${cityFile}-dark.svg`),cfg.dark);
   await exportMap(cityKey,'light',cfg.light);
   await exportMap(cityKey,'dark',cfg.dark);
 }
 for(const file of ['index.html','brandbook.html'])await inject(file);
-
 for(const file of [
   'AURIX_Map_Moscow_Light.jpg','AURIX_Map_Moscow_Light.svg','AURIX_Map_Moscow_Light.pdf',
   'AURIX_Map_Moscow_Dark.jpg','AURIX_Map_Moscow_Dark.svg','AURIX_Map_Moscow_Dark.pdf',
