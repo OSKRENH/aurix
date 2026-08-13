@@ -161,17 +161,18 @@ refinements.textContent=`
   @media(max-width:900px){
     .hero::after{
       z-index:0;
-      right:-62vw;
-      top:0;
-      width:100vw;
-      height:100%;
-      opacity:.28;
+      right:-28vw;
+      top:2%;
+      width:88vw;
+      height:96%;
+      opacity:.16;
       -webkit-mask-position:right center;
       mask-position:right center;
-      -webkit-mask-size:auto 100%;
-      mask-size:auto 100%;
+      -webkit-mask-size:auto 96%;
+      mask-size:auto 96%;
     }
-    .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(58px,17vw,88px)}
+    .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(54px,15.5vw,72px);line-height:.92;position:relative;z-index:2}
+    .hero .eyebrow,.hero-note,.hero-foot{position:relative;z-index:2}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
     .logo-card-tones{top:11px;right:11px;gap:6px}
