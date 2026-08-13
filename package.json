@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-cloudflare.mjs",
-    "postinstall": "node scripts/build-cloudflare.mjs",
+    "build": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs",
+    "postinstall": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
