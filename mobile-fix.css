@@ -146,17 +146,17 @@ section[id]{scroll-margin-top:92px}
   .hero::after{display:none!important;content:none!important}
 }
 
-/* Mobile hero symbol: give the mask enough horizontal canvas to render at full height. */
+/* Mobile hero symbol: tuned to the tested viewport proportions. */
 @media(max-width:560px){
   .hero::after{
     display:block!important;
     content:""!important;
     top:-6%!important;
-    right:-8vw!important;
+    right:-38vw!important;
     bottom:auto!important;
     left:auto!important;
-    width:260vw!important;
-    height:112%!important;
+    width:140vw!important;
+    height:120%!important;
     opacity:.16!important;
     background:var(--lilac)!important;
     -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat!important;
