@@ -77,6 +77,13 @@ declare -A COLORS=(
   [White]="#FFFFFF"
 )
 
+rm -f \
+  "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" \
+  "$ABS_DOWNLOADS/AURIX_Logos.zip" \
+  "$ABS_DOWNLOADS"/AURIX_With_Descriptor_*.zip \
+  "$ABS_DOWNLOADS"/AURIX_Wordmark_*.zip \
+  "$ABS_DOWNLOADS"/AURIX_Symbol_*.zip
+
 for type in With_Descriptor Wordmark Symbol; do
   source="$LOGOS_DIR/${TYPE_SOURCE[$type]}"
   test -s "$source"
@@ -92,6 +99,15 @@ for type in With_Descriptor Wordmark Symbol; do
     else
       export_asset "$generated" "$target" "$base_name" 2400
     fi
+
+    # Per-card download: selected type + selected color, exactly SVG / PNG / PDF.
+    zip -jq "$ABS_DOWNLOADS/$base_name.zip" \
+      "$target/$base_name.svg" \
+      "$target/$base_name.png" \
+      "$target/$base_name.pdf"
+    unzip -t "$ABS_DOWNLOADS/$base_name.zip" >/dev/null
+    per_count=$(unzip -Z1 "$ABS_DOWNLOADS/$base_name.zip" | grep -E '\.(svg|png|pdf)$' | wc -l)
+    test "$per_count" -eq 3
   done
 done
 
@@ -103,11 +119,13 @@ With_Descriptor — логотип AURIX + DISCOVER STARS
 Wordmark — логотип AURIX без дескриптора
 Symbol — фирменный знак AURIX
 
-Форматы:
+Форматы полного архива:
 SVG — редактируемый вектор
 PNG — прозрачный фон
 EPS — вектор для профессиональной печати
 PDF — универсальный векторный формат
+
+Индивидуальные архивы каждой карточки содержат SVG, PNG и PDF выбранного цвета.
 
 Цвета:
 Deep_Purple — #1F0048
@@ -117,10 +135,6 @@ White — #FFFFFF
 
 Не изменяйте пропорции и взаимное расположение элементов логотипа.
 EOF
-
-rm -f \
-  "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" \
-  "$ABS_DOWNLOADS/AURIX_Logos.zip"
 
 (
   cd /tmp
@@ -138,3 +152,7 @@ test -s "$ABS_DOWNLOADS/AURIX_Logos.zip"
 # 3 types × 4 colors × 4 formats = 48 exported files, plus README.
 count=$(unzip -Z1 "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" | grep -E '\.(svg|png|pdf|eps)$' | wc -l)
 test "$count" -eq 48
+
+# 3 types × 4 colors = 12 independent selected-color archives.
+archive_count=$(find "$ABS_DOWNLOADS" -maxdepth 1 -type f \( -name 'AURIX_With_Descriptor_*.zip' -o -name 'AURIX_Wordmark_*.zip' -o -name 'AURIX_Symbol_*.zip' \) | wc -l)
+test "$archive_count" -eq 12
