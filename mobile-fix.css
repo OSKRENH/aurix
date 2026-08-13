@@ -57,7 +57,24 @@ section[id]{scroll-margin-top:92px}
   .page-grid{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:12px}
   .eyebrow,.page-no{padding-top:20px;font-size:10px}
 
-  .hero{min-height:auto;grid-template-rows:auto auto auto auto;padding-bottom:36px}
+  .hero{min-height:auto;grid-template-rows:auto auto auto auto;padding-bottom:36px;position:relative;overflow:hidden}
+  .hero::after{
+    content:""!important;
+    position:absolute!important;
+    z-index:0!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:auto!important;
+    width:78vw!important;
+    height:auto!important;
+    background:var(--lilac)!important;
+    opacity:.26!important;
+    -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/contain no-repeat!important;
+    mask:url("./assets/logos/symbol-purple.svg") right center/contain no-repeat!important;
+    pointer-events:none!important;
+  }
+  .hero-inner,.hero .eyebrow,.hero h1,.hero-note,.hero-foot{position:relative;z-index:2}
   .hero h1{grid-column:1/5;align-self:start;margin:52px 0 0;font-size:17vw;line-height:.88;letter-spacing:-.03em}
   .hero-note{grid-column:1/5;align-self:start;margin:22px 0 0;max-width:none;font-size:16px;line-height:1.42}
   .hero-foot{grid-column:1/5;margin-top:24px;padding:16px 0 0}
