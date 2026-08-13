@@ -12,16 +12,17 @@ const refinements=document.createElement('style');
 refinements.textContent=`
   body{font-synthesis:none}
 
+  /* The header is fixed, so its backdrop is re-filtered on every scrolled
+     frame across the full width of the window: keep the radius small, skip
+     saturate(), and carry the tint with the background instead. */
   .topbar{
-    background:rgba(31,0,72,.70)!important;
-    -webkit-backdrop-filter:blur(22px) saturate(145%);
-    backdrop-filter:blur(22px) saturate(145%);
+    background:rgba(31,0,72,.82)!important;
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
     border-bottom:1px solid rgba(255,255,255,.22)!important;
   }
   .mobile-nav{
-    background:rgba(31,0,72,.88)!important;
-    -webkit-backdrop-filter:blur(22px) saturate(145%);
-    backdrop-filter:blur(22px) saturate(145%);
+    background:rgba(31,0,72,.96)!important;
   }
 
   .hero h1,.section-heading h2,.guild-sample,.guild-block .alphabet{text-transform:uppercase}
@@ -205,14 +206,15 @@ refinements.textContent=`
   }
 
   /* Reveals are opacity + transform only: nothing here may clip an element or
-     take it out of layout, otherwise the scroll watcher can never measure it. */
+     take it out of layout, otherwise the scroll watcher can never measure it.
+     No will-change either — it would keep a couple of dozen card-sized layers
+     on the GPU for motion that plays once. */
   .reveal{
     opacity:0;
     transform:translateY(14px);
     transition:opacity 620ms ${EASE} var(--reveal-delay,0ms),transform 620ms ${EASE} var(--reveal-delay,0ms);
-    will-change:opacity,transform;
   }
-  .reveal.is-revealed{opacity:1;transform:none;will-change:auto}
+  .reveal.is-revealed{opacity:1;transform:none}
 
   .line-reveal{position:relative}
   .line-reveal::after{
@@ -239,7 +241,10 @@ refinements.textContent=`
   }
 
   /* Type specimens: slower than the card reveals and started only once the
-     specimen itself is well inside the viewport (see TYPE_TRIGGER). */
+     specimen itself is well inside the viewport (see TYPE_TRIGGER).
+     The specimen tightens its tracking, which relayouts while it plays, so the
+     block is contained and the reflow cannot escape the card. */
+  .font-stack .font-block{contain:layout paint}
   .guild-sample.type-reveal{letter-spacing:.06em;opacity:0;transform:translateY(16px);transition:letter-spacing 950ms ${EASE},opacity 950ms ${EASE},transform 950ms ${EASE}}
   .guild-sample.type-reveal.is-revealed{letter-spacing:-.03em;opacity:1;transform:none}
 
@@ -283,18 +288,6 @@ refinements.textContent=`
 
   .brand-section,.section-colors,.type-section,.files{position:relative;isolation:isolate}
   .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.files>.shell{position:relative;z-index:1}
-  .section-grid-flash{
-    position:absolute;
-    z-index:0;
-    inset:0;
-    color:currentColor;
-    background-image:linear-gradient(to right,currentColor 1px,transparent 1px);
-    background-size:10% 100%;
-    opacity:0;
-    pointer-events:none;
-  }
-  @keyframes grid-flash{0%{opacity:0}35%{opacity:.05}100%{opacity:0}}
-  .section-grid-flash.is-grid-flashing{animation:grid-flash 1000ms ${EASE} both}
 
   @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
@@ -335,7 +328,6 @@ refinements.textContent=`
     }
     .guild-sample.type-reveal{letter-spacing:-.03em!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
-    .section-grid-flash{animation:none!important;opacity:0!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
 `;
@@ -589,23 +581,19 @@ if(!prefersReduced){
   addMotion(hovesSample,'type-reveal',TYPE_TRIGGER,0);
 }
 
-/* Sticky large section numbers and transient 10-column grid highlights. */
+/* Sticky large section numbers. The 10-column grid flash is gone: it painted a
+   repeating gradient across a whole section and animated it while scrolling. */
 ['logo','colors','type','files'].forEach(id=>{
   const section=document.getElementById(id);
   if(!section)return;
   const kicker=section.querySelector('.section-kicker');
   const number=(kicker?.textContent.match(/\b(0[1-4])\b/)||[])[1]||'';
-  if(number){
-    const sticky=document.createElement('span');
-    sticky.className='section-number-sticky';
-    sticky.textContent=number;
-    sticky.setAttribute('aria-hidden','true');
-    section.insertBefore(sticky,section.firstChild);
-  }
-  const grid=document.createElement('span');
-  grid.className='section-grid-flash';
-  grid.setAttribute('aria-hidden','true');
-  section.insertBefore(grid,section.firstChild);
+  if(!number)return;
+  const sticky=document.createElement('span');
+  sticky.className='section-number-sticky';
+  sticky.textContent=number;
+  sticky.setAttribute('aria-hidden','true');
+  section.insertBefore(sticky,section.firstChild);
 });
 
 /* Single moving active navigation indicator. */
@@ -624,13 +612,6 @@ function moveNavIndicator(link){
   navIndicator.style.transform=`translateX(${Math.round(x)}px)`;
   navIndicator.classList.add('is-visible');
 }
-const navSectionObserver=new IntersectionObserver(entries=>{
-  const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-  if(!visible)return;
-  const link=navLinks.find(item=>item.getAttribute('href')===`#${visible.target.id}`);
-  if(link)moveNavIndicator(link);
-},{rootMargin:'-18% 0px -62% 0px',threshold:[0,.1,.25,.5]});
-['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)navSectionObserver.observe(section)});
 window.addEventListener('resize',()=>{
   const current=navLinks.find(link=>link.getAttribute('aria-current')==='true');
   if(current)moveNavIndicator(current);
@@ -655,38 +636,42 @@ if(!supportsScrollTimeline){
   updateProgress();
 }
 
-/* One deterministic scroll pass drives every reveal: a target plays once, when
-   its top crosses its own trigger line. Measuring rectangles ourselves keeps
-   the reveal independent of how the element is painted. */
-const motionSections=['logo','colors','type','files'].map(id=>document.getElementById(id)).filter(Boolean);
-function playMotion(target){
-  if(target.grid){target.el.querySelector('.section-grid-flash')?.classList.add('is-grid-flashing');return}
-  target.el.classList.add('is-revealed');
-}
+/* One deterministic pass drives every reveal: a target plays once, when its top
+   crosses its own trigger line. Positions are measured up front and only
+   remeasured when the layout can actually have changed, so scrolling itself
+   reads nothing from the layout tree and can never force a reflow. */
 if(prefersReduced){
-  motionTargets.forEach(playMotion);
+  motionTargets.forEach(target=>target.el.classList.add('is-revealed'));
 }else{
-  motionSections.forEach(section=>motionTargets.push({el:section,trigger:.82,grid:true}));
   let pending=motionTargets.slice();
   let queued=false;
+  let docHeight=0;
+  const measure=()=>{
+    docHeight=document.documentElement.scrollHeight;
+    pending.forEach(target=>{target.top=target.el.getBoundingClientRect().top+scrollY});
+  };
   const updateMotion=()=>{
     queued=false;
     if(!pending.length)return;
     const height=innerHeight||document.documentElement.clientHeight;
     /* Nothing below can move any closer once the page bottom is reached, so
        whatever is left must play rather than stay invisible. */
-    const atEnd=scrollY+height>=document.documentElement.scrollHeight-2;
+    const atEnd=scrollY+height>=docHeight-2;
     const rest=[];
     pending.forEach(target=>{
-      if(atEnd||target.el.getBoundingClientRect().top<height*target.trigger)playMotion(target);
+      if(atEnd||target.top<scrollY+height*target.trigger)target.el.classList.add('is-revealed');
       else rest.push(target);
     });
     pending=rest;
   };
   const scheduleMotion=()=>{if(!queued){queued=true;requestAnimationFrame(updateMotion)}};
+  const remeasure=()=>{measure();scheduleMotion()};
+  measure();
   addEventListener('scroll',scheduleMotion,{passive:true});
-  addEventListener('resize',scheduleMotion,{passive:true});
-  addEventListener('load',scheduleMotion);
+  addEventListener('resize',remeasure,{passive:true});
+  addEventListener('load',remeasure);
+  /* Web fonts land after first paint and shift everything below them. */
+  document.fonts?.ready.then(remeasure);
   scheduleMotion();
 }
 
