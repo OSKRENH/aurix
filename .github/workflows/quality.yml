@@ -66,15 +66,11 @@ jobs:
               test -s "$file" || { echo "Missing: $file"; exit 1; }
           done
 
-      - name: Enforce brandbook font families only
+      - name: Enforce regular-only brand fonts
         run: |
-          test -d fonts/guild
-          test -d fonts/tt-hoves-pro
-          if find fonts -type f | grep -Eiq '(compact|condensed|expanded|mono|outline|part-[0-9]+|\.b64$)'; then
-            echo 'Only Guild A Display and base TT Hoves Pro are allowed.'
-            exit 1
-          fi
-          if find fonts -mindepth 1 -maxdepth 1 -type d ! -name guild ! -name tt-hoves-pro | grep -q .; then
-            echo 'Unexpected font family directory.'
-            exit 1
-          fi
+          test -s fonts/guild/GuildA-Display-Regular-Desktop.otf
+          test -s "fonts/tt-hoves-pro/TT Hoves Pro Trial Regular.ttf"
+          count="$(find fonts -type f | wc -l | tr -d ' ')"
+          test "$count" = "2" || { echo "Expected exactly two font files, found $count"; find fonts -type f; exit 1; }
+          test "$(find fonts/guild -type f | wc -l | tr -d ' ')" = "1"
+          test "$(find fonts/tt-hoves-pro -type f | wc -l | tr -d ' ')" = "1"
