@@ -1,8 +1,25 @@
-/* The site is fully static: the worker only serves the built assets.
-   Motion lives in app.js, so nothing is injected into the HTML here — an
-   injected second motion layer could only fight the first one. */
+const MOBILE_HERO_FIX = `
+@media (max-width: 560px) {
+  .hero::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+`;
+
 export default {
   async fetch(request, env) {
-    return env.ASSETS.fetch(request);
+    const response = await env.ASSETS.fetch(request);
+    const contentType = response.headers.get('content-type') || '';
+
+    if (!contentType.includes('text/html')) return response;
+
+    return new HTMLRewriter()
+      .on('head', {
+        element(head) {
+          head.append(`<style>${MOBILE_HERO_FIX}</style>`, { html: true });
+        }
+      })
+      .transform(response);
   }
 };
