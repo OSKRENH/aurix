@@ -80,36 +80,37 @@ refinements.textContent=`
     top:14px;
     right:14px;
     display:flex;
-    gap:6px;
+    gap:7px;
     align-items:center;
   }
   .logo-tone-button{
-    width:20px;
-    height:20px;
+    width:14px;
+    height:14px;
     display:grid;
     place-items:center;
     padding:0;
-    border:1px solid rgba(31,0,72,.58);
+    border:0;
     border-radius:999px;
     background:transparent;
     color:var(--purple);
     cursor:pointer;
-    transition:transform var(--transition),background var(--transition),border-color var(--transition);
+    opacity:.42;
+    transition:opacity .14s ease;
   }
   .logo-tone-button::before{
     content:"";
-    width:9px;
-    height:9px;
+    width:12px;
+    height:12px;
     border-radius:50%;
     background:var(--tone);
-    border:1px solid rgba(31,0,72,.22);
+    border:1px solid currentColor;
     box-sizing:border-box;
   }
-  .logo-tone-button:hover,.logo-tone-button:focus-visible{transform:scale(1.08)}
-  .logo-tone-button.is-active{background:rgba(255,255,255,.84);box-shadow:0 0 0 1px currentColor inset}
-  .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white);border-color:rgba(255,255,255,.68)}
-  .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:rgba(255,255,255,.18)}
-  .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:rgba(255,255,255,.4)}
+  .logo-tone-button:hover,.logo-tone-button:focus-visible{opacity:.72;transform:none}
+  .logo-tone-button.is-active{opacity:1;background:transparent;box-shadow:none;transform:none}
+  .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white)}
+  .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:transparent;box-shadow:none}
+  .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:currentColor}
 
   .compact-zip-link{
     min-width:0!important;
@@ -158,13 +159,24 @@ refinements.textContent=`
     .section-heading h2{font-size:58px!important}
   }
   @media(max-width:900px){
-    .hero::after{right:-42vw;top:-8%;width:118vw;height:116%;opacity:.34;-webkit-mask-size:auto 100%;mask-size:auto 100%}
+    .hero::after{
+      z-index:0;
+      right:-62vw;
+      top:0;
+      width:100vw;
+      height:100%;
+      opacity:.28;
+      -webkit-mask-position:right center;
+      mask-position:right center;
+      -webkit-mask-size:auto 100%;
+      mask-size:auto 100%;
+    }
     .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(58px,17vw,88px)}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
-    .logo-card-tones{top:11px;right:11px;gap:5px}
-    .logo-tone-button{width:19px;height:19px}
-    .logo-tone-button::before{width:8px;height:8px}
+    .logo-card-tones{top:11px;right:11px;gap:6px}
+    .logo-tone-button{width:14px;height:14px}
+    .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
   }
   @media(max-width:768px){.section-heading h2{font-size:45px!important}}
