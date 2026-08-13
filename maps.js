@@ -12,6 +12,7 @@
     const layers=[...card.querySelectorAll('.map-preview-layer')];
     const buttons=[...card.querySelectorAll('.map-tone-button')];
     const links=[...card.querySelectorAll('[data-map-format]')];
+    const canvas=card.querySelector('.map-canvas');
     const city=card.dataset.city;
 
     const syncDownloads=(tone)=>{
@@ -36,6 +37,7 @@
         button.classList.toggle('is-active',active);
         button.setAttribute('aria-pressed',String(active));
       });
+      canvas?.classList.toggle('is-dark-preview',tone==='dark');
       syncDownloads(tone);
     };
 
