@@ -3,6 +3,11 @@ const mobile=document.querySelector('.mobile-nav');
 menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));mobile?.classList.toggle('is-open',!open)});
 mobile?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobile.classList.remove('is-open');menu?.setAttribute('aria-expanded','false')}));
 
+const EASE='cubic-bezier(.2,.7,.3,1)';
+const copyIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>';
+const checkIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+const downloadIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17V3zM5 19h14v2H5z"/></svg>';
+
 const refinements=document.createElement('style');
 refinements.textContent=`
   body{font-synthesis:none}
@@ -72,11 +77,11 @@ refinements.textContent=`
   .font-download{border-top:0!important;padding-top:0!important}
 
   .logo-color-switch{display:none!important}
-  .logo-canvas{overflow:hidden;transition:background var(--transition)}
-  .logo-art{display:block!important;transition:opacity var(--transition)}
+  .logo-canvas{overflow:hidden;transition:none!important;position:relative}
+  .logo-art{display:block!important;position:relative;z-index:2;transition:opacity 250ms ${EASE}!important}
   .logo-card-tones{
     position:absolute;
-    z-index:5;
+    z-index:6;
     top:14px;
     right:14px;
     display:flex;
@@ -95,7 +100,7 @@ refinements.textContent=`
     color:var(--purple);
     cursor:pointer;
     opacity:.42;
-    transition:opacity .14s ease;
+    transition:opacity 250ms ${EASE};
   }
   .logo-tone-button::before{
     content:"";
@@ -111,6 +116,26 @@ refinements.textContent=`
   .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white)}
   .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:transparent;box-shadow:none}
   .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:currentColor}
+  .logo-crossfade-layer{
+    position:absolute!important;
+    z-index:3!important;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 250ms ${EASE}!important;
+  }
+  .logo-bg-crossfade{
+    position:absolute;
+    z-index:1;
+    inset:0;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 250ms ${EASE};
+  }
+  .logo-art.is-fading-out{opacity:0}
+  .logo-crossfade-layer.is-fading-in,.logo-bg-crossfade.is-fading-in{opacity:1}
 
   .compact-zip-link{
     min-width:0!important;
@@ -142,7 +167,7 @@ refinements.textContent=`
     background:transparent!important;
     color:inherit!important;
     opacity:1!important;
-    transition:background var(--transition),color var(--transition),transform var(--transition)!important;
+    transition:transform 250ms ${EASE},opacity 250ms ${EASE}!important;
   }
   .color-copy-icon svg{width:18px!important;height:18px!important;fill:currentColor!important}
   .color-copy-icon:hover,.color-copy-icon:focus-visible{transform:translateY(-1px)}
@@ -150,14 +175,167 @@ refinements.textContent=`
   .color-lilac .color-copy-icon:hover,.color-lilac .color-copy-icon:focus-visible,
   .color-mist .color-copy-icon:hover,.color-mist .color-copy-icon:focus-visible{background:var(--purple)!important;color:var(--white)!important}
 
+  .copy-value-stack{position:relative;display:grid;overflow:hidden;line-height:.9}
+  .copy-value-stack>.color-hex,.copy-value-confirm{grid-area:1/1;display:block;transition:transform 250ms ${EASE},opacity 250ms ${EASE}}
+  .copy-value-confirm{align-self:center;justify-self:end;transform:translateY(100%);opacity:0;font-size:13px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
+  .color-primary.is-copy-confirmed .color-hex{transform:translateY(-100%);opacity:0}
+  .color-primary.is-copy-confirmed .copy-value-confirm{transform:translateY(0);opacity:1}
+
   .material-download:hover .material-download-icon{background:var(--white)!important;color:var(--purple)!important;opacity:1!important}
 
   .desktop-break{display:none}
   @media(min-width:769px){.desktop-break{display:block}}
 
-  @media(max-width:1024px){
-    .section-heading h2{font-size:58px!important}
+  /* restrained motion system */
+  .scroll-progress{
+    position:fixed;
+    z-index:300;
+    top:0;
+    left:0;
+    width:100%;
+    height:1px;
+    background:var(--lilac);
+    transform:scaleX(0);
+    transform-origin:left center;
+    pointer-events:none;
   }
+  @keyframes page-progress{to{transform:scaleX(1)}}
+  @supports(animation-timeline:scroll()){
+    .scroll-progress{animation:page-progress linear both;animation-timeline:scroll(root block)}
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity 600ms ${EASE} var(--reveal-delay,0ms),transform 600ms ${EASE} var(--reveal-delay,0ms);
+  }
+  .reveal.is-revealed{opacity:1;transform:translateY(0)}
+  @keyframes reveal-view{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @supports(animation-timeline:view()){
+    .reveal.is-view-tracking{
+      animation:reveal-view linear both;
+      animation-timeline:view();
+      animation-range:entry 0% cover 30%;
+    }
+  }
+
+  .line-reveal{position:relative}
+  .line-reveal::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-24px;
+    height:1px;
+    background:currentColor;
+    opacity:.22;
+    transform:scaleX(0);
+    transform-origin:left center;
+    transition:transform 700ms ${EASE};
+  }
+  .line-reveal.is-revealed::after{transform:scaleX(1)}
+  @keyframes line-view{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @supports(animation-timeline:view()){
+    .line-reveal.is-view-tracking::after{animation:line-view linear both;animation-timeline:view();animation-range:entry 5% cover 32%}
+  }
+
+  .swatch-reveal{clip-path:inset(100% 0 0 0);transition:clip-path 500ms ${EASE} var(--reveal-delay,0ms),opacity 500ms ${EASE} var(--reveal-delay,0ms),transform 500ms ${EASE} var(--reveal-delay,0ms)}
+  .swatch-reveal.is-revealed{clip-path:inset(0 0 0 0)}
+  @keyframes swatch-view{from{clip-path:inset(100% 0 0 0);opacity:0;transform:translateY(14px)}to{clip-path:inset(0 0 0 0);opacity:1;transform:translateY(0)}}
+  @supports(animation-timeline:view()){
+    .swatch-reveal.is-view-tracking{animation:swatch-view linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  }
+
+  @media(hover:hover){
+    .color .codes button{opacity:.68;transform:translateY(4px);transition:opacity 250ms ${EASE},transform 250ms ${EASE}}
+    .color:hover .codes button{opacity:1;transform:translateY(0)}
+    .color .codes button:nth-child(1){transition-delay:0ms}
+    .color .codes button:nth-child(2){transition-delay:40ms}
+    .color .codes button:nth-child(3){transition-delay:80ms}
+  }
+
+  .guild-sample.type-spacing-reveal{letter-spacing:.08em;opacity:0;transform:translateY(14px);transition:letter-spacing 400ms ${EASE},opacity 400ms ${EASE},transform 400ms ${EASE}}
+  .guild-sample.type-spacing-reveal.is-revealed{letter-spacing:-.03em;opacity:1;transform:translateY(0)}
+  @keyframes guild-spacing-view{from{letter-spacing:.08em;opacity:0;transform:translateY(14px)}to{letter-spacing:-.03em;opacity:1;transform:translateY(0)}}
+  @supports(animation-timeline:view()){
+    .guild-sample.type-spacing-reveal.is-view-tracking{animation:guild-spacing-view linear both;animation-timeline:view();animation-range:entry 0% cover 24%}
+  }
+
+  .type-line-mask{display:block;overflow:hidden}
+  .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 500ms ${EASE} var(--line-delay,0ms),opacity 500ms ${EASE} var(--line-delay,0ms)}
+  .hoves-sample.is-lines-revealed .type-line{transform:translateY(0);opacity:1}
+
+  .section-number-sticky{
+    position:sticky;
+    z-index:1;
+    top:calc(var(--header-h,78px) + 18px);
+    display:block;
+    width:max-content;
+    height:0;
+    margin-left:auto;
+    margin-right:var(--page-pad,64px);
+    color:currentColor;
+    font-family:"Guild A Display",Arial,sans-serif;
+    font-size:clamp(64px,8vw,118px);
+    line-height:1;
+    opacity:.055;
+    pointer-events:none;
+    transform:translateY(10px);
+  }
+
+  .nav{position:relative}
+  .nav-active-indicator{
+    position:absolute;
+    left:0;
+    bottom:8px;
+    width:28px;
+    height:1px;
+    background:currentColor;
+    opacity:0;
+    transform:translateX(0);
+    transform-origin:center;
+    pointer-events:none;
+    transition:transform 350ms ${EASE},opacity 250ms ${EASE};
+  }
+  .nav-active-indicator.is-visible{opacity:1}
+
+  .brand-section,.section-colors,.type-section,.files{position:relative;isolation:isolate}
+  .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.files>.shell{position:relative;z-index:1}
+  .section-grid-flash{
+    position:absolute;
+    z-index:0;
+    inset:0;
+    color:currentColor;
+    background-image:linear-gradient(to right,currentColor 1px,transparent 1px);
+    background-size:10% 100%;
+    opacity:0;
+    pointer-events:none;
+  }
+  @keyframes grid-flash{0%{opacity:0}35%{opacity:.05}100%{opacity:0}}
+  .section-grid-flash.is-grid-flashing{animation:grid-flash 1000ms ${EASE} both}
+
+  .logo-variant-symbol .logo-art-symbol.symbol-pending{opacity:0}
+  .symbol-draw-overlay{
+    position:absolute;
+    z-index:4;
+    left:50%;
+    top:50%;
+    width:min(150px,28%);
+    transform:translate(-50%,-50%);
+    opacity:1;
+    pointer-events:none;
+    transition:opacity 250ms ${EASE};
+  }
+  .symbol-draw-overlay path{fill:transparent;stroke:var(--purple);stroke-width:2;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 650ms ${EASE}}
+  .logo-variant-symbol.is-symbol-drawing .symbol-draw-overlay path{stroke-dashoffset:0}
+  .logo-variant-symbol.is-symbol-filled .logo-art-symbol{opacity:1}
+  .logo-variant-symbol.is-symbol-filled .symbol-draw-overlay{opacity:0}
+  @keyframes symbol-trace-view{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @supports(animation-timeline:view()){
+    .logo-variant-symbol.is-view-tracking .symbol-draw-overlay path{animation:symbol-trace-view linear both;animation-timeline:view();animation-range:entry 5% cover 28%}
+  }
+
+  @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
     .hero::after{
       z-index:0;
@@ -179,55 +357,34 @@ refinements.textContent=`
     .logo-tone-button{width:14px;height:14px}
     .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
+    .section-number-sticky{margin-right:24px;font-size:58px;opacity:.045}
   }
-  @media(max-width:768px){.section-heading h2{font-size:45px!important}}
+  @media(max-width:768px){.section-heading h2{font-size:45px!important}.nav-active-indicator{display:none}}
   @media(max-width:375px){.section-heading h2{font-size:38px!important}}
+
+  @media(prefers-reduced-motion:reduce){
+    .reveal,.reveal.is-view-tracking,.reveal.is-revealed,.swatch-reveal,.swatch-reveal.is-view-tracking,.swatch-reveal.is-revealed,
+    .guild-sample.type-spacing-reveal,.guild-sample.type-spacing-reveal.is-view-tracking,.guild-sample.type-spacing-reveal.is-revealed,
+    .type-line,.hoves-sample.is-lines-revealed .type-line,.logo-art,.logo-crossfade-layer,.logo-bg-crossfade,.color-copy-icon,.copy-value-stack>*{
+      animation:none!important;
+      transition:none!important;
+      opacity:1!important;
+      transform:none!important;
+    }
+    .swatch-reveal{clip-path:none!important}
+    .guild-sample.type-spacing-reveal{letter-spacing:-.03em!important}
+    .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
+    .symbol-draw-overlay{display:none!important}
+    .logo-variant-symbol .logo-art-symbol.symbol-pending{opacity:1!important}
+    .section-grid-flash{animation:none!important;opacity:0!important}
+    .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
+  }
 `;
 document.head.appendChild(refinements);
 
 const heroEyebrow=document.querySelector('.hero .eyebrow');
 if(heroEyebrow)heroEyebrow.textContent=heroEyebrow.textContent.replace(/^\s*0+\s*\/\s*/, '').trim();
 document.querySelectorAll('.hero .page-no').forEach(node=>node.remove());
-
-const copyIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>';
-const checkIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
-const downloadIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17V3zM5 19h14v2H5z"/></svg>';
-
-document.querySelectorAll('.color-primary').forEach(primary=>{
-  const hex=primary.querySelector('.color-hex');
-  const button=primary.querySelector('[data-copy]');
-  if(!hex||!button)return;
-  button.className='color-copy-icon';
-  button.setAttribute('aria-label',`Скопировать ${hex.textContent.trim()}`);
-  button.setAttribute('title',`Скопировать ${hex.textContent.trim()}`);
-  button.innerHTML=copyIcon;
-  primary.insertBefore(button,hex);
-  primary.classList.add('color-primary-etalon');
-});
-
-const toast=document.querySelector('.toast');
-let toastTimer;
-function showToast(text){
-  if(!toast)return;
-  toast.textContent=text;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>toast.classList.remove('show'),1300);
-}
-
-document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{
-  const value=btn.dataset.copy||'';
-  try{
-    await navigator.clipboard.writeText(value);
-    if(btn.classList.contains('color-copy-icon')){
-      btn.innerHTML=checkIcon;
-      btn.classList.add('is-copied');
-      clearTimeout(btn._copyTimer);
-      btn._copyTimer=setTimeout(()=>{btn.innerHTML=copyIcon;btn.classList.remove('is-copied')},1200);
-    }
-    showToast(`Скопировано: ${value}`);
-  }catch{showToast(value)}
-}));
 
 const guildSample=document.querySelector('.guild-sample');
 if(guildSample)guildSample.textContent='О ПРОЕКТЕ';
@@ -251,6 +408,58 @@ function fixHangingWords(element){
 }
 document.querySelectorAll('.hero-note,.section-intro,.logo-rule p,.hoves-sample,.font-download strong,.logo-variant-meta strong').forEach(fixHangingWords);
 
+/* Copy controls: retain the compact icon, and move HEX out while “Скопировано” moves in. */
+document.querySelectorAll('.color-primary').forEach(primary=>{
+  const hex=primary.querySelector('.color-hex');
+  const button=primary.querySelector('[data-copy]');
+  if(!hex||!button)return;
+  button.className='color-copy-icon';
+  button.setAttribute('aria-label',`Скопировать ${hex.textContent.trim()}`);
+  button.setAttribute('title',`Скопировать ${hex.textContent.trim()}`);
+  button.innerHTML=copyIcon;
+  const stack=document.createElement('span');
+  stack.className='copy-value-stack';
+  hex.before(stack);
+  stack.appendChild(hex);
+  const confirmation=document.createElement('span');
+  confirmation.className='copy-value-confirm';
+  confirmation.textContent='Скопировано';
+  stack.appendChild(confirmation);
+  primary.insertBefore(button,stack);
+  primary.classList.add('color-primary-etalon');
+});
+
+const toast=document.querySelector('.toast');
+let toastTimer;
+function showToast(text){
+  if(!toast)return;
+  toast.textContent=text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),1300);
+}
+
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{
+  const value=btn.dataset.copy||'';
+  try{
+    await navigator.clipboard.writeText(value);
+    if(btn.classList.contains('color-copy-icon')){
+      const primary=btn.closest('.color-primary');
+      btn.innerHTML=checkIcon;
+      btn.classList.add('is-copied');
+      primary?.classList.add('is-copy-confirmed');
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer=setTimeout(()=>{
+        btn.innerHTML=copyIcon;
+        btn.classList.remove('is-copied');
+        primary?.classList.remove('is-copy-confirmed');
+      },1200);
+    }
+    showToast(`Скопировано: ${value}`);
+  }catch{showToast(value)}
+}));
+
+/* Per-card tone controls with opacity-only two-layer crossfade. */
 const logoTones=[
   {key:'Deep_Purple',label:'Фиолетовый',preview:'#E9E9F5',dark:false},
   {key:'White',label:'Белый',preview:'#1F0048',dark:true}
@@ -267,23 +476,66 @@ document.querySelectorAll('.logo-variant').forEach((card,index)=>{
   controls.className='logo-card-tones';
   controls.setAttribute('role','group');
   controls.setAttribute('aria-label','Цвет этой версии логотипа');
+  let currentTone='Deep_Purple';
+  let switchTimer=0;
 
-  function applyTone(tone,button){
-    const isWhite=tone.key==='White';
-    img.src=isWhite?(img.dataset.white||img.src):(img.dataset.purple||img.src);
-    canvas.style.background=tone.preview;
-    canvas.classList.toggle('is-dark-preview',tone.dark);
-    controls.querySelectorAll('.logo-tone-button').forEach(b=>{
-      const active=b===button;
-      b.classList.toggle('is-active',active);
-      b.setAttribute('aria-pressed',String(active));
-    });
+  function updateDownload(tone){
     const type=logoTypes[index]||logoTypes[0];
     const archive=`${type}_${tone.key}.zip`;
     download.href=`./downloads/${archive}`;
     download.setAttribute('download',archive);
     download.setAttribute('aria-label',`Скачать ${tone.label}: SVG, PNG и PDF`);
     download.setAttribute('title',`Скачать ${tone.label}: SVG, PNG и PDF`);
+  }
+
+  function setControls(button){
+    controls.querySelectorAll('.logo-tone-button').forEach(b=>{
+      const active=b===button;
+      b.classList.toggle('is-active',active);
+      b.setAttribute('aria-pressed',String(active));
+    });
+  }
+
+  function applyTone(tone,button,instant=false){
+    const isWhite=tone.key==='White';
+    const nextSrc=isWhite?(img.dataset.white||img.src):(img.dataset.purple||img.src);
+    updateDownload(tone);
+    setControls(button);
+    if(instant){
+      img.src=nextSrc;
+      canvas.style.background=tone.preview;
+      canvas.classList.toggle('is-dark-preview',tone.dark);
+      currentTone=tone.key;
+      return;
+    }
+    if(currentTone===tone.key)return;
+    clearTimeout(switchTimer);
+    canvas.querySelectorAll('.logo-crossfade-layer,.logo-bg-crossfade').forEach(node=>node.remove());
+    img.classList.remove('is-fading-out');
+
+    const next=img.cloneNode(true);
+    next.src=nextSrc;
+    next.classList.add('logo-crossfade-layer');
+    next.removeAttribute('id');
+    const bg=document.createElement('span');
+    bg.className='logo-bg-crossfade';
+    bg.style.background=tone.preview;
+    canvas.insertBefore(bg,canvas.firstChild);
+    canvas.appendChild(next);
+    requestAnimationFrame(()=>{
+      img.classList.add('is-fading-out');
+      next.classList.add('is-fading-in');
+      bg.classList.add('is-fading-in');
+    });
+    switchTimer=setTimeout(()=>{
+      img.src=nextSrc;
+      img.classList.remove('is-fading-out');
+      canvas.style.background=tone.preview;
+      canvas.classList.toggle('is-dark-preview',tone.dark);
+      next.remove();
+      bg.remove();
+      currentTone=tone.key;
+    },260);
   }
 
   logoTones.forEach((tone,toneIndex)=>{
@@ -294,9 +546,9 @@ document.querySelectorAll('.logo-variant').forEach((card,index)=>{
     button.setAttribute('aria-label',tone.label);
     button.setAttribute('title',tone.label);
     button.setAttribute('aria-pressed','false');
-    button.addEventListener('click',()=>applyTone(tone,button));
+    button.addEventListener('click',()=>applyTone(tone,button,false));
     controls.appendChild(button);
-    if(toneIndex===0)requestAnimationFrame(()=>applyTone(tone,button));
+    if(toneIndex===0)requestAnimationFrame(()=>applyTone(tone,button,true));
   });
 
   canvas.appendChild(controls);
@@ -304,7 +556,6 @@ document.querySelectorAll('.logo-variant').forEach((card,index)=>{
 });
 
 document.querySelector('.logo-color-switch')?.remove();
-/* The global “all logo versions” ZIP is intentionally removed; downloads stay per card. */
 document.querySelector('.logo-download')?.remove();
 
 const fontZipLink=document.querySelector('.font-download .text-link');
@@ -339,3 +590,175 @@ document.querySelectorAll('.file-list a').forEach(link=>{
   const sizeTarget=link.querySelector('[data-file-size]');
   resolveFileSize(link.href).then(bytes=>{if(sizeTarget)sizeTarget.textContent=formatFileSize(bytes)});
 });
+
+/* Typography line masks. */
+const hovesSample=document.querySelector('.hoves-sample');
+if(hovesSample){
+  const lines=hovesSample.innerHTML.split(/<br\s*\/?\s*>/i).map(line=>line.trim()).filter(Boolean);
+  if(lines.length){
+    hovesSample.innerHTML=lines.map((line,index)=>`<span class="type-line-mask"><span class="type-line" style="--line-delay:${index*90}ms">${line}</span></span>`).join('');
+  }
+}
+
+/* Symbol card outline trace, followed by the real filled asset. */
+const symbolCard=document.querySelector('.logo-variant-symbol');
+if(symbolCard){
+  const symbolCanvas=symbolCard.querySelector('.logo-canvas');
+  const symbolImg=symbolCard.querySelector('.logo-art-symbol');
+  if(symbolCanvas&&symbolImg){
+    symbolImg.classList.add('symbol-pending');
+    const overlay=document.createElement('svg');
+    overlay.classList.add('symbol-draw-overlay');
+    overlay.setAttribute('viewBox','250 305 430 455');
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML='<path pathLength="1" d="M657.9,741.2c-8.2-8-18.8-21.5-27.6-43.5l-149.6-374.3h-67.8c8.2,8,18.6,21.5,27.2,43.5l129.6,330.8c8.6,22,8.8,35.5,6.9,43.5h81.3Z"/><path pathLength="1" d="M273.7,741.2h73.4c39.9-176.2,155.4-236.2,265.4-247v-3.9c-91.8,6.8-260.2,46.3-338.8,250.9Z"/>';
+    symbolCanvas.appendChild(overlay);
+  }
+}
+
+/* Add motion classes without rewriting source markup. */
+const revealGroups=[
+  [...document.querySelectorAll('.logo-variant')],
+  [...document.querySelectorAll('.palette .color')],
+  [...document.querySelectorAll('.font-stack .font-block')],
+  [...document.querySelectorAll('.file-list a')]
+];
+revealGroups.forEach(group=>group.forEach((el,index)=>{
+  el.classList.add('reveal');
+  el.style.setProperty('--reveal-delay',`${index*70}ms`);
+  el.dataset.revealDelay=String(index*70);
+}));
+document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>el.classList.add('reveal'));
+document.querySelectorAll('.section-heading').forEach(el=>el.classList.add('line-reveal'));
+document.querySelectorAll('.palette .color').forEach(el=>el.classList.add('swatch-reveal'));
+if(guildSample)guildSample.classList.add('type-spacing-reveal');
+
+/* Sticky large section numbers and transient 10-column grid highlights. */
+['logo','colors','type','files'].forEach(id=>{
+  const section=document.getElementById(id);
+  if(!section)return;
+  const kicker=section.querySelector('.section-kicker');
+  const number=(kicker?.textContent.match(/\b(0[1-4])\b/)||[])[1]||'';
+  if(number){
+    const sticky=document.createElement('span');
+    sticky.className='section-number-sticky';
+    sticky.textContent=number;
+    sticky.setAttribute('aria-hidden','true');
+    section.insertBefore(sticky,section.firstChild);
+  }
+  const grid=document.createElement('span');
+  grid.className='section-grid-flash';
+  grid.setAttribute('aria-hidden','true');
+  section.insertBefore(grid,section.firstChild);
+});
+
+/* Single moving active navigation indicator. */
+const nav=document.querySelector('.nav');
+const navLinks=nav?[...nav.querySelectorAll('a[href^="#"]')]:[];
+let navIndicator=null;
+if(nav&&navLinks.length){
+  navIndicator=document.createElement('span');
+  navIndicator.className='nav-active-indicator';
+  navIndicator.setAttribute('aria-hidden','true');
+  nav.appendChild(navIndicator);
+}
+function moveNavIndicator(link){
+  if(!nav||!navIndicator||!link){navIndicator?.classList.remove('is-visible');return}
+  const x=link.offsetLeft+(link.offsetWidth-28)/2;
+  navIndicator.style.transform=`translateX(${Math.round(x)}px)`;
+  navIndicator.classList.add('is-visible');
+}
+const navSectionObserver=new IntersectionObserver(entries=>{
+  const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+  if(!visible)return;
+  const link=navLinks.find(item=>item.getAttribute('href')===`#${visible.target.id}`);
+  if(link)moveNavIndicator(link);
+},{rootMargin:'-18% 0px -62% 0px',threshold:[0,.1,.25,.5]});
+['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)navSectionObserver.observe(section)});
+window.addEventListener('resize',()=>{
+  const current=navLinks.find(link=>link.getAttribute('aria-current')==='true');
+  if(current)moveNavIndicator(current);
+},{passive:true});
+
+/* Page progress: CSS scroll timeline when available, rAF scroll fallback otherwise. */
+const progress=document.createElement('span');
+progress.className='scroll-progress';
+progress.setAttribute('aria-hidden','true');
+document.body.appendChild(progress);
+const supportsScrollTimeline=CSS.supports?.('animation-timeline: scroll()')===true;
+if(!supportsScrollTimeline){
+  let progressTick=false;
+  const updateProgress=()=>{
+    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+    const value=Math.min(1,Math.max(0,scrollY/max));
+    progress.style.transform=`scaleX(${value})`;
+    progressTick=false;
+  };
+  addEventListener('scroll',()=>{if(!progressTick){progressTick=true;requestAnimationFrame(updateProgress)}},{passive:true});
+  addEventListener('resize',updateProgress,{passive:true});
+  updateProgress();
+}
+
+/* One-shot view reveals. CSS view() participates where supported; IO latches final state forever. */
+const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const supportsViewTimeline=CSS.supports?.('animation-timeline: view()')===true;
+const revealTargets=[...new Set([
+  ...document.querySelectorAll('.reveal'),
+  ...document.querySelectorAll('.line-reveal'),
+  ...(guildSample?[guildSample]:[])
+])];
+function startSymbolTrace(){
+  if(!symbolCard||symbolCard.dataset.symbolPlayed)return;
+  symbolCard.dataset.symbolPlayed='true';
+  symbolCard.classList.add('is-symbol-drawing');
+  setTimeout(()=>symbolCard.classList.add('is-symbol-filled'),650);
+}
+function revealElement(el){
+  const delay=Math.min(140,Number(el.dataset.revealDelay)||0);
+  if(prefersReduced){
+    el.classList.add('is-revealed');
+    if(el===guildSample)el.classList.add('is-revealed');
+    if(el===hovesSample)el.classList.add('is-lines-revealed');
+    return;
+  }
+  if(supportsViewTimeline)el.classList.add('is-view-tracking');
+  setTimeout(()=>{
+    el.classList.add('is-revealed');
+    el.classList.remove('is-view-tracking');
+  },supportsViewTimeline?Math.min(700,520+delay):delay);
+  if(el===guildSample)setTimeout(()=>el.classList.add('is-revealed'),delay);
+}
+const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const el=entry.target;
+    revealElement(el);
+    if(el.classList.contains('logo-variant-symbol'))startSymbolTrace();
+    if(el===hovesSample)el.classList.add('is-lines-revealed');
+    revealObserver.unobserve(el);
+  });
+},{threshold:.14,rootMargin:'0px 0px -8% 0px'});
+revealTargets.forEach(el=>revealObserver.observe(el));
+if(hovesSample)revealObserver.observe(hovesSample);
+
+/* Grid appears once per section, peaks at 5%, then fades away. */
+const gridObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const layer=entry.target.querySelector('.section-grid-flash');
+    layer?.classList.add('is-grid-flashing');
+    gridObserver.unobserve(entry.target);
+  });
+},{threshold:.18});
+['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)gridObserver.observe(section)});
+
+/* Keep aria-current in sync with the moving indicator. */
+const currentSectionObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    navLinks.forEach(link=>link.removeAttribute('aria-current'));
+    const active=navLinks.find(link=>link.getAttribute('href')===`#${entry.target.id}`);
+    if(active){active.setAttribute('aria-current','true');moveNavIndicator(active)}
+  });
+},{rootMargin:'-20% 0px -65% 0px',threshold:0});
+['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)currentSectionObserver.observe(section)});
