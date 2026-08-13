@@ -204,20 +204,15 @@ refinements.textContent=`
     .scroll-progress{animation:page-progress linear both;animation-timeline:scroll(root block)}
   }
 
+  /* Reveals are opacity + transform only: nothing here may clip an element or
+     take it out of layout, otherwise the scroll watcher can never measure it. */
   .reveal{
     opacity:0;
     transform:translateY(14px);
-    transition:opacity 600ms ${EASE} var(--reveal-delay,0ms),transform 600ms ${EASE} var(--reveal-delay,0ms);
+    transition:opacity 620ms ${EASE} var(--reveal-delay,0ms),transform 620ms ${EASE} var(--reveal-delay,0ms);
+    will-change:opacity,transform;
   }
-  .reveal.is-revealed{opacity:1;transform:translateY(0)}
-  @keyframes reveal-view{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-  @supports(animation-timeline:view()){
-    .reveal.is-view-tracking{
-      animation:reveal-view linear both;
-      animation-timeline:view();
-      animation-range:entry 0% cover 30%;
-    }
-  }
+  .reveal.is-revealed{opacity:1;transform:none;will-change:auto}
 
   .line-reveal{position:relative}
   .line-reveal::after{
@@ -234,17 +229,6 @@ refinements.textContent=`
     transition:transform 700ms ${EASE};
   }
   .line-reveal.is-revealed::after{transform:scaleX(1)}
-  @keyframes line-view{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-  @supports(animation-timeline:view()){
-    .line-reveal.is-view-tracking::after{animation:line-view linear both;animation-timeline:view();animation-range:entry 5% cover 32%}
-  }
-
-  .swatch-reveal{clip-path:inset(100% 0 0 0);transition:clip-path 500ms ${EASE} var(--reveal-delay,0ms),opacity 500ms ${EASE} var(--reveal-delay,0ms),transform 500ms ${EASE} var(--reveal-delay,0ms)}
-  .swatch-reveal.is-revealed{clip-path:inset(0 0 0 0)}
-  @keyframes swatch-view{from{clip-path:inset(100% 0 0 0);opacity:0;transform:translateY(14px)}to{clip-path:inset(0 0 0 0);opacity:1;transform:translateY(0)}}
-  @supports(animation-timeline:view()){
-    .swatch-reveal.is-view-tracking{animation:swatch-view linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
-  }
 
   @media(hover:hover){
     .color .codes button{opacity:.68;transform:translateY(4px);transition:opacity 250ms ${EASE},transform 250ms ${EASE}}
@@ -254,16 +238,14 @@ refinements.textContent=`
     .color .codes button:nth-child(3){transition-delay:80ms}
   }
 
-  .guild-sample.type-spacing-reveal{letter-spacing:.08em;opacity:0;transform:translateY(14px);transition:letter-spacing 400ms ${EASE},opacity 400ms ${EASE},transform 400ms ${EASE}}
-  .guild-sample.type-spacing-reveal.is-revealed{letter-spacing:-.03em;opacity:1;transform:translateY(0)}
-  @keyframes guild-spacing-view{from{letter-spacing:.08em;opacity:0;transform:translateY(14px)}to{letter-spacing:-.03em;opacity:1;transform:translateY(0)}}
-  @supports(animation-timeline:view()){
-    .guild-sample.type-spacing-reveal.is-view-tracking{animation:guild-spacing-view linear both;animation-timeline:view();animation-range:entry 0% cover 24%}
-  }
+  /* Type specimens: slower than the card reveals and started only once the
+     specimen itself is well inside the viewport (see TYPE_TRIGGER). */
+  .guild-sample.type-reveal{letter-spacing:.06em;opacity:0;transform:translateY(16px);transition:letter-spacing 950ms ${EASE},opacity 950ms ${EASE},transform 950ms ${EASE}}
+  .guild-sample.type-reveal.is-revealed{letter-spacing:-.03em;opacity:1;transform:none}
 
   .type-line-mask{display:block;overflow:hidden}
-  .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 500ms ${EASE} var(--line-delay,0ms),opacity 500ms ${EASE} var(--line-delay,0ms)}
-  .hoves-sample.is-lines-revealed .type-line{transform:translateY(0);opacity:1}
+  .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 950ms ${EASE} var(--line-delay,0ms),opacity 950ms ${EASE} var(--line-delay,0ms)}
+  .hoves-sample.type-reveal.is-revealed .type-line{transform:none;opacity:1}
 
   .section-number-sticky{
     position:sticky;
@@ -314,27 +296,6 @@ refinements.textContent=`
   @keyframes grid-flash{0%{opacity:0}35%{opacity:.05}100%{opacity:0}}
   .section-grid-flash.is-grid-flashing{animation:grid-flash 1000ms ${EASE} both}
 
-  .logo-variant-symbol .logo-art-symbol.symbol-pending{opacity:0}
-  .symbol-draw-overlay{
-    position:absolute;
-    z-index:4;
-    left:50%;
-    top:50%;
-    width:min(150px,28%);
-    transform:translate(-50%,-50%);
-    opacity:1;
-    pointer-events:none;
-    transition:opacity 250ms ${EASE};
-  }
-  .symbol-draw-overlay path{fill:transparent;stroke:var(--purple);stroke-width:2;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 650ms ${EASE}}
-  .logo-variant-symbol.is-symbol-drawing .symbol-draw-overlay path{stroke-dashoffset:0}
-  .logo-variant-symbol.is-symbol-filled .logo-art-symbol{opacity:1}
-  .logo-variant-symbol.is-symbol-filled .symbol-draw-overlay{opacity:0}
-  @keyframes symbol-trace-view{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
-  @supports(animation-timeline:view()){
-    .logo-variant-symbol.is-view-tracking .symbol-draw-overlay path{animation:symbol-trace-view linear both;animation-timeline:view();animation-range:entry 5% cover 28%}
-  }
-
   @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
     .hero::after{
@@ -363,19 +324,17 @@ refinements.textContent=`
   @media(max-width:375px){.section-heading h2{font-size:38px!important}}
 
   @media(prefers-reduced-motion:reduce){
-    .reveal,.reveal.is-view-tracking,.reveal.is-revealed,.swatch-reveal,.swatch-reveal.is-view-tracking,.swatch-reveal.is-revealed,
-    .guild-sample.type-spacing-reveal,.guild-sample.type-spacing-reveal.is-view-tracking,.guild-sample.type-spacing-reveal.is-revealed,
-    .type-line,.hoves-sample.is-lines-revealed .type-line,.logo-art,.logo-crossfade-layer,.logo-bg-crossfade,.color-copy-icon,.copy-value-stack>*{
+    .reveal,.reveal.is-revealed,
+    .guild-sample.type-reveal,.guild-sample.type-reveal.is-revealed,
+    .type-line,.hoves-sample.type-reveal.is-revealed .type-line,
+    .logo-art,.logo-crossfade-layer,.logo-bg-crossfade,.color-copy-icon,.copy-value-stack>*{
       animation:none!important;
       transition:none!important;
       opacity:1!important;
       transform:none!important;
     }
-    .swatch-reveal{clip-path:none!important}
-    .guild-sample.type-spacing-reveal{letter-spacing:-.03em!important}
+    .guild-sample.type-reveal{letter-spacing:-.03em!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
-    .symbol-draw-overlay{display:none!important}
-    .logo-variant-symbol .logo-art-symbol.symbol-pending{opacity:1!important}
     .section-grid-flash{animation:none!important;opacity:0!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
@@ -591,47 +550,44 @@ document.querySelectorAll('.file-list a').forEach(link=>{
   resolveFileSize(link.href).then(bytes=>{if(sizeTarget)sizeTarget.textContent=formatFileSize(bytes)});
 });
 
+const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 /* Typography line masks. */
 const hovesSample=document.querySelector('.hoves-sample');
-if(hovesSample){
+if(hovesSample&&!prefersReduced){
   const lines=hovesSample.innerHTML.split(/<br\s*\/?\s*>/i).map(line=>line.trim()).filter(Boolean);
   if(lines.length){
-    hovesSample.innerHTML=lines.map((line,index)=>`<span class="type-line-mask"><span class="type-line" style="--line-delay:${index*90}ms">${line}</span></span>`).join('');
+    hovesSample.innerHTML=lines.map((line,index)=>`<span class="type-line-mask"><span class="type-line" style="--line-delay:${index*150}ms">${line}</span></span>`).join('');
   }
 }
 
-/* Symbol card outline trace, followed by the real filled asset. */
-const symbolCard=document.querySelector('.logo-variant-symbol');
-if(symbolCard){
-  const symbolCanvas=symbolCard.querySelector('.logo-canvas');
-  const symbolImg=symbolCard.querySelector('.logo-art-symbol');
-  if(symbolCanvas&&symbolImg){
-    symbolImg.classList.add('symbol-pending');
-    const overlay=document.createElement('svg');
-    overlay.classList.add('symbol-draw-overlay');
-    overlay.setAttribute('viewBox','250 305 430 455');
-    overlay.setAttribute('aria-hidden','true');
-    overlay.innerHTML='<path pathLength="1" d="M657.9,741.2c-8.2-8-18.8-21.5-27.6-43.5l-149.6-374.3h-67.8c8.2,8,18.6,21.5,27.2,43.5l129.6,330.8c8.6,22,8.8,35.5,6.9,43.5h81.3Z"/><path pathLength="1" d="M273.7,741.2h73.4c39.9-176.2,155.4-236.2,265.4-247v-3.9c-91.8,6.8-260.2,46.3-338.8,250.9Z"/>';
-    symbolCanvas.appendChild(overlay);
-  }
+/* Motion classes are added only when motion will actually run, so a page
+   without JS — or with reduced motion — never ends up with hidden content. */
+const motionTargets=[];
+function addMotion(el,className,trigger,delay){
+  if(!el||el.dataset.motion)return;
+  el.dataset.motion='1';
+  el.classList.add(className);
+  if(delay)el.style.setProperty('--reveal-delay',`${delay}ms`);
+  motionTargets.push({el,trigger});
 }
+/* Fraction of the viewport an element must reach before it plays.
+   Lower value = starts later (element sits higher up the screen). */
+const CARD_TRIGGER=.88;
+const TYPE_TRIGGER=.62;
 
-/* Add motion classes without rewriting source markup. */
-const revealGroups=[
-  [...document.querySelectorAll('.logo-variant')],
-  [...document.querySelectorAll('.palette .color')],
-  [...document.querySelectorAll('.font-stack .font-block')],
-  [...document.querySelectorAll('.file-list a')]
-];
-revealGroups.forEach(group=>group.forEach((el,index)=>{
-  el.classList.add('reveal');
-  el.style.setProperty('--reveal-delay',`${index*70}ms`);
-  el.dataset.revealDelay=String(index*70);
-}));
-document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>el.classList.add('reveal'));
-document.querySelectorAll('.section-heading').forEach(el=>el.classList.add('line-reveal'));
-document.querySelectorAll('.palette .color').forEach(el=>el.classList.add('swatch-reveal'));
-if(guildSample)guildSample.classList.add('type-spacing-reveal');
+if(!prefersReduced){
+  [
+    [...document.querySelectorAll('.logo-variant')],
+    [...document.querySelectorAll('.palette .color')],
+    [...document.querySelectorAll('.font-stack .font-block')],
+    [...document.querySelectorAll('.file-list a')]
+  ].forEach(group=>group.forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,Math.min(index,3)*70)));
+  document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
+  document.querySelectorAll('.section-heading').forEach(el=>addMotion(el,'line-reveal',CARD_TRIGGER,0));
+  addMotion(guildSample,'type-reveal',TYPE_TRIGGER,0);
+  addMotion(hovesSample,'type-reveal',TYPE_TRIGGER,0);
+}
 
 /* Sticky large section numbers and transient 10-column grid highlights. */
 ['logo','colors','type','files'].forEach(id=>{
@@ -699,58 +655,40 @@ if(!supportsScrollTimeline){
   updateProgress();
 }
 
-/* One-shot view reveals. CSS view() participates where supported; IO latches final state forever. */
-const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const supportsViewTimeline=CSS.supports?.('animation-timeline: view()')===true;
-const revealTargets=[...new Set([
-  ...document.querySelectorAll('.reveal'),
-  ...document.querySelectorAll('.line-reveal'),
-  ...(guildSample?[guildSample]:[])
-])];
-function startSymbolTrace(){
-  if(!symbolCard||symbolCard.dataset.symbolPlayed)return;
-  symbolCard.dataset.symbolPlayed='true';
-  symbolCard.classList.add('is-symbol-drawing');
-  setTimeout(()=>symbolCard.classList.add('is-symbol-filled'),650);
+/* One deterministic scroll pass drives every reveal: a target plays once, when
+   its top crosses its own trigger line. Measuring rectangles ourselves keeps
+   the reveal independent of how the element is painted. */
+const motionSections=['logo','colors','type','files'].map(id=>document.getElementById(id)).filter(Boolean);
+function playMotion(target){
+  if(target.grid){target.el.querySelector('.section-grid-flash')?.classList.add('is-grid-flashing');return}
+  target.el.classList.add('is-revealed');
 }
-function revealElement(el){
-  const delay=Math.min(140,Number(el.dataset.revealDelay)||0);
-  if(prefersReduced){
-    el.classList.add('is-revealed');
-    if(el===guildSample)el.classList.add('is-revealed');
-    if(el===hovesSample)el.classList.add('is-lines-revealed');
-    return;
-  }
-  if(supportsViewTimeline)el.classList.add('is-view-tracking');
-  setTimeout(()=>{
-    el.classList.add('is-revealed');
-    el.classList.remove('is-view-tracking');
-  },supportsViewTimeline?Math.min(700,520+delay):delay);
-  if(el===guildSample)setTimeout(()=>el.classList.add('is-revealed'),delay);
+if(prefersReduced){
+  motionTargets.forEach(playMotion);
+}else{
+  motionSections.forEach(section=>motionTargets.push({el:section,trigger:.82,grid:true}));
+  let pending=motionTargets.slice();
+  let queued=false;
+  const updateMotion=()=>{
+    queued=false;
+    if(!pending.length)return;
+    const height=innerHeight||document.documentElement.clientHeight;
+    /* Nothing below can move any closer once the page bottom is reached, so
+       whatever is left must play rather than stay invisible. */
+    const atEnd=scrollY+height>=document.documentElement.scrollHeight-2;
+    const rest=[];
+    pending.forEach(target=>{
+      if(atEnd||target.el.getBoundingClientRect().top<height*target.trigger)playMotion(target);
+      else rest.push(target);
+    });
+    pending=rest;
+  };
+  const scheduleMotion=()=>{if(!queued){queued=true;requestAnimationFrame(updateMotion)}};
+  addEventListener('scroll',scheduleMotion,{passive:true});
+  addEventListener('resize',scheduleMotion,{passive:true});
+  addEventListener('load',scheduleMotion);
+  scheduleMotion();
 }
-const revealObserver=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(!entry.isIntersecting)return;
-    const el=entry.target;
-    revealElement(el);
-    if(el.classList.contains('logo-variant-symbol'))startSymbolTrace();
-    if(el===hovesSample)el.classList.add('is-lines-revealed');
-    revealObserver.unobserve(el);
-  });
-},{threshold:.14,rootMargin:'0px 0px -8% 0px'});
-revealTargets.forEach(el=>revealObserver.observe(el));
-if(hovesSample)revealObserver.observe(hovesSample);
-
-/* Grid appears once per section, peaks at 5%, then fades away. */
-const gridObserver=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(!entry.isIntersecting)return;
-    const layer=entry.target.querySelector('.section-grid-flash');
-    layer?.classList.add('is-grid-flashing');
-    gridObserver.unobserve(entry.target);
-  });
-},{threshold:.18});
-['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)gridObserver.observe(section)});
 
 /* Keep aria-current in sync with the moving indicator. */
 const currentSectionObserver=new IntersectionObserver(entries=>{
