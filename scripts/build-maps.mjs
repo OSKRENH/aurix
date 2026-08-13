@@ -54,6 +54,16 @@ const SECTION=`
 
 async function ensure(dir){await fs.mkdir(dir,{recursive:true})}
 
+async function readSvg(sourceName){
+  const raw=await fs.readFile(path.join(SRC,sourceName));
+  const head=raw.subarray(0,128).toString('utf8').trimStart();
+  if(head.startsWith('<svg')||head.startsWith('<?xml'))return raw;
+  const decoded=Buffer.from(raw.toString('utf8').trim(),'base64');
+  const decodedHead=decoded.subarray(0,128).toString('utf8').trimStart();
+  if(!decodedHead.startsWith('<svg')&&!decodedHead.startsWith('<?xml'))throw new Error(`Invalid map source: ${sourceName}`);
+  return decoded;
+}
+
 async function makePdf(jpg,width,height){
   const doc=await PDFDocument.create();
   const image=await doc.embedJpg(jpg);
@@ -65,8 +75,7 @@ async function makePdf(jpg,width,height){
 }
 
 async function exportMap(cityKey,tone,sourceName){
-  const sourcePath=path.join(SRC,sourceName);
-  const svg=await fs.readFile(sourcePath);
+  const svg=await readSvg(sourceName);
   const rendered=await sharp(svg).resize({width:3840,withoutEnlargement:false}).jpeg({quality:94,chromaSubsampling:'4:4:4'}).toBuffer({resolveWithObject:true});
   const titleTone=tone==='light'?'Light':'Dark';
   const base=`AURIX_Map_${cityKey}_${titleTone}`;
@@ -81,10 +90,10 @@ async function exportMap(cityKey,tone,sourceName){
 async function inject(file){
   const target=path.join(DIST,file);
   let html=await fs.readFile(target,'utf8');
-  if(!html.includes('maps.css')) html=html.replace('</head>','  <link rel="stylesheet" href="./maps.css">\n</head>');
+  if(!html.includes('maps.css'))html=html.replace('</head>','  <link rel="stylesheet" href="./maps.css">\n</head>');
   html=html.replaceAll('<a href="#files">Файлы</a>','<a href="#files">Файлы</a>\n      <a href="#maps">Карты</a>');
-  if(!html.includes('id="maps"')) html=html.replace('</main>',`${SECTION}\n  </main>`);
-  if(!html.includes('maps.js')) html=html.replace('</body>','  <script src="./maps.js"></script>\n</body>');
+  if(!html.includes('id="maps"'))html=html.replace('</main>',`${SECTION}\n  </main>`);
+  if(!html.includes('maps.js'))html=html.replace('</body>','  <script src="./maps.js"></script>\n</body>');
   await fs.writeFile(target,html);
 }
 
@@ -94,12 +103,15 @@ await Promise.all([
   fs.copyFile(path.join(ROOT,'maps.css'),path.join(DIST,'maps.css')),
   fs.copyFile(path.join(ROOT,'maps.js'),path.join(DIST,'maps.js'))
 ]);
-for(const name of await fs.readdir(SRC)) if(name.endsWith('.svg')) await fs.copyFile(path.join(SRC,name),path.join(OUT_ASSETS,name));
+for(const name of await fs.readdir(SRC)){
+  if(!name.endsWith('.svg'))continue;
+  await fs.writeFile(path.join(OUT_ASSETS,name),await readSvg(name));
+}
 for(const [cityKey,cfg] of Object.entries(MAPS)){
   await exportMap(cityKey,'light',cfg.light);
   await exportMap(cityKey,'dark',cfg.dark);
 }
-for(const file of ['index.html','brandbook.html']) await inject(file);
+for(const file of ['index.html','brandbook.html'])await inject(file);
 
 for(const file of [
   'AURIX_Map_Moscow_Light.jpg','AURIX_Map_Moscow_Light.svg','AURIX_Map_Moscow_Light.pdf',
@@ -108,6 +120,6 @@ for(const file of [
   'AURIX_Map_Saint_Petersburg_Dark.jpg','AURIX_Map_Saint_Petersburg_Dark.svg','AURIX_Map_Saint_Petersburg_Dark.pdf'
 ]){
   const stat=await fs.stat(path.join(OUT_DOWNLOADS,file));
-  if(!stat.size) throw new Error(`Generated map file is empty: ${file}`);
+  if(!stat.size)throw new Error(`Generated map file is empty: ${file}`);
 }
 console.log('AURIX maps section and downloads ready');
