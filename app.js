@@ -7,7 +7,6 @@ const refinements=document.createElement('style');
 refinements.textContent=`
   body{font-synthesis:none}
 
-  /* Glass navigation. */
   .topbar{
     background:rgba(31,0,72,.70)!important;
     -webkit-backdrop-filter:blur(22px) saturate(145%);
@@ -20,30 +19,26 @@ refinements.textContent=`
     backdrop-filter:blur(22px) saturate(145%);
   }
 
-  /* All Guild typography is uppercase; section titles are 20% smaller. */
   .hero h1,.section-heading h2,.guild-sample,.guild-block .alphabet{text-transform:uppercase}
   .section-heading h2{font-size:70px!important;text-wrap:balance}
 
-  /* Better editorial line endings and paragraph integrity. */
   .hero-note,.section-intro,.logo-rule p,.hoves-sample,.font-download strong,.material-copy small,.logo-variant-meta strong{
     text-wrap:pretty;
     orphans:3;
     widows:3;
     hyphens:none;
   }
-  .hero h1,.hoves-sample{ text-wrap:balance; }
+  .hero h1,.hoves-sample{text-wrap:balance}
 
-  /* Hero: full-height AURIX symbol, title and copy stay left. */
   .hero{position:relative;overflow:hidden}
   .hero::after{
     content:"";
     position:absolute;
     z-index:3;
     right:-8vw;
-    top:-1px;
-    bottom:-1px;
+    top:-6%;
     width:72vw;
-    height:calc(100% + 2px);
+    height:112%;
     background:var(--lilac);
     -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
     mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
@@ -69,16 +64,13 @@ refinements.textContent=`
   }
   .hero-foot{grid-column:1/11}
 
-  /* Footer baseline. */
   .footer{align-items:center!important}
   .footer img,.footer span,.footer a{align-self:center}
 
-  /* Font specimens. */
   .guild-block .alphabet{font-family:"Guild A Display",Arial,sans-serif;font-weight:400}
   .hoves-block .alphabet{line-height:1.8;letter-spacing:.015em}
   .font-download{border-top:0!important;padding-top:0!important}
 
-  /* Only two independent logo tones: purple / white. */
   .logo-color-switch{display:none!important}
   .logo-canvas{overflow:hidden;transition:background var(--transition)}
   .logo-art{display:block!important;transition:opacity var(--transition)}
@@ -88,16 +80,16 @@ refinements.textContent=`
     top:14px;
     right:14px;
     display:flex;
-    gap:7px;
+    gap:6px;
     align-items:center;
   }
   .logo-tone-button{
-    width:22px;
-    height:22px;
+    width:20px;
+    height:20px;
     display:grid;
     place-items:center;
     padding:0;
-    border:1px solid rgba(31,0,72,.65);
+    border:1px solid rgba(31,0,72,.58);
     border-radius:999px;
     background:transparent;
     color:var(--purple);
@@ -106,20 +98,19 @@ refinements.textContent=`
   }
   .logo-tone-button::before{
     content:"";
-    width:10px;
-    height:10px;
+    width:9px;
+    height:9px;
     border-radius:50%;
     background:var(--tone);
-    border:1px solid rgba(31,0,72,.24);
+    border:1px solid rgba(31,0,72,.22);
     box-sizing:border-box;
   }
   .logo-tone-button:hover,.logo-tone-button:focus-visible{transform:scale(1.08)}
-  .logo-tone-button.is-active{background:rgba(255,255,255,.82);box-shadow:0 0 0 1px currentColor inset}
-  .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white);border-color:rgba(255,255,255,.72)}
+  .logo-tone-button.is-active{background:rgba(255,255,255,.84);box-shadow:0 0 0 1px currentColor inset}
+  .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white);border-color:rgba(255,255,255,.68)}
   .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:rgba(255,255,255,.18)}
-  .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:rgba(255,255,255,.45)}
+  .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:rgba(255,255,255,.4)}
 
-  /* Compact ZIP links: same language as the per-card download. */
   .compact-zip-link{
     min-width:0!important;
     min-height:0!important;
@@ -139,7 +130,6 @@ refinements.textContent=`
   .compact-zip-link:hover{opacity:.62!important}
   .font-download .compact-zip-link{justify-self:end}
 
-  /* Etalon-style HEX copy circles. */
   .color-copy-icon{
     width:42px!important;
     height:42px!important;
@@ -159,32 +149,29 @@ refinements.textContent=`
   .color-lilac .color-copy-icon:hover,.color-lilac .color-copy-icon:focus-visible,
   .color-mist .color-copy-icon:hover,.color-mist .color-copy-icon:focus-visible{background:var(--purple)!important;color:var(--white)!important}
 
-  /* Material download circles stay visible on hover. */
   .material-download:hover .material-download-icon{background:var(--white)!important;color:var(--purple)!important;opacity:1!important}
+
+  .desktop-break{display:none}
+  @media(min-width:769px){.desktop-break{display:block}}
 
   @media(max-width:1024px){
     .section-heading h2{font-size:58px!important}
   }
   @media(max-width:900px){
-    .hero::after{right:-42vw;top:-1px;bottom:-1px;width:118vw;height:calc(100% + 2px);opacity:.34;-webkit-mask-size:auto 100%;mask-size:auto 100%}
+    .hero::after{right:-42vw;top:-8%;width:118vw;height:116%;opacity:.34;-webkit-mask-size:auto 100%;mask-size:auto 100%}
     .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(58px,17vw,88px)}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
-    .logo-card-tones{top:11px;right:11px;gap:6px}
-    .logo-tone-button{width:20px;height:20px}
-    .logo-tone-button::before{width:9px;height:9px}
+    .logo-card-tones{top:11px;right:11px;gap:5px}
+    .logo-tone-button{width:19px;height:19px}
+    .logo-tone-button::before{width:8px;height:8px}
     .font-download .compact-zip-link{justify-self:start}
   }
-  @media(max-width:768px){
-    .section-heading h2{font-size:45px!important}
-  }
-  @media(max-width:375px){
-    .section-heading h2{font-size:38px!important}
-  }
+  @media(max-width:768px){.section-heading h2{font-size:45px!important}}
+  @media(max-width:375px){.section-heading h2{font-size:38px!important}}
 `;
 document.head.appendChild(refinements);
 
-/* Remove the leading 00 marker from the first screen. */
 const heroEyebrow=document.querySelector('.hero .eyebrow');
 if(heroEyebrow)heroEyebrow.textContent=heroEyebrow.textContent.replace(/^\s*0+\s*\/\s*/, '').trim();
 document.querySelectorAll('.hero .page-no').forEach(node=>node.remove());
@@ -193,7 +180,6 @@ const copyIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2
 const checkIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
 const downloadIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17V3zM5 19h14v2H5z"/></svg>';
 
-/* Copy controls beside HEX values. */
 document.querySelectorAll('.color-primary').forEach(primary=>{
   const hex=primary.querySelector('.color-hex');
   const button=primary.querySelector('[data-copy]');
@@ -227,20 +213,21 @@ document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('clic
       btn._copyTimer=setTimeout(()=>{btn.innerHTML=copyIcon;btn.classList.remove('is-copied')},1200);
     }
     showToast(`Скопировано: ${value}`);
-  }catch{
-    showToast(value);
-  }
+  }catch{showToast(value)}
 }));
 
-/* Editorial font specimens. */
 const guildSample=document.querySelector('.guild-sample');
 if(guildSample)guildSample.textContent='О ПРОЕКТЕ';
+const guildAlphabet=document.querySelector('.guild-block .alphabet');
+if(guildAlphabet)guildAlphabet.textContent='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
 const hovesAlphabet=document.querySelector('.hoves-block .alphabet');
-if(hovesAlphabet){
-  hovesAlphabet.innerHTML='Аа Бб Вв Гг Дд Ее Ёё Жж Зз Ии Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф Хх Цц Чч Шш Щщ Ъъ Ыы Ьь Ээ Юю Яя<br>Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz · 1234567890';
+if(hovesAlphabet)hovesAlphabet.textContent='Аа Бб Вв Гг Дд Ее Ёё Жж Зз Ии Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф Хх Цц Чч Шш Щщ Ъъ Ыы Ьь Ээ Юю Яя';
+
+const colorIntro=document.querySelector('.section-colors .section-intro');
+if(colorIntro){
+  colorIntro.innerHTML='Сине-фиолетовый оттенок — доминирующий.<span class="desktop-break"></span>Сиреневый и светло-сиреневый дополняют основную палитру.';
 }
 
-/* Prevent hanging Russian prepositions/conjunctions in editorial copy. */
 const hangingWords=/((?:^|[\s(«„“—–-]))(а|и|в|во|к|ко|с|со|у|о|об|обо|от|до|по|на|за|из|без|для|при|над|под|перед|через|не|ни|но|же|бы|ли)\s+/giu;
 function fixHangingWords(element){
   if(!element)return;
@@ -251,7 +238,6 @@ function fixHangingWords(element){
 }
 document.querySelectorAll('.hero-note,.section-intro,.logo-rule p,.hoves-sample,.font-download strong,.logo-variant-meta strong').forEach(fixHangingWords);
 
-/* Independent color switching inside each logo card: purple / white only. */
 const logoTones=[
   {key:'Deep_Purple',label:'Фиолетовый',preview:'#E9E9F5',dark:false},
   {key:'White',label:'Белый',preview:'#1F0048',dark:true}
@@ -305,24 +291,15 @@ document.querySelectorAll('.logo-variant').forEach((card,index)=>{
 });
 
 document.querySelector('.logo-color-switch')?.remove();
+/* The global “all logo versions” ZIP is intentionally removed; downloads stay per card. */
+document.querySelector('.logo-download')?.remove();
 
-/* Compact ZIP controls for the full logo pack and font pack. */
-const fullLogoArchive='./downloads/AURIX_Logos_All_Formats.zip';
-const logoAllLink=document.querySelector('.logo-download');
-if(logoAllLink){
-  logoAllLink.href=fullLogoArchive;
-  logoAllLink.classList.add('compact-zip-link');
-  logoAllLink.innerHTML=`ZIP <span class="inline-download-icon" aria-hidden="true">${downloadIcon}</span>`;
-  logoAllLink.setAttribute('aria-label','Скачать все версии логотипов ZIP');
-}
 const fontZipLink=document.querySelector('.font-download .text-link');
 if(fontZipLink){
   fontZipLink.classList.add('compact-zip-link');
   fontZipLink.innerHTML=`ZIP <span class="inline-download-icon" aria-hidden="true">${downloadIcon}</span>`;
   fontZipLink.setAttribute('aria-label','Скачать шрифты ZIP');
 }
-
-document.querySelectorAll('a[href$="AURIX_Logos.zip"]').forEach(link=>{link.href=fullLogoArchive});
 
 function formatFileSize(bytes){
   if(!Number.isFinite(bytes)||bytes<=0)return '—';
@@ -337,7 +314,7 @@ async function resolveFileSize(url){
 }
 
 const materialDefinitions=[
-  {match:'AURIX_Logos_All_Formats.zip',title:'Логотипы',formats:'ZIP · SVG, PNG, EPS, PDF · фиолетовый / белый'},
+  {match:'AURIX_Logos',title:'Логотипы',formats:'ZIP · SVG, PNG, EPS, PDF · фиолетовый / белый'},
   {match:'AURIX_Fonts.zip',title:'Шрифты',formats:'ZIP · OTF, TTF · Regular'}
 ];
 document.querySelectorAll('.file-list a').forEach(link=>{
