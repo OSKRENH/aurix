@@ -241,7 +241,7 @@ if(hovesAlphabet){
 }
 
 /* Prevent hanging Russian prepositions/conjunctions in editorial copy. */
-const hangingWords=/((?:^|[\s(«„“\"—–-]))(а|и|в|во|к|ко|с|со|у|о|об|обо|от|до|по|на|за|из|без|для|при|над|под|перед|через|не|ни|но|же|бы|ли)\s+/giu;
+const hangingWords=/((?:^|[\s(«„“—–-]))(а|и|в|во|к|ко|с|со|у|о|об|обо|от|до|по|на|за|из|без|для|при|над|под|перед|через|не|ни|но|же|бы|ли)\s+/giu;
 function fixHangingWords(element){
   if(!element)return;
   const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
