@@ -72,8 +72,6 @@ declare -A TYPE_LABEL=(
 
 declare -A COLORS=(
   [Deep_Purple]="#1F0048"
-  [Lilac]="#A7A4DF"
-  [Mist]="#E9E9F5"
   [White]="#FFFFFF"
 )
 
@@ -88,7 +86,7 @@ for type in With_Descriptor Wordmark Symbol; do
   source="$LOGOS_DIR/${TYPE_SOURCE[$type]}"
   test -s "$source"
 
-  for tone in Deep_Purple Lilac Mist White; do
+  for tone in Deep_Purple White; do
     generated="/tmp/aurix-${type}-${tone}.svg"
     make_tone_svg "$source" "${COLORS[$tone]}" "$generated"
     target="$BUILD_DIR/$type/$tone"
@@ -112,7 +110,7 @@ for type in With_Descriptor Wordmark Symbol; do
 done
 
 cat > "$BUILD_DIR/README.txt" <<'EOF'
-AURIX — логотипы во всех фирменных цветах и типах.
+AURIX — логотипы и фирменный символ в двух разрешённых цветах.
 
 Типы:
 With_Descriptor — логотип AURIX + DISCOVER STARS
@@ -127,10 +125,8 @@ PDF — универсальный векторный формат
 
 Индивидуальные архивы каждой карточки содержат SVG, PNG и PDF выбранного цвета.
 
-Цвета:
+Цвета логотипа:
 Deep_Purple — #1F0048
-Lilac — #A7A4DF
-Mist — #E9E9F5
 White — #FFFFFF
 
 Не изменяйте пропорции и взаимное расположение элементов логотипа.
@@ -149,10 +145,10 @@ unzip -t "$ABS_DOWNLOADS/AURIX_Logos.zip" >/dev/null
 test -s "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip"
 test -s "$ABS_DOWNLOADS/AURIX_Logos.zip"
 
-# 3 types × 4 colors × 4 formats = 48 exported files, plus README.
+# 3 types × 2 colors × 4 formats = 24 exported files, plus README.
 count=$(unzip -Z1 "$ABS_DOWNLOADS/AURIX_Logos_All_Formats.zip" | grep -E '\.(svg|png|pdf|eps)$' | wc -l)
-test "$count" -eq 48
+test "$count" -eq 24
 
-# 3 types × 4 colors = 12 independent selected-color archives.
+# 3 types × 2 colors = 6 independent selected-color archives.
 archive_count=$(find "$ABS_DOWNLOADS" -maxdepth 1 -type f \( -name 'AURIX_With_Descriptor_*.zip' -o -name 'AURIX_Wordmark_*.zip' -o -name 'AURIX_Symbol_*.zip' \) | wc -l)
-test "$archive_count" -eq 12
+test "$archive_count" -eq 6
