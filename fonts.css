@@ -1,20 +1,15 @@
-@font-face{font-family:"Guild A Display";src:url("./fonts/guild/GuildA-Display-Regular-Web.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"Guild A Display";src:url("./fonts/guild/GuildA-Display-Italic-Web.woff2") format("woff2");font-style:italic;font-weight:400;font-display:swap}
-@font-face{font-family:"Guild A Display";src:url("./fonts/guild/GuildA-Display-Bold-Web.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap}
-@font-face{font-family:"TT Hoves Pro";src:url("./fonts/tt-hoves-pro/TT Hoves Pro Trial Regular.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"TT Hoves Pro";src:url("./fonts/tt-hoves-pro/TT Hoves Pro Trial Medium.ttf") format("truetype");font-style:normal;font-weight:500;font-display:swap}
+@font-face{
+  font-family:"Guild A Display";
+  src:url("./fonts/guild/GuildA-Display-Regular-Desktop.otf") format("opentype");
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+}
 
-/* Desktop hero refinement: match the 88px section-heading scale and separate the two focal elements vertically. */
-.hero .page-no{display:none!important}
-@media (min-width:901px){
-  .hero h1{
-    font-size:88px!important;
-    line-height:.94!important;
-    align-self:start!important;
-    margin-top:clamp(104px,12vh,148px)!important;
-  }
-  .hero-note{
-    align-self:end!important;
-    margin-bottom:clamp(96px,11vh,136px)!important;
-  }
+@font-face{
+  font-family:"TT Hoves Pro";
+  src:url("./fonts/tt-hoves-pro/TT Hoves Pro Trial Regular.ttf") format("truetype");
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
 }
