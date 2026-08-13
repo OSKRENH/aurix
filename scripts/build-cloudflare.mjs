@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import zlib from 'node:zlib';
 import JSZip from 'jszip';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
@@ -57,26 +56,6 @@ function recolorSvg(svg, color) {
   return svg.replace(/#1f0048(?:ff)?/gi, color);
 }
 
-function ascii85(buffer) {
-  let out = '';
-  for (let i = 0; i < buffer.length; i += 4) {
-    const remaining = Math.min(4, buffer.length - i);
-    let value = 0;
-    for (let j = 0; j < 4; j++) value = value * 256 + (j < remaining ? buffer[i + j] : 0);
-    if (remaining === 4 && value === 0) {
-      out += 'z';
-      continue;
-    }
-    const chars = new Array(5);
-    for (let j = 4; j >= 0; j--) {
-      chars[j] = String.fromCharCode((value % 85) + 33);
-      value = Math.floor(value / 85);
-    }
-    out += chars.slice(0, remaining + 1).join('');
-  }
-  return out + '~>';
-}
-
 async function makePdf(png, width, height) {
   const doc = await PDFDocument.create();
   const image = await doc.embedPng(png);
@@ -86,23 +65,21 @@ async function makePdf(png, width, height) {
 }
 
 async function makeEps(png) {
-  // EPS is included only in the full download. A compact Flate-compressed RGB
-  // image keeps Workers Builds self-contained without system packages such as
-  // Inkscape/Poppler, while remaining a valid EPS file for interchange.
+  // Keep Workers Builds fast and self-contained: EPS is a compact raster EPS
+  // generated with Sharp + native Buffer hex encoding, with no Inkscape or
+  // Poppler dependency. Per-card downloads remain SVG/PNG/PDF as before.
   const { data, info } = await sharp(png)
     .flatten({ background: '#ffffff' })
+    .resize({ width: 480, withoutEnlargement: true })
     .removeAlpha()
-    .resize({ width: Math.min(1200, (await sharp(png).metadata()).width || 1200), withoutEnlargement: true })
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  const compressed = zlib.deflateSync(data, { level: 9 });
-  const encoded = ascii85(compressed);
-  const lines = encoded.match(/.{1,100}/g)?.join('\n') || encoded;
   const { width, height, channels } = info;
   if (channels !== 3) throw new Error(`Unexpected EPS channel count: ${channels}`);
+  const hex = data.toString('hex').match(/.{1,120}/g)?.join('\n') || '';
 
-  return Buffer.from(`%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 ${width} ${height}\n%%LanguageLevel: 3\n%%Pages: 1\n%%EndComments\n/Data currentfile /ASCII85Decode filter /FlateDecode filter def\n${width} ${height} 8\n[${width} 0 0 -${height} 0 ${height}]\n{ Data } false 3 colorimage\n${lines}\nshowpage\n%%EOF\n`, 'ascii');
+  return Buffer.from(`%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 ${width} ${height}\n%%LanguageLevel: 2\n%%Pages: 1\n%%EndComments\n/picstr ${width * 3} string def\n${width} ${height} 8\n[${width} 0 0 -${height} 0 ${height}]\n{ currentfile picstr readhexstring pop }\nfalse 3 colorimage\n${hex}\nshowpage\n%%EOF\n`, 'ascii');
 }
 
 async function makeLogoAsset(svgText, pngWidth) {
@@ -114,8 +91,10 @@ async function makeLogoAsset(svgText, pngWidth) {
   const png = rendered.data;
   const width = rendered.info.width;
   const height = rendered.info.height;
-  const pdf = await makePdf(png, width, height);
-  const eps = await makeEps(png);
+  const [pdf, eps] = await Promise.all([
+    makePdf(png, width, height),
+    makeEps(png)
+  ]);
   return { svg, png, pdf, eps };
 }
 
@@ -123,7 +102,7 @@ async function writeZip(fileName, zip) {
   const data = await zip.generateAsync({
     type: 'nodebuffer',
     compression: 'DEFLATE',
-    compressionOptions: { level: 9 }
+    compressionOptions: { level: 6 }
   });
   await fs.writeFile(path.join(DOWNLOADS, fileName), data);
   return data;
