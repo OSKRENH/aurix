@@ -141,4 +141,7 @@ section[id]{scroll-margin-top:92px}
   .footer a{justify-self:start}
 
   .toast{bottom:calc(18px + env(safe-area-inset-bottom))}
+
+  /* Mobile: remove the hero brand symbol entirely. */
+  .hero::after{display:none!important;content:none!important}
 }
