@@ -145,3 +145,21 @@ section[id]{scroll-margin-top:92px}
   /* Mobile: remove the hero brand symbol entirely. */
   .hero::after{display:none!important;content:none!important}
 }
+
+/* Mobile hero symbol: give the mask enough horizontal canvas to render at full height. */
+@media(max-width:560px){
+  .hero::after{
+    display:block!important;
+    content:""!important;
+    top:-6%!important;
+    right:-8vw!important;
+    bottom:auto!important;
+    left:auto!important;
+    width:260vw!important;
+    height:112%!important;
+    opacity:.16!important;
+    background:var(--lilac)!important;
+    -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat!important;
+    mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat!important;
+  }
+}
