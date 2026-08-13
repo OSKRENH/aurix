@@ -7,19 +7,20 @@ const refinements=document.createElement('style');
 refinements.textContent=`
   body{font-synthesis:none}
 
-  /* Hero: compact 88px title, copy on the left, oversized brand symbol on the right. */
+  /* Hero: compact 88px title, copy on the left, full-height brand symbol on the right. */
   .hero{position:relative;overflow:hidden}
   .hero::after{
     content:"";
     position:absolute;
-    z-index:0;
-    right:-10vw;
-    top:-4%;
-    width:min(58vw,980px);
-    height:112%;
+    z-index:2;
+    right:-5vw;
+    top:0;
+    bottom:0;
+    width:min(62vw,1080px);
+    height:100%;
     background:var(--lilac);
-    -webkit-mask:url("./assets/logos/symbol-purple.svg") center/contain no-repeat;
-    mask:url("./assets/logos/symbol-purple.svg") center/contain no-repeat;
+    -webkit-mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
+    mask:url("./assets/logos/symbol-purple.svg") right center/auto 100% no-repeat;
     pointer-events:none;
   }
   .hero-inner{position:relative;z-index:1}
@@ -40,7 +41,11 @@ refinements.textContent=`
     margin:0 0 clamp(78px,9vh,116px);
     max-width:360px;
   }
-  .hero-foot{grid-column:1/8}
+  .hero-foot{grid-column:1/11}
+
+  /* Footer: all three items sit on one visual vertical center line. */
+  .footer{align-items:center!important}
+  .footer img,.footer span,.footer a{align-self:center}
 
   /* Guild specimen: the whole left card demonstrates Guild, including the alphabet. */
   .guild-block .alphabet{font-family:"Guild A Display",Arial,sans-serif;font-weight:400}
@@ -80,7 +85,7 @@ refinements.textContent=`
   .theme-dark .text-link:hover .round-download-icon{background:var(--white)!important;color:var(--purple)!important;opacity:1!important}
 
   @media(max-width:900px){
-    .hero::after{right:-30vw;top:12%;width:92vw;height:78%;opacity:.38}
+    .hero::after{right:-32vw;top:0;bottom:0;width:98vw;height:100%;opacity:.38;-webkit-mask-size:auto 100%;mask-size:auto 100%}
     .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(58px,17vw,88px)}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
