@@ -1,11 +1,4 @@
 const UI_FIXES = `
-@media (max-width: 560px) {
-  .hero::after {
-    display: none !important;
-    content: none !important;
-  }
-}
-
 /* The outgoing logo still fades for 250ms, but the committed image must snap
    back to opacity:1 when the temporary crossfade layer is removed. Otherwise
    it starts a second 250ms fade-in and creates the visible end-of-switch blink. */

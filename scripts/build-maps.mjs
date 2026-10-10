@@ -33,7 +33,7 @@ const SECTION=`
   <span class="section-number-sticky" aria-hidden="true">05</span>
   <div class="shell"><div class="grid">
     <header class="section-heading">
-      <div class="section-kicker">06 / КАРТЫ</div>
+      <div class="section-kicker">05 / КАРТЫ</div>
       <h2>Карты</h2>
       <p class="section-intro">Фирменные карты Москвы и Санкт-Петербурга в светлой и тёмной версиях.</p>
     </header>
@@ -92,8 +92,12 @@ async function inject(file){
   const target=path.join(DIST,file);
   let html=await fs.readFile(target,'utf8');
   if(!html.includes('maps.css'))html=html.replace('</head>','  <link rel="stylesheet" href="./maps.css">\n</head>');
-  html=html.replaceAll('<a href="#files">Файлы</a>','<a href="#files">Файлы</a>\n      <a href="#maps">Карты</a>');
-  if(!html.includes('id="maps"'))html=html.replace('</main>',`${SECTION}\n  </main>`);
+  html=html.replaceAll('<a href="#files">Файлы</a>','<a href="#maps">Карты</a>\n      <a href="#files">Файлы</a>');
+  if(!html.includes('id="maps"')&&html.includes('<main')){
+    const filesSection='<section class="brand-section section-files"';
+    if(!html.includes(filesSection))throw new Error('Files section not found: maps must be placed before it');
+    html=html.replace(filesSection,`${SECTION.trim()}\n\n    ${filesSection}`);
+  }
   if(!html.includes('maps.js'))html=html.replace('</body>','  <script src="./maps.js"></script>\n</body>');
   await fs.writeFile(target,html);
 }

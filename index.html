@@ -304,16 +304,15 @@
       gap:var(--space-24);
     }
     .logo-variant{
-      grid-column:1/11;
+      grid-column:1/7;
       display:grid;
-      grid-template-rows:320px 96px;
+      grid-template-rows:320px minmax(96px,1fr);
       border:var(--border);
       border-radius:var(--radius-card);
       overflow:hidden;
       background:var(--white);
     }
-    .logo-variant:nth-child(2){grid-column:1/6}
-    .logo-variant-symbol{grid-column:6/11}
+    .logo-variant-symbol{grid-column:7/11}
     .logo-canvas{
       position:relative;
       display:grid;
@@ -351,6 +350,32 @@
       text-transform:uppercase;
     }
     .logo-variant-meta strong{font-size:var(--fs-body);font-weight:400;line-height:1.2}
+    .descriptor-switch{display:flex;flex-wrap:wrap;gap:var(--space-8) var(--space-24)}
+    .descriptor-switch button{
+      position:relative;
+      padding:0 0 4px;
+      border:0;
+      background:none;
+      font-size:var(--fs-body);
+      line-height:1.2;
+      opacity:.42;
+      cursor:pointer;
+      transition:opacity 250ms cubic-bezier(.2,.7,.3,1);
+    }
+    .descriptor-switch button::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:1px;
+      background:currentColor;
+      transform:scaleX(0);
+      transform-origin:left;
+      transition:transform 350ms cubic-bezier(.2,.7,.3,1);
+    }
+    .descriptor-switch button:hover,.descriptor-switch button:focus-visible,.descriptor-switch button.is-active{opacity:1}
+    .descriptor-switch button.is-active::after{transform:scaleX(1)}
     .logo-variant-meta a{
       display:inline-flex;
       align-items:center;
@@ -742,9 +767,8 @@
       .section-heading .section-intro{grid-column:6/9}
       .logo-color-switch{grid-column:5/9}
       .logo-variants{grid-template-columns:repeat(8,minmax(0,1fr))}
-      .logo-variant{grid-column:1/9}
-      .logo-variant:nth-child(2){grid-column:1/5}
-      .logo-variant-symbol{grid-column:5/9}
+      .logo-variant{grid-column:1/6}
+      .logo-variant-symbol{grid-column:6/9}
       .rule-a{grid-column:1/5}
       .rule-b{grid-column:5/9}
       .logo-download{grid-column:5/9}
@@ -779,7 +803,7 @@
       .section-heading .section-kicker,.section-heading h2,.section-heading .section-intro{grid-column:1/5}
       .logo-color-switch{grid-column:1/5}
       .logo-variants{grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-16)}
-      .logo-variant,.logo-variant:nth-child(2),.logo-variant-symbol{grid-column:1/5;grid-template-rows:240px 96px}
+      .logo-variant,.logo-variant-symbol{grid-column:1/5;grid-template-rows:240px minmax(96px,1fr)}
       .logo-canvas{padding:var(--space-24)}
       .logo-art-lockup{width:78%}
       .logo-art-wordmark{width:68%}
@@ -823,7 +847,7 @@
       .hero h1{margin-top:var(--space-64)}
       .logo-color-switch{gap:var(--space-16);flex-wrap:wrap}
       .logo-color-switch>span{width:100%;margin-right:0}
-      .logo-variant{grid-template-rows:216px 96px}
+      .logo-variant{grid-template-rows:216px minmax(96px,1fr)}
       .color{min-height:360px}
       .font-block{min-height:360px}
       .file-list .material-copy strong{font-size:var(--fs-h3)}
@@ -883,36 +907,34 @@
           </div>
 
           <div class="logo-variants" data-logo-gallery data-theme="purple">
-            <article class="logo-variant">
+            <article class="logo-variant" data-variants="with,without">
               <div class="logo-canvas">
-                <img class="logo-art logo-art-lockup" src="./assets/logos/aurix-discover-stars.svg" data-purple="./assets/logos/aurix-discover-stars.svg" data-white="./assets/logos/aurix-discover-stars-white.svg" alt="AURIX — Discover Stars">
+                <img class="logo-art logo-art-lockup" src="./assets/logos/aurix-discover-stars.svg"
+                  data-with-purple="./assets/logos/aurix-discover-stars.svg" data-with-white="./assets/logos/aurix-discover-stars-white.svg"
+                  data-without-purple="./assets/logos/wordmark-purple.svg" data-without-white="./assets/logos/wordmark-white.svg"
+                  alt="AURIX — Discover Stars">
                 <span class="canvas-index">01</span>
               </div>
               <div class="logo-variant-meta">
-                <div><span>ЛОГОТИП / 01</span><strong>С дескриптором</strong></div>
-                <a data-logo-download href="./assets/logos/aurix-discover-stars.svg" data-purple="./assets/logos/aurix-discover-stars.svg" data-white="./assets/logos/aurix-discover-stars-white.svg" download>SVG <b>↓</b></a>
+                <div>
+                  <span>ЛОГОТИП / 01</span>
+                  <div class="descriptor-switch" role="group" aria-label="Версия логотипа">
+                    <button type="button" class="is-active" data-variant="with" aria-pressed="true">С дескриптором</button>
+                    <button type="button" data-variant="without" aria-pressed="false">Без дескриптора</button>
+                  </div>
+                </div>
+                <a data-logo-download href="./assets/logos/aurix-discover-stars.svg" download>SVG <b>↓</b></a>
               </div>
             </article>
 
-            <article class="logo-variant">
+            <article class="logo-variant logo-variant-symbol" data-variants="symbol">
               <div class="logo-canvas">
-                <img class="logo-art logo-art-wordmark" src="./assets/logos/wordmark-purple.svg" data-purple="./assets/logos/wordmark-purple.svg" data-white="./assets/logos/wordmark-white.svg" alt="Логотип AURIX без дескриптора">
+                <img class="logo-art logo-art-symbol" src="./assets/logos/symbol-purple.svg" data-symbol-purple="./assets/logos/symbol-purple.svg" data-symbol-white="./assets/logos/symbol-white.svg" alt="Фирменный символ AURIX">
                 <span class="canvas-index">02</span>
               </div>
               <div class="logo-variant-meta">
-                <div><span>ЛОГОТИП / 02</span><strong>Без дескриптора</strong></div>
-                <a data-logo-download href="./assets/logos/wordmark-purple.svg" data-purple="./assets/logos/wordmark-purple.svg" data-white="./assets/logos/wordmark-white.svg" download>SVG <b>↓</b></a>
-              </div>
-            </article>
-
-            <article class="logo-variant logo-variant-symbol">
-              <div class="logo-canvas">
-                <img class="logo-art logo-art-symbol" src="./assets/logos/symbol-purple.svg" data-purple="./assets/logos/symbol-purple.svg" data-white="./assets/logos/symbol-white.svg" alt="Фирменный символ AURIX">
-                <span class="canvas-index">03</span>
-              </div>
-              <div class="logo-variant-meta">
                 <div><span>СИМВОЛ</span><strong>Фирменный знак</strong></div>
-                <a data-logo-download href="./assets/logos/symbol-purple.svg" data-purple="./assets/logos/symbol-purple.svg" data-white="./assets/logos/symbol-white.svg" download>SVG <b>↓</b></a>
+                <a data-logo-download href="./assets/logos/symbol-purple.svg" download>SVG <b>↓</b></a>
               </div>
             </article>
           </div>
@@ -1100,36 +1122,10 @@
                 <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
               </div>
             </a>
-            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A2%D0%B5%D0%BA%D1%81%D0%B8%D1%82%D0%B8%D0%BB%D1%8C%D1%89%D0%B8%D0%BA%D0%BE%D0%B2%2C%208" target="_blank" rel="noopener noreferrer" aria-label="Текстильщиков 8 — рендеры на Яндекс Диске">
-              <figure class="project-cover">
-                <img src="./assets/projects/textil-1600.webp" srcset="./assets/projects/textil-900.webp 900w, ./assets/projects/textil-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="1134" alt="Рендер проекта «Текстильщиков 8»" loading="lazy" decoding="async" style="object-position:50% 40%">
-              </figure>
-              <div class="project-info">
-                <span class="project-index">06</span>
-                <div class="project-text">
-                  <h3>Текстильщиков 8</h3>
-                  <span class="project-meta">Москва</span>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
-            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A1%D0%B5%D1%80%D0%B5%D0%B1%D1%80%D1%8F%D0%BD%D1%8B%D0%B9%20%D0%B1%D0%BE%D1%80" target="_blank" rel="noopener noreferrer" aria-label="Серебряный бор — рендеры на Яндекс Диске">
-              <figure class="project-cover">
-                <img src="./assets/projects/borbor-1600.webp" srcset="./assets/projects/borbor-900.webp 900w, ./assets/projects/borbor-1600.webp 1600w, ./assets/projects/borbor-2400.webp 2400w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="1132" alt="Рендер проекта «Серебряный бор»" loading="lazy" decoding="async" style="object-position:50% 55%">
-              </figure>
-              <div class="project-info">
-                <span class="project-index">07</span>
-                <div class="project-text">
-                  <h3>Серебряный бор</h3>
-                  <span class="project-meta">Москва</span>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
           </div>
 
           <div class="projects-all">
-            <div><span>ВСЕ РЕНДЕРЫ</span><strong>Яндекс Диск · семь проектов</strong></div>
+            <div><span>ВСЕ РЕНДЕРЫ</span><strong>Яндекс Диск · пять проектов</strong></div>
             <a class="text-link" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg" target="_blank" rel="noopener noreferrer">Открыть папку <span>↗</span></a>
           </div>
         </div>
@@ -1140,7 +1136,7 @@
       <div class="shell">
         <div class="grid">
           <header class="section-heading">
-            <div class="section-kicker">05 / ФАЙЛЫ</div>
+            <div class="section-kicker">06 / ФАЙЛЫ</div>
             <h2>Материалы</h2>
             <p class="section-intro"></p>
           </header>

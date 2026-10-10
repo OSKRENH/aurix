@@ -189,7 +189,7 @@ async function buildStaticSite() {
     'index.html',
     'assets/og-cover.jpg',
     'assets/projects/omega-1600.webp',
-    'assets/projects/borbor-2400.webp',
+    'assets/projects/zemled-1600.webp',
     'downloads/AURIX_Fonts.zip',
     'downloads/AURIX_Logos.zip',
     'downloads/AURIX_Logos_All_Formats.zip',

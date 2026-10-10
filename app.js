@@ -114,6 +114,7 @@ refinements.textContent=`
   }
   .logo-tone-button:hover,.logo-tone-button:focus-visible{opacity:.72;transform:none}
   .logo-tone-button.is-active{opacity:1;background:transparent;box-shadow:none;transform:none}
+  .logo-canvas.is-dark-preview{color:var(--white)}
   .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white)}
   .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:transparent;box-shadow:none}
   .logo-canvas.is-dark-preview .logo-tone-button::before{border-color:currentColor}
@@ -291,17 +292,20 @@ refinements.textContent=`
 
   @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
+    /* The box takes the symbol's own proportions (viewBox 430 x 455), so the mask is
+       never wider than its canvas — a narrower box slices the swoosh with a hard edge. */
     .hero::after{
       z-index:0;
-      right:-28vw;
-      top:2%;
-      width:88vw;
-      height:96%;
+      right:-34vw;
+      top:3%;
+      width:auto;
+      height:94%;
+      aspect-ratio:430/455;
       opacity:.16;
-      -webkit-mask-position:right center;
-      mask-position:right center;
-      -webkit-mask-size:auto 96%;
-      mask-size:auto 96%;
+      -webkit-mask-position:center;
+      mask-position:center;
+      -webkit-mask-size:100% 100%;
+      mask-size:100% 100%;
     }
     .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(54px,15.5vw,72px);line-height:.92;position:relative;z-index:2}
     .hero .eyebrow,.hero-note,.hero-foot{position:relative;z-index:2}
@@ -411,86 +415,103 @@ document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('clic
   }catch{showToast(value)}
 }));
 
-/* Per-card tone controls with opacity-only two-layer crossfade. */
+/* Logo cards: every card is a small state machine of version × colour. The image
+   changes through one opacity crossfade; the committed image is only replaced once
+   the fade has finished, so rapid clicks can never leave a half-switched card. */
 const logoTones=[
-  {key:'Deep_Purple',label:'Фиолетовый',preview:'#E9E9F5',dark:false},
-  {key:'White',label:'Белый',preview:'#1F0048',dark:true}
+  {key:'Deep_Purple',data:'Purple',label:'Фиолетовый',preview:'#E9E9F5',dark:false},
+  {key:'White',data:'White',label:'Белый',preview:'#1F0048',dark:true}
 ];
-const logoTypes=['AURIX_With_Descriptor','AURIX_Wordmark','AURIX_Symbol'];
+const logoVersions={
+  with:{type:'AURIX_With_Descriptor',cls:'logo-art-lockup',label:'с дескриптором'},
+  without:{type:'AURIX_Wordmark',cls:'logo-art-wordmark',label:'без дескриптора'},
+  symbol:{type:'AURIX_Symbol',cls:'logo-art-symbol',label:'фирменный знак'}
+};
 
-document.querySelectorAll('.logo-variant').forEach((card,index)=>{
+document.querySelectorAll('.logo-variant').forEach(card=>{
   const canvas=card.querySelector('.logo-canvas');
   const img=canvas?.querySelector('.logo-art');
   const download=card.querySelector('[data-logo-download]');
   if(!canvas||!img||!download)return;
 
+  const versions=(card.dataset.variants||'with').split(',').filter(key=>logoVersions[key]);
+  const switchButtons=[...card.querySelectorAll('[data-variant]')];
   const controls=document.createElement('div');
   controls.className='logo-card-tones';
   controls.setAttribute('role','group');
-  controls.setAttribute('aria-label','Цвет этой версии логотипа');
-  let currentTone='Deep_Purple';
-  let switchTimer=0;
+  controls.setAttribute('aria-label','Цвет логотипа');
+  const toneButtons=new Map();
 
-  function updateDownload(tone){
-    const type=logoTypes[index]||logoTypes[0];
-    const archive=`${type}_${tone.key}.zip`;
+  let shown={version:versions[0],tone:logoTones[0]}; /* what the committed <img> displays */
+  let timer=0;
+
+  const sourceOf=state=>img.dataset[`${state.version}${state.tone.data}`]||img.src;
+  const sameState=(a,b)=>a.version===b.version&&a.tone.key===b.tone.key;
+
+  function syncControls(state){
+    toneButtons.forEach((button,key)=>{
+      button.classList.toggle('is-active',key===state.tone.key);
+      button.setAttribute('aria-pressed',String(key===state.tone.key));
+    });
+    switchButtons.forEach(button=>{
+      const active=button.dataset.variant===state.version;
+      button.classList.toggle('is-active',active);
+      button.setAttribute('aria-pressed',String(active));
+    });
+    const archive=`${logoVersions[state.version].type}_${state.tone.key}.zip`;
+    const hint=`Скачать ${logoVersions[state.version].label}, ${state.tone.label.toLowerCase()}: SVG, PNG и PDF`;
     download.href=`./downloads/${archive}`;
     download.setAttribute('download',archive);
-    download.setAttribute('aria-label',`Скачать ${tone.label}: SVG, PNG и PDF`);
-    download.setAttribute('title',`Скачать ${tone.label}: SVG, PNG и PDF`);
+    download.setAttribute('aria-label',hint);
+    download.setAttribute('title',hint);
   }
 
-  function setControls(button){
-    controls.querySelectorAll('.logo-tone-button').forEach(b=>{
-      const active=b===button;
-      b.classList.toggle('is-active',active);
-      b.setAttribute('aria-pressed',String(active));
-    });
-  }
-
-  function applyTone(tone,button,instant=false){
-    const isWhite=tone.key==='White';
-    const nextSrc=isWhite?(img.dataset.white||img.src):(img.dataset.purple||img.src);
-    updateDownload(tone);
-    setControls(button);
-    if(instant){
-      img.src=nextSrc;
-      canvas.style.background=tone.preview;
-      canvas.classList.toggle('is-dark-preview',tone.dark);
-      currentTone=tone.key;
-      return;
-    }
-    if(currentTone===tone.key)return;
-    clearTimeout(switchTimer);
+  function clearLayers(){
+    clearTimeout(timer);
     canvas.querySelectorAll('.logo-crossfade-layer,.logo-bg-crossfade').forEach(node=>node.remove());
     img.classList.remove('is-fading-out');
-
-    const next=img.cloneNode(true);
-    next.src=nextSrc;
-    next.classList.add('logo-crossfade-layer');
-    next.removeAttribute('id');
-    const bg=document.createElement('span');
-    bg.className='logo-bg-crossfade';
-    bg.style.background=tone.preview;
-    canvas.insertBefore(bg,canvas.firstChild);
-    canvas.appendChild(next);
-    requestAnimationFrame(()=>{
-      img.classList.add('is-fading-out');
-      next.classList.add('is-fading-in');
-      bg.classList.add('is-fading-in');
-    });
-    switchTimer=setTimeout(()=>{
-      img.src=nextSrc;
-      img.classList.remove('is-fading-out');
-      canvas.style.background=tone.preview;
-      canvas.classList.toggle('is-dark-preview',tone.dark);
-      next.remove();
-      bg.remove();
-      currentTone=tone.key;
-    },260);
   }
 
-  logoTones.forEach((tone,toneIndex)=>{
+  function commit(state){
+    img.className=`logo-art ${logoVersions[state.version].cls}`;
+    img.src=sourceOf(state);
+    canvas.style.background=state.tone.preview;
+    canvas.classList.toggle('is-dark-preview',state.tone.dark);
+    clearLayers();
+    shown=state;
+  }
+
+  function go(state,instant=false){
+    syncControls(state);
+    clearLayers();
+    if(instant){commit(state);return}
+    if(sameState(shown,state))return;
+
+    const layer=new Image();
+    layer.className=`logo-art ${logoVersions[state.version].cls} logo-crossfade-layer`;
+    layer.alt='';
+    layer.setAttribute('aria-hidden','true');
+    layer.src=sourceOf(state);
+    canvas.appendChild(layer);
+    const toneChanged=shown.tone.key!==state.tone.key;
+    let bg=null;
+    if(toneChanged){
+      bg=document.createElement('span');
+      bg.className='logo-bg-crossfade';
+      bg.style.background=state.tone.preview;
+      canvas.insertBefore(bg,canvas.firstChild);
+    }
+    requestAnimationFrame(()=>{
+      img.classList.add('is-fading-out');
+      layer.classList.add('is-fading-in');
+      bg?.classList.add('is-fading-in');
+    });
+    timer=setTimeout(()=>commit(state),260);
+  }
+
+  /* The requested state is the last click, not the last committed image. */
+  let wanted={...shown};
+  logoTones.forEach(tone=>{
     const button=document.createElement('button');
     button.type='button';
     button.className='logo-tone-button';
@@ -498,13 +519,19 @@ document.querySelectorAll('.logo-variant').forEach((card,index)=>{
     button.setAttribute('aria-label',tone.label);
     button.setAttribute('title',tone.label);
     button.setAttribute('aria-pressed','false');
-    button.addEventListener('click',()=>applyTone(tone,button,false));
+    button.addEventListener('click',()=>{wanted={...wanted,tone};go(wanted)});
+    toneButtons.set(tone.key,button);
     controls.appendChild(button);
-    if(toneIndex===0)requestAnimationFrame(()=>applyTone(tone,button,true));
   });
+  switchButtons.forEach(button=>button.addEventListener('click',()=>{
+    if(!logoVersions[button.dataset.variant])return;
+    wanted={...wanted,version:button.dataset.variant};
+    go(wanted);
+  }));
 
   canvas.appendChild(controls);
   download.innerHTML=`ZIP <b class="inline-download-icon" aria-hidden="true">${downloadIcon}</b>`;
+  requestAnimationFrame(()=>go(wanted,true));
 });
 
 document.querySelector('.logo-color-switch')?.remove();
