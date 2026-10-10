@@ -7,6 +7,7 @@ import { PDFDocument } from 'pdf-lib';
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist-site');
 const LOGOS = path.join(ROOT, 'assets', 'logos');
+const PROJECTS = path.join(ROOT, 'assets', 'projects');
 const DOWNLOADS = path.join(DIST, 'downloads');
 
 const STATIC_FILES = [
@@ -165,6 +166,12 @@ async function buildStaticSite() {
     if (name.endsWith('.svg')) await copyFile(path.join('assets', 'logos', name));
   }
 
+  await copyFile(path.join('assets', 'og-cover.jpg'));
+  await ensureDir(path.join(DIST, 'assets', 'projects'));
+  for (const name of await fs.readdir(PROJECTS)) {
+    if (name.endsWith('.webp')) await copyFile(path.join('assets', 'projects', name));
+  }
+
   await copyFile(
     path.join('fonts', 'guild', 'GuildA-Display-Regular-Desktop.otf'),
     path.join('fonts', 'guild', 'GuildA-Display-Regular-Desktop.otf')
@@ -180,6 +187,9 @@ async function buildStaticSite() {
 
   const required = [
     'index.html',
+    'assets/og-cover.jpg',
+    'assets/projects/omega-1600.webp',
+    'assets/projects/borbor-2400.webp',
     'downloads/AURIX_Fonts.zip',
     'downloads/AURIX_Logos.zip',
     'downloads/AURIX_Logos_All_Formats.zip',

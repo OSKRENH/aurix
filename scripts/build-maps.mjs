@@ -33,7 +33,7 @@ const SECTION=`
   <span class="section-number-sticky" aria-hidden="true">05</span>
   <div class="shell"><div class="grid">
     <header class="section-heading">
-      <div class="section-kicker">05 / КАРТЫ</div>
+      <div class="section-kicker">06 / КАРТЫ</div>
       <h2>Карты</h2>
       <p class="section-intro">Фирменные карты Москвы и Санкт-Петербурга в светлой и тёмной версиях.</p>
     </header>
