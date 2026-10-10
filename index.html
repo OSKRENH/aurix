@@ -58,7 +58,9 @@
       --radius-control:999px;
       --header-h:96px;
       --transition:180ms ease;
+      --hair:1px;
     }
+    @media(min-resolution:2dppx){:root{--hair:.5px}}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth;scroll-padding-top:var(--header-h)}
@@ -439,16 +441,17 @@
     .color-deep{background:var(--purple);color:var(--white)}
     .color-lilac{background:var(--lilac);color:var(--purple)}
     .color-mist{background:var(--mist);color:var(--purple)}
-    .color-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-24)}
+    .color-top{display:flex;justify-content:flex-start;align-items:flex-start;gap:var(--space-24)}
     .color-index{font-size:var(--fs-small);letter-spacing:var(--tracking-caps)}
     .color-primary{
-      margin-left:auto;
+      margin-left:0;
       display:flex;
       flex-direction:column;
-      align-items:flex-end;
+      align-items:flex-start;
       gap:var(--space-16);
-      text-align:right;
+      text-align:left;
     }
+    .color-primary .copy-value-stack{order:-1}
     .color-primary.color-primary-etalon{
       flex-direction:row;
       align-items:center;
@@ -477,31 +480,32 @@
     .color-copy-icon svg{width:20px;height:20px;fill:currentColor}
     .color-copy-icon:hover,.color-copy-icon:focus-visible{opacity:1}
     .color-name{
-      margin-top:var(--space-24);
-      text-align:right;
+      margin-top:var(--space-16);
+      text-align:left;
       font-size:var(--fs-small);
       font-weight:500;
       letter-spacing:var(--tracking-caps);
       text-transform:uppercase;
     }
-    .codes{margin-top:auto;padding-top:var(--space-64)}
+    .codes{margin-top:auto;padding-top:var(--space-40)}
     .codes button{
       width:100%;
       display:grid;
-      grid-template-columns:1fr auto;
+      grid-template-columns:88px 1fr;
       align-items:center;
-      gap:var(--space-24);
-      min-height:64px;
-      padding:var(--space-16) 0;
+      justify-items:start;
+      gap:var(--space-16);
+      min-height:44px;
+      padding:var(--space-8) 0;
       border:0;
-      border-top:1px solid currentColor;
+      border-top:var(--hair) solid color-mix(in srgb,currentColor 55%,transparent);
       background:none;
       color:inherit;
       text-align:left;
       cursor:pointer;
       transition:opacity var(--transition);
     }
-    .codes button:last-child{border-bottom:1px solid currentColor}
+    .codes button:last-child{border-bottom:var(--hair) solid color-mix(in srgb,currentColor 55%,transparent)}
     .codes button:hover{opacity:.68}
     .codes span{font-size:var(--fs-small);letter-spacing:var(--tracking-caps)}
     .codes b{font-size:var(--fs-small);font-weight:500}
@@ -818,8 +822,9 @@
       .rule-a,.rule-b,.logo-download{grid-column:1/5}
       .logo-download{justify-self:start}
       .palette{grid-template-columns:1fr;gap:var(--space-16)}
-      .color{min-height:400px;padding:var(--space-24)}
-      .codes{padding-top:var(--space-40)}
+      .color{min-height:0;padding:20px}
+      .codes{padding-top:var(--space-24)}
+      .color-name{margin-top:var(--space-8)}
       .font-stack{grid-template-columns:1fr;gap:var(--space-16)}
       .font-block{min-height:400px;padding:var(--space-24)}
       .projects{grid-template-columns:1fr;row-gap:var(--space-40);--row-h:auto}
@@ -854,7 +859,7 @@
       .logo-color-switch{gap:var(--space-16);flex-wrap:wrap}
       .logo-color-switch>span{width:100%;margin-right:0}
       .logo-variant{grid-template-rows:216px minmax(96px,1fr)}
-      .color{min-height:360px}
+      .color{min-height:0}
       .font-block{min-height:360px}
       .file-list .material-copy strong{font-size:var(--fs-h3)}
     }

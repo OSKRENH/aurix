@@ -179,7 +179,7 @@ refinements.textContent=`
 
   .copy-value-stack{position:relative;display:grid;overflow:hidden;line-height:.9}
   .copy-value-stack>.color-hex,.copy-value-confirm{grid-area:1/1;display:block;transition:transform 250ms ${EASE},opacity 250ms ${EASE}}
-  .copy-value-confirm{align-self:center;justify-self:end;transform:translateY(100%);opacity:0;font-size:13px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
+  .copy-value-confirm{align-self:center;justify-self:start;transform:translateY(100%);opacity:0;font-size:13px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
   .color-primary.is-copy-confirmed .color-hex{transform:translateY(-100%);opacity:0}
   .color-primary.is-copy-confirmed .copy-value-confirm{transform:translateY(0);opacity:1}
 
@@ -335,7 +335,7 @@ if(hovesAlphabet)hovesAlphabet.textContent='Аа Бб Вв Гг Дд Ее Ёё �
 
 const colorIntro=document.querySelector('.section-colors .section-intro');
 if(colorIntro){
-  colorIntro.innerHTML='Сине-фиолетовый оттенок — доминирующий.<span class="desktop-break"></span>Сиреневый и светло-сиреневый дополняют основную палитру.';
+  colorIntro.innerHTML='Сине-фиолетовый оттенок — доминирующий. <span class="desktop-break"></span>Сиреневый и светло-сиреневый дополняют основную палитру.';
 }
 
 const hangingWords=/((?:^|[\s(«„“—–-]))(а|и|в|во|к|ко|с|со|у|о|об|обо|от|до|по|на|за|из|без|для|при|над|под|перед|через|не|ни|но|же|бы|ли)\s+/giu;
