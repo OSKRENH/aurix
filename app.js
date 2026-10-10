@@ -253,24 +253,6 @@ refinements.textContent=`
   .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 950ms ${EASE} var(--line-delay,0ms),opacity 950ms ${EASE} var(--line-delay,0ms)}
   .hoves-sample.type-reveal.is-revealed .type-line{transform:none;opacity:1}
 
-  .section-number-sticky{
-    position:sticky;
-    z-index:1;
-    top:calc(var(--header-h,78px) + 18px);
-    display:block;
-    width:max-content;
-    height:0;
-    margin-left:auto;
-    margin-right:var(--page-pad,64px);
-    color:currentColor;
-    font-family:"Guild A Display",Arial,sans-serif;
-    font-size:clamp(64px,8vw,118px);
-    line-height:1;
-    opacity:.055;
-    pointer-events:none;
-    transform:translateY(10px);
-  }
-
   .nav{position:relative}
   .nav-active-indicator{
     position:absolute;
@@ -292,7 +274,8 @@ refinements.textContent=`
 
   @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
-    /* The box takes the symbol's own proportions (viewBox 430 x 455), so the mask is
+    /* The box takes the proportions of the glyph itself (the mask is trimmed to its bounds,
+       so it touches the top and bottom of the hero), so the mask is
        never wider than its canvas — a narrower box slices the swoosh with a hard edge. */
     .hero::after{
       z-index:0;
@@ -300,8 +283,10 @@ refinements.textContent=`
       top:0;
       width:auto;
       height:100%;
-      aspect-ratio:430/455;
+      aspect-ratio:384.2/417.8;
       opacity:.16;
+      -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='273.7 323.4 384.2 417.8'%3E%3Cpath d='M657.9,741.2c-8.2-8-18.8-21.5-27.6-43.5l-149.6-374.3h-67.8c8.2,8,18.6,21.5,27.2,43.5l129.6,330.8c8.6,22,8.8,35.5,6.9,43.5h81.3Z'/%3E%3Cpath d='M273.7,741.2h73.4c39.9-176.2,155.4-236.2,265.4-247v-3.9c-91.8,6.8-260.2,46.3-338.8,250.9Z'/%3E%3C/svg%3E");
+      mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='273.7 323.4 384.2 417.8'%3E%3Cpath d='M657.9,741.2c-8.2-8-18.8-21.5-27.6-43.5l-149.6-374.3h-67.8c8.2,8,18.6,21.5,27.2,43.5l129.6,330.8c8.6,22,8.8,35.5,6.9,43.5h81.3Z'/%3E%3Cpath d='M273.7,741.2h73.4c39.9-176.2,155.4-236.2,265.4-247v-3.9c-91.8,6.8-260.2,46.3-338.8,250.9Z'/%3E%3C/svg%3E");
       -webkit-mask-position:center;
       mask-position:center;
       -webkit-mask-size:100% 100%;
@@ -315,7 +300,6 @@ refinements.textContent=`
     .logo-tone-button{width:14px;height:14px}
     .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
-    .section-number-sticky{margin-right:24px;font-size:58px;opacity:.045}
   }
   @media(max-width:768px){.section-heading h2{font-size:45px!important}.nav-active-indicator{display:none}}
   @media(max-width:375px){.section-heading h2{font-size:38px!important}}
@@ -668,21 +652,6 @@ if(!prefersReduced){
   addMotion(hovesSample,'type-reveal',TYPE_TRIGGER,0);
 }
 
-/* Sticky large section numbers. The 10-column grid flash is gone: it painted a
-   repeating gradient across a whole section and animated it while scrolling. */
-['logo','colors','type','projects','files'].forEach(id=>{
-  const section=document.getElementById(id);
-  if(!section)return;
-  const kicker=section.querySelector('.section-kicker');
-  const number=(kicker?.textContent.match(/\b(0[1-9])\b/)||[])[1]||'';
-  if(!number)return;
-  const sticky=document.createElement('span');
-  sticky.className='section-number-sticky';
-  sticky.textContent=number;
-  sticky.setAttribute('aria-hidden','true');
-  section.insertBefore(sticky,section.firstChild);
-});
-
 /* Single moving active navigation indicator. */
 const nav=document.querySelector('.nav');
 const navLinks=nav?[...nav.querySelectorAll('a[href^="#"]')]:[];
@@ -760,6 +729,40 @@ if(prefersReduced){
   /* Web fonts land after first paint and shift everything below them. */
   document.fonts?.ready.then(remeasure);
   scheduleMotion();
+}
+
+/* Soft parallax for the project covers. The picture sits in a wrapper 16% taller than
+   its frame and drifts by at most ±6% of the frame height, slower than the page. Only
+   covers near the viewport are updated, in one rAF pass, with no layout reads besides
+   the frame rectangles. */
+if(!prefersReduced){
+  const covers=[...document.querySelectorAll('.project-cover')]
+    .map(frame=>({frame,layer:frame.querySelector('.project-par'),near:false}))
+    .filter(item=>item.layer);
+  if(covers.length){
+    let parallaxQueued=false;
+    const drift=()=>{
+      parallaxQueued=false;
+      const vh=innerHeight||document.documentElement.clientHeight;
+      covers.forEach(item=>{
+        if(!item.near)return;
+        const rect=item.frame.getBoundingClientRect();
+        const progress=Math.max(-1,Math.min(1,(rect.top+rect.height/2-vh/2)/(vh/2+rect.height/2)));
+        item.layer.style.setProperty('--par',`${(-progress*rect.height*.06).toFixed(1)}px`);
+      });
+    };
+    const queueDrift=()=>{if(!parallaxQueued){parallaxQueued=true;requestAnimationFrame(drift)}};
+    const nearObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        const item=covers.find(candidate=>candidate.frame===entry.target);
+        if(item)item.near=entry.isIntersecting;
+      });
+      queueDrift();
+    },{rootMargin:'120px 0px'});
+    covers.forEach(item=>nearObserver.observe(item.frame));
+    addEventListener('scroll',queueDrift,{passive:true});
+    addEventListener('resize',queueDrift,{passive:true});
+  }
 }
 
 /* Keep aria-current in sync with the moving indicator. */

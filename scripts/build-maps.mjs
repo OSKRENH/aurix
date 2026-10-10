@@ -30,10 +30,9 @@ for(const cfg of Object.values(MAPS))cfg.light=lightVersion(cfg.dark);
 
 const SECTION=`
 <section class="brand-section section-maps theme-white" id="maps">
-  <span class="section-number-sticky" aria-hidden="true">05</span>
   <div class="shell"><div class="grid">
     <header class="section-heading">
-      <div class="section-kicker">05 / КАРТЫ</div>
+      <div class="section-kicker">КАРТЫ</div>
       <h2>Карты</h2>
       <p class="section-intro">Фирменные карты Москвы и Санкт-Петербурга в светлой и тёмной версиях.</p>
     </header>
@@ -42,25 +41,23 @@ const SECTION=`
         <div class="map-canvas">
           <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/moscow-light.svg" alt="Карта Москвы, светлая версия">
           <img class="map-preview-layer" data-tone="dark" src="./assets/maps/moscow-dark.svg" alt="Карта Москвы, тёмная версия">
-          <span class="map-index">КАРТА / 01</span>
           <div class="map-tone-switch" role="group" aria-label="Цвет карты Москвы">
             <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E5E5F3" aria-label="Светлая" aria-pressed="true"></button>
             <button class="map-tone-button" type="button" data-tone="dark" style="--tone:#1F0048" aria-label="Тёмная" aria-pressed="false"></button>
           </div>
         </div>
-        <div class="map-meta"><div class="map-copy"><span>КАРТА / 01</span><strong>Москва</strong></div><div class="map-downloads" aria-label="Скачать карту Москвы"><a data-map-format="jpg" href="./downloads/maps/AURIX_Map_Moscow_Light.jpg" download>JPG</a><a data-map-format="svg" href="./downloads/maps/AURIX_Map_Moscow_Light.svg" download>SVG</a><a data-map-format="pdf" href="./downloads/maps/AURIX_Map_Moscow_Light.pdf" download>PDF</a></div></div>
+        <div class="map-meta"><div class="map-copy"><span>КАРТА</span><strong>Москва</strong></div><div class="map-downloads" aria-label="Скачать карту Москвы"><a data-map-format="jpg" href="./downloads/maps/AURIX_Map_Moscow_Light.jpg" download>JPG</a><a data-map-format="svg" href="./downloads/maps/AURIX_Map_Moscow_Light.svg" download>SVG</a><a data-map-format="pdf" href="./downloads/maps/AURIX_Map_Moscow_Light.pdf" download>PDF</a></div></div>
       </article>
       <article class="map-card" data-city="spb" data-label="Санкт-Петербург">
         <div class="map-canvas">
           <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/spb-light.svg" alt="Карта Санкт-Петербурга, светлая версия">
           <img class="map-preview-layer" data-tone="dark" src="./assets/maps/spb-dark.svg" alt="Карта Санкт-Петербурга, тёмная версия">
-          <span class="map-index">КАРТА / 02</span>
           <div class="map-tone-switch" role="group" aria-label="Цвет карты Санкт-Петербурга">
             <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E5E5F3" aria-label="Светлая" aria-pressed="true"></button>
             <button class="map-tone-button" type="button" data-tone="dark" style="--tone:#1F0048" aria-label="Тёмная" aria-pressed="false"></button>
           </div>
         </div>
-        <div class="map-meta"><div class="map-copy"><span>КАРТА / 02</span><strong>Санкт-Петербург</strong></div><div class="map-downloads" aria-label="Скачать карту Санкт-Петербурга"><a data-map-format="jpg" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.jpg" download>JPG</a><a data-map-format="svg" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.svg" download>SVG</a><a data-map-format="pdf" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.pdf" download>PDF</a></div></div>
+        <div class="map-meta"><div class="map-copy"><span>КАРТА</span><strong>Санкт-Петербург</strong></div><div class="map-downloads" aria-label="Скачать карту Санкт-Петербурга"><a data-map-format="jpg" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.jpg" download>JPG</a><a data-map-format="svg" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.svg" download>SVG</a><a data-map-format="pdf" href="./downloads/maps/AURIX_Map_Saint_Petersburg_Light.pdf" download>PDF</a></div></div>
       </article>
     </div>
   </div></div>
