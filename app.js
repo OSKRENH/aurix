@@ -286,8 +286,8 @@ refinements.textContent=`
   }
   .nav-active-indicator.is-visible{opacity:1}
 
-  .brand-section,.section-colors,.type-section,.files{position:relative;isolation:isolate}
-  .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.files>.shell{position:relative;z-index:1}
+  .brand-section,.section-colors,.type-section,.section-projects,.files{position:relative;isolation:isolate}
+  .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.section-projects>.shell,.files>.shell{position:relative;z-index:1}
 
   @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
@@ -326,6 +326,7 @@ refinements.textContent=`
       opacity:1!important;
       transform:none!important;
     }
+    .project .project-cover img,.project.reveal:not(.is-revealed) .project-cover img{transform:none!important;transition:none!important}
     .guild-sample.type-reveal{letter-spacing:-.03em!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
@@ -575,6 +576,9 @@ if(!prefersReduced){
     [...document.querySelectorAll('.font-stack .font-block')],
     [...document.querySelectorAll('.file-list a')]
   ].forEach(group=>group.forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,Math.min(index,3)*70)));
+  /* Project covers arrive row by row: left card first, its neighbour a beat later. */
+  document.querySelectorAll('.projects .project').forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,el.classList.contains('project-wide')?0:((index+1)%2)*90));
+  document.querySelectorAll('.projects-all').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
   document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
   document.querySelectorAll('.section-heading').forEach(el=>addMotion(el,'line-reveal',CARD_TRIGGER,0));
   addMotion(guildSample,'type-reveal',TYPE_TRIGGER,0);
@@ -583,11 +587,11 @@ if(!prefersReduced){
 
 /* Sticky large section numbers. The 10-column grid flash is gone: it painted a
    repeating gradient across a whole section and animated it while scrolling. */
-['logo','colors','type','files'].forEach(id=>{
+['logo','colors','type','projects','files'].forEach(id=>{
   const section=document.getElementById(id);
   if(!section)return;
   const kicker=section.querySelector('.section-kicker');
-  const number=(kicker?.textContent.match(/\b(0[1-4])\b/)||[])[1]||'';
+  const number=(kicker?.textContent.match(/\b(0[1-9])\b/)||[])[1]||'';
   if(!number)return;
   const sticky=document.createElement('span');
   sticky.className='section-number-sticky';
@@ -684,4 +688,4 @@ const currentSectionObserver=new IntersectionObserver(entries=>{
     if(active){active.setAttribute('aria-current','true');moveNavIndicator(active)}
   });
 },{rootMargin:'-20% 0px -65% 0px',threshold:0});
-['logo','colors','type','files'].forEach(id=>{const section=document.getElementById(id);if(section)currentSectionObserver.observe(section)});
+['logo','colors','type','projects','files'].forEach(id=>{const section=document.getElementById(id);if(section)currentSectionObserver.observe(section)});

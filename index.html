@@ -4,7 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#1F0048">
-  <meta name="description" content="AURIX — логотип, фирменная палитра, типографика и материалы бренда.">
+  <meta name="description" content="AURIX — логотип, фирменная палитра, типографика, проекты и материалы бренда.">
+  <link rel="icon" href="./assets/logos/symbol-purple.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="AURIX — фирменный стиль">
+  <meta property="og:description" content="Логотип, палитра, типографика, проекты и материалы бренда AURIX.">
+  <meta property="og:image" content="https://aurix.ivankamaldinov.workers.dev/assets/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <title>AURIX — фирменный стиль</title>
   <link rel="stylesheet" href="./fonts.css">
   <style>
@@ -62,6 +71,8 @@
       line-height:var(--lh-body);
       overflow-x:hidden;
     }
+    ::selection{background:var(--lilac);color:var(--purple)}
+    .theme-dark ::selection,.section-files ::selection{background:var(--lilac);color:var(--purple)}
     a{color:inherit;text-decoration:none}
     button{font:inherit;color:inherit}
     button,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -524,6 +535,116 @@
     .font-download>div span{font-size:var(--fs-small);letter-spacing:var(--tracking-caps);text-transform:uppercase}
     .font-download>div strong{font-size:var(--fs-body);font-weight:400}
 
+    .section-projects{background:var(--mist);color:var(--purple)}
+    .projects{
+      grid-column:1/-1;
+      display:grid;
+      grid-template-columns:repeat(10,minmax(0,1fr));
+      column-gap:var(--space-24);
+      row-gap:var(--space-64);
+      --row-h:clamp(300px,35vw,540px);
+    }
+    .project{
+      display:flex;
+      flex-direction:column;
+      gap:var(--space-16);
+      min-width:0;
+      container-type:inline-size;
+    }
+    .project-wide{grid-column:1/-1}
+    .project-l{grid-column:span 6}
+    .project-s{grid-column:span 4}
+    .project-cover{
+      margin:0;
+      overflow:hidden;
+      background:rgba(31,0,72,.08);
+    }
+    .project-l .project-cover,.project-s .project-cover{height:var(--row-h)}
+    .project-wide .project-cover{aspect-ratio:21/9}
+    .project-cover img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform 1400ms cubic-bezier(.2,.7,.3,1);
+    }
+    .project.reveal:not(.is-revealed) .project-cover img{transform:scale(1.07)}
+    .project-info{
+      display:grid;
+      grid-template-columns:2.5ch minmax(0,1fr) auto;
+      column-gap:var(--space-24);
+      align-items:start;
+      padding-top:var(--space-16);
+      border-top:var(--border);
+      transition:border-color 400ms cubic-bezier(.2,.7,.3,1);
+    }
+    .project-index{
+      padding-top:6px;
+      font-size:var(--fs-small);
+      letter-spacing:var(--tracking-caps);
+      font-variant-numeric:tabular-nums;
+      opacity:.6;
+    }
+    .project-text h3{
+      margin:0;
+      font-family:"Guild A Display",Arial,sans-serif;
+      font-size:clamp(24px,2.1vw,32px);
+      font-weight:400;
+      line-height:1;
+      letter-spacing:-.02em;
+      text-transform:uppercase;
+      text-wrap:balance;
+    }
+    .project-meta{
+      display:block;
+      margin-top:var(--space-8);
+      font-size:var(--fs-small);
+      letter-spacing:var(--tracking-caps);
+      text-transform:uppercase;
+      opacity:.72;
+    }
+    .project-desc{
+      margin:var(--space-16) 0 0;
+      max-width:46ch;
+      font-size:15px;
+      line-height:var(--lh-body);
+      text-wrap:pretty;
+    }
+    .project-link{
+      display:inline-flex;
+      align-items:baseline;
+      gap:var(--space-8);
+      padding-bottom:2px;
+      border-bottom:1px solid currentColor;
+      font-size:var(--fs-small);
+      letter-spacing:var(--tracking-caps);
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .project-link i{
+      font-style:normal;
+      display:inline-block;
+      transition:transform 400ms cubic-bezier(.2,.7,.3,1);
+    }
+    @container (max-width:440px){
+      .project-info{grid-template-columns:2.5ch minmax(0,1fr)}
+      .project-link{grid-column:2;justify-self:start;margin-top:var(--space-16)}
+    }
+    @media(hover:hover){
+      .project:hover .project-cover img,.project:focus-visible .project-cover img{transform:scale(1.035);transition-duration:1000ms}
+      .project:hover .project-info,.project:focus-visible .project-info{border-top-color:var(--purple)}
+      .project:hover .project-link i,.project:focus-visible .project-link i{transform:translate(3px,-3px)}
+    }
+    .projects-all{
+      grid-column:1/-1;
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:end;
+      gap:var(--space-40);
+    }
+    .projects-all>div{display:flex;flex-direction:column;gap:var(--space-8)}
+    .projects-all>div span{font-size:var(--fs-small);letter-spacing:var(--tracking-caps);text-transform:uppercase}
+    .projects-all>div strong{font-size:var(--fs-body);font-weight:400}
+
     .section-files{background:var(--purple);color:var(--white)}
     .section-files .section-heading .section-intro{color:inherit}
     .file-list{
@@ -671,6 +792,11 @@
       .codes{padding-top:var(--space-40)}
       .font-stack{grid-template-columns:1fr;gap:var(--space-16)}
       .font-block{min-height:400px;padding:var(--space-24)}
+      .projects{grid-template-columns:1fr;row-gap:var(--space-40);--row-h:auto}
+      .project-wide,.project-l,.project-s{grid-column:1/-1}
+      .project-l .project-cover,.project-s .project-cover,.project-wide .project-cover{height:auto;aspect-ratio:4/3}
+      .projects-all{grid-template-columns:1fr;gap:var(--space-24)}
+      .projects-all .text-link{width:100%}
       .font-download{grid-template-columns:1fr;gap:var(--space-24)}
       .font-download .text-link{width:100%}
       .file-list{grid-column:1/5}
@@ -718,6 +844,7 @@
       <a href="#logo">Логотип</a>
       <a href="#colors">Цвета</a>
       <a href="#type">Шрифты</a>
+      <a href="#projects">Проекты</a>
       <a href="#files">Файлы</a>
     </nav>
     <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-nav">Меню</button>
@@ -726,6 +853,7 @@
     <a href="#logo">Логотип</a>
     <a href="#colors">Цвета</a>
     <a href="#type">Шрифты</a>
+    <a href="#projects">Проекты</a>
     <a href="#files">Файлы</a>
   </nav>
 
@@ -895,11 +1023,124 @@
       </div>
     </section>
 
+    <section class="brand-section section-projects theme-mist" id="projects">
+      <div class="shell">
+        <div class="grid">
+          <header class="section-heading">
+            <div class="section-kicker">04 / ПРОЕКТЫ</div>
+            <h2>Проекты</h2>
+            <p class="section-intro">Обложки проектов и ссылки на архивы рендеров.</p>
+          </header>
+
+          <div class="projects">
+            <a class="project project-wide" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A0%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D1%8F%20%D0%9E%D0%BC%D0%B5%D0%B3%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Резиденция Омега — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/omega-1600.webp" srcset="./assets/projects/omega-900.webp 900w, ./assets/projects/omega-1600.webp 1600w" sizes="(max-width:768px) 100vw, (max-width:1600px) calc(100vw - 80px), 1472px" width="1600" height="900" alt="Рендер проекта «Резиденция Омега»" loading="lazy" decoding="async" style="object-position:50% 62%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">01</span>
+                <div class="project-text">
+                  <h3>Резиденция Омега</h3>
+                  <span class="project-meta">Москва · В продаже</span>
+              <p class="project-desc">Пространство социального взаимодействия, где жизнь становится инструментом для развития.</p>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D1%80%D0%B8%D0%B8%D0%BD%D0%BA%D0%B0%20%D0%94%D0%B5%D0%BB%D1%8E%D0%BA%D1%81" target="_blank" rel="noopener noreferrer" aria-label="Мариинка Делюкс — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/mariinka-1600.webp" srcset="./assets/projects/mariinka-900.webp 900w, ./assets/projects/mariinka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="900" alt="Рендер проекта «Мариинка Делюкс»" loading="lazy" decoding="async" style="object-position:50% 55%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">02</span>
+                <div class="project-text">
+                  <h3>Мариинка Делюкс</h3>
+                  <span class="project-meta">Санкт-Петербург · В продаже</span>
+              <p class="project-desc">Жилой дом премиум-класса в исторической части Адмиралтейского района.</p>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D0%BB%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%BA%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Малая Полянка 3 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/polyanka-1600.webp" srcset="./assets/projects/polyanka-900.webp 900w, ./assets/projects/polyanka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="900" alt="Рендер проекта «Малая Полянка 3»" loading="lazy" decoding="async" style="object-position:62% 50%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">03</span>
+                <div class="project-text">
+                  <h3>Малая Полянка 3</h3>
+                  <span class="project-meta">Москва · Скоро</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9E%D1%80%D0%B4%D1%8B%D0%BD%D0%BA%D0%B0%2C%2025" target="_blank" rel="noopener noreferrer" aria-label="Большая Ордынка 25 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/ordynka-1600.webp" srcset="./assets/projects/ordynka-900.webp 900w, ./assets/projects/ordynka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="1132" alt="Рендер проекта «Большая Ордынка 25»" loading="lazy" decoding="async" style="object-position:50% 60%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">04</span>
+                <div class="project-text">
+                  <h3>Большая Ордынка 25</h3>
+                  <span class="project-meta">Москва · Скоро</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%2C%2015" target="_blank" rel="noopener noreferrer" aria-label="Земледельческий 15 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/zemled-1600.webp" srcset="./assets/projects/zemled-900.webp 900w, ./assets/projects/zemled-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="1066" alt="Рендер проекта «Земледельческий 15»" loading="lazy" decoding="async" style="object-position:50% 45%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">05</span>
+                <div class="project-text">
+                  <h3>Земледельческий 15</h3>
+                  <span class="project-meta">Москва · Скоро</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A2%D0%B5%D0%BA%D1%81%D0%B8%D1%82%D0%B8%D0%BB%D1%8C%D1%89%D0%B8%D0%BA%D0%BE%D0%B2%2C%208" target="_blank" rel="noopener noreferrer" aria-label="Текстильщиков 8 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/textil-1600.webp" srcset="./assets/projects/textil-900.webp 900w, ./assets/projects/textil-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="1134" alt="Рендер проекта «Текстильщиков 8»" loading="lazy" decoding="async" style="object-position:50% 40%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">06</span>
+                <div class="project-text">
+                  <h3>Текстильщиков 8</h3>
+                  <span class="project-meta">Москва</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A1%D0%B5%D1%80%D0%B5%D0%B1%D1%80%D1%8F%D0%BD%D1%8B%D0%B9%20%D0%B1%D0%BE%D1%80" target="_blank" rel="noopener noreferrer" aria-label="Серебряный бор — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <img src="./assets/projects/borbor-1600.webp" srcset="./assets/projects/borbor-900.webp 900w, ./assets/projects/borbor-1600.webp 1600w, ./assets/projects/borbor-2400.webp 2400w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="1132" alt="Рендер проекта «Серебряный бор»" loading="lazy" decoding="async" style="object-position:50% 55%">
+              </figure>
+              <div class="project-info">
+                <span class="project-index">07</span>
+                <div class="project-text">
+                  <h3>Серебряный бор</h3>
+                  <span class="project-meta">Москва</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+          </div>
+
+          <div class="projects-all">
+            <div><span>ВСЕ РЕНДЕРЫ</span><strong>Яндекс Диск · семь проектов</strong></div>
+            <a class="text-link" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg" target="_blank" rel="noopener noreferrer">Открыть папку <span>↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="brand-section section-files" id="files">
       <div class="shell">
         <div class="grid">
           <header class="section-heading">
-            <div class="section-kicker">04 / ФАЙЛЫ</div>
+            <div class="section-kicker">05 / ФАЙЛЫ</div>
             <h2>Материалы</h2>
             <p class="section-intro"></p>
           </header>
