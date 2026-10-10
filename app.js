@@ -428,10 +428,66 @@ const logoVersions={
   symbol:{type:'AURIX_Symbol',cls:'logo-art-symbol',label:'фирменный знак'}
 };
 
+/* The lockup is one inline SVG: the wordmark and the descriptor are separate groups.
+   Switching the descriptor off slides it away under a clip while the wordmark moves
+   to the centre; colour is plain currentColor, so the canvas transition recolours it. */
+function initLockupCard(card,canvas,download){
+  const toggle=card.querySelector('.desc-switch');
+  const label=card.querySelector('[data-desc-label]');
+  const svg=card.querySelector('.logo-svg');
+  const controls=document.createElement('div');
+  controls.className='logo-card-tones';
+  controls.setAttribute('role','group');
+  controls.setAttribute('aria-label','Цвет логотипа');
+  let tone=logoTones[0];
+  let descriptor=true;
+
+  function update(){
+    card.classList.toggle('desc-off',!descriptor);
+    toggle.setAttribute('aria-checked',String(descriptor));
+    canvas.style.background=tone.preview;
+    canvas.classList.toggle('is-dark-preview',tone.dark);
+    const version=descriptor?logoVersions.with:logoVersions.without;
+    if(label)label.textContent=descriptor?'С дескриптором':'Без дескриптора';
+    svg.setAttribute('aria-label',descriptor?'AURIX — Discover Stars':'AURIX');
+    const archive=`${version.type}_${tone.key}.zip`;
+    const hint=`Скачать ${version.label}, ${tone.label.toLowerCase()}: SVG, PNG и PDF`;
+    download.href=`./downloads/${archive}`;
+    download.setAttribute('download',archive);
+    download.setAttribute('aria-label',hint);
+    download.setAttribute('title',hint);
+    controls.querySelectorAll('.logo-tone-button').forEach(button=>{
+      const active=button.dataset.tone===tone.key;
+      button.classList.toggle('is-active',active);
+      button.setAttribute('aria-pressed',String(active));
+    });
+  }
+
+  logoTones.forEach(item=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='logo-tone-button';
+    button.dataset.tone=item.key;
+    button.style.setProperty('--tone',item.key==='White'?'#FFFFFF':'#1F0048');
+    button.setAttribute('aria-label',item.label);
+    button.setAttribute('title',item.label);
+    button.addEventListener('click',()=>{tone=item;update()});
+    controls.appendChild(button);
+  });
+  toggle.addEventListener('click',()=>{descriptor=!descriptor;update()});
+  canvas.appendChild(controls);
+  download.innerHTML=`ZIP <b class="inline-download-icon" aria-hidden="true">${downloadIcon}</b>`;
+  update();
+}
+
 document.querySelectorAll('.logo-variant').forEach(card=>{
   const canvas=card.querySelector('.logo-canvas');
-  const img=canvas?.querySelector('.logo-art');
+  const img=canvas?.querySelector('img.logo-art');
   const download=card.querySelector('[data-logo-download]');
+  if(card.hasAttribute('data-lockup')){
+    initLockupCard(card,canvas,download);
+    return;
+  }
   if(!canvas||!img||!download)return;
 
   const versions=(card.dataset.variants||'with').split(',').filter(key=>logoVersions[key]);
