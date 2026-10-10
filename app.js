@@ -90,6 +90,7 @@ refinements.textContent=`
     align-items:center;
   }
   .logo-tone-button{
+    position:relative;
     width:14px;
     height:14px;
     display:grid;
@@ -114,6 +115,7 @@ refinements.textContent=`
   }
   .logo-tone-button:hover,.logo-tone-button:focus-visible{opacity:.72;transform:none}
   .logo-tone-button.is-active{opacity:1;background:transparent;box-shadow:none;transform:none}
+  .logo-tone-button::after{content:"";position:absolute;inset:-15px -5px}
   .logo-canvas.is-dark-preview{color:var(--white)}
   .logo-canvas.is-dark-preview .logo-tone-button{color:var(--white)}
   .logo-canvas.is-dark-preview .logo-tone-button.is-active{background:transparent;box-shadow:none}
@@ -140,8 +142,8 @@ refinements.textContent=`
   .logo-crossfade-layer.is-fading-in,.logo-bg-crossfade.is-fading-in{opacity:1}
 
   .compact-zip-link{
-    min-width:0!important;
-    min-height:0!important;
+    min-width:44px!important;
+    min-height:44px!important;
     width:auto!important;
     display:inline-flex!important;
     justify-content:flex-start!important;
@@ -159,9 +161,9 @@ refinements.textContent=`
   .font-download .compact-zip-link{justify-self:end}
 
   .color-copy-icon{
-    width:42px!important;
-    height:42px!important;
-    flex:0 0 42px;
+    width:44px!important;
+    height:44px!important;
+    flex:0 0 44px;
     display:grid!important;
     place-items:center!important;
     border:1px solid currentColor!important;
@@ -234,7 +236,7 @@ refinements.textContent=`
   .line-reveal.is-revealed::after{transform:scaleX(1)}
 
   @media(hover:hover){
-    .color .codes button{opacity:.68;transform:translateY(4px);transition:opacity 250ms ${EASE},transform 250ms ${EASE}}
+    .color .codes button{opacity:.82;transform:translateY(4px);transition:opacity 250ms ${EASE},transform 250ms ${EASE}}
     .color:hover .codes button{opacity:1;transform:translateY(0)}
     .color .codes button:nth-child(1){transition-delay:0ms}
     .color .codes button:nth-child(2){transition-delay:40ms}

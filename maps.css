@@ -7,7 +7,8 @@
 .map-preview-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 250ms cubic-bezier(.2,.7,.3,1);pointer-events:none}
 .map-preview-layer.is-active{opacity:1}
 .map-tone-switch{position:absolute;z-index:5;top:14px;right:14px;display:flex;align-items:center;gap:7px}
-.map-tone-button{appearance:none;width:14px;height:14px;padding:0;border:0;border-radius:999px;background:transparent;color:var(--purple);display:grid;place-items:center;cursor:pointer;opacity:.42;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
+.map-tone-button{position:relative;appearance:none;width:14px;height:14px;padding:0;border:0;border-radius:999px;background:transparent;color:var(--purple);display:grid;place-items:center;cursor:pointer;opacity:.42;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
+.map-tone-button::after{content:"";position:absolute;inset:-15px -5px}
 .map-tone-button::before{content:"";width:12px;height:12px;border-radius:50%;box-sizing:border-box;background:var(--tone);border:1px solid currentColor}
 .map-tone-button:hover,.map-tone-button:focus-visible{opacity:.72;transform:none}
 .map-tone-button.is-active{opacity:1;background:transparent;box-shadow:none;transform:none}
@@ -20,7 +21,7 @@
 .map-copy span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.62}
 .map-copy strong{font-size:clamp(24px,2vw,34px);font-weight:400;line-height:1;letter-spacing:-.02em}
 .map-downloads{display:flex;align-items:center;gap:14px}
-.map-downloads a{display:inline-flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid currentColor;font-size:10px;line-height:1;letter-spacing:.08em;text-transform:uppercase;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
+.map-downloads a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:7px 0;border-bottom:1px solid currentColor;font-size:11px;line-height:1;letter-spacing:.08em;text-transform:uppercase;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
 .map-downloads a:hover{opacity:.58}
 .map-downloads svg{width:13px;height:13px;fill:currentColor}
 .section-maps .section-heading{position:relative}
@@ -31,5 +32,5 @@
 .section-maps .section-heading h2{transition-delay:70ms}
 .section-maps .section-heading .section-intro{transition-delay:140ms}
 @media(max-width:768px){.map-grid{grid-template-columns:1fr}.map-meta{grid-template-columns:1fr;gap:16px}.map-downloads{justify-content:flex-start}.map-tone-switch{top:11px;right:11px;gap:6px}.section-maps>.shell>.grid{row-gap:40px}}
-@media(max-width:560px){.section-maps{padding-top:48px;padding-bottom:48px}.map-grid{grid-column:1/5;gap:20px}.map-meta{padding:14px 16px 16px}.map-copy strong{font-size:28px}.map-downloads{gap:12px;flex-wrap:wrap}.map-downloads a{font-size:9px}.map-index{left:11px;top:11px}}
+@media(max-width:560px){.section-maps{padding-top:48px;padding-bottom:48px}.map-grid{grid-column:1/5;gap:20px}.map-meta{padding:14px 16px 16px}.map-copy strong{font-size:28px}.map-downloads{gap:12px;flex-wrap:wrap}.map-downloads a{font-size:11px}.map-index{left:11px;top:11px}}
 @media(prefers-reduced-motion:reduce){.map-card,.map-card.is-revealed,.section-maps .section-heading>*,.section-maps .section-heading.is-revealed>*,.map-preview-layer,.map-tone-button,.map-downloads a{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}.map-preview-layer:not(.is-active){opacity:0!important}.section-maps .section-heading::after{transition:none!important;transform:none!important}}
