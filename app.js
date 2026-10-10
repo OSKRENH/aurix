@@ -84,7 +84,7 @@ refinements.textContent=`
     position:absolute;
     z-index:6;
     top:14px;
-    right:14px;
+    left:14px;
     display:flex;
     gap:7px;
     align-items:center;
@@ -296,10 +296,10 @@ refinements.textContent=`
        never wider than its canvas — a narrower box slices the swoosh with a hard edge. */
     .hero::after{
       z-index:0;
-      right:-34vw;
-      top:3%;
+      right:-30vw;
+      top:0;
       width:auto;
-      height:94%;
+      height:100%;
       aspect-ratio:430/455;
       opacity:.16;
       -webkit-mask-position:center;
@@ -311,7 +311,7 @@ refinements.textContent=`
     .hero .eyebrow,.hero-note,.hero-foot{position:relative;z-index:2}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
-    .logo-card-tones{top:11px;right:11px;gap:6px}
+    .logo-card-tones{top:11px;left:11px;gap:6px}
     .logo-tone-button{width:14px;height:14px}
     .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
