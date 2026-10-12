@@ -591,7 +591,10 @@
       grid-template-columns:repeat(var(--grid-cols),minmax(0,1fr));
       column-gap:var(--space-24);
       row-gap:var(--space-64);
-      --row-h:clamp(300px,35vw,540px);
+      align-items:start;
+      --tall:clamp(360px,41.7vw,660px);
+      --mid:calc(var(--tall) * .97);
+      --short:calc(var(--tall) * .77);
     }
     .project{
       display:flex;
@@ -600,17 +603,22 @@
       min-width:0;
       container-type:inline-size;
     }
-    .project-wide{grid-column:1/-1}
-    .project-l{grid-column:span var(--span-l)}
-    .project-s{grid-column:span var(--span-s)}
+    /* A cycle of six, borrowed from the company site: tall + short, wide, short + tall, wide.
+       The projects are staggered on purpose, so they leave the shared axis of the other sections. */
+    .project{--h:var(--tall)}
+    .project:nth-child(6n+1){grid-column:1/7}
+    .project:nth-child(6n+2){grid-column:7/11;--h:var(--short)}
+    .project:nth-child(6n+3){grid-column:1/8;--h:var(--mid)}
+    .project:nth-child(6n+4){grid-column:1/5;--h:var(--short)}
+    .project:nth-child(6n+5){grid-column:5/11}
+    .project:nth-child(6n){grid-column:1/8;--h:var(--mid)}
     .project-cover{
       position:relative;
       margin:0;
       overflow:hidden;
       background:rgba(31,0,72,.08);
     }
-    .project-l .project-cover,.project-s .project-cover{height:var(--row-h)}
-    .project-wide .project-cover{aspect-ratio:21/9}
+    .project-cover{height:var(--h)}
     .project-par{position:absolute;left:0;right:0;top:-8%;bottom:-8%;transform:translate3d(0,var(--par,0px),0)}
     .project-cover img{
       width:100%;
@@ -638,7 +646,7 @@
     .project-text h3{
       margin:0;
       font-family:"Guild A Display",Arial,sans-serif;
-      font-size:var(--fs-h4);
+      font-size:var(--fs-h3);
       font-weight:400;
       line-height:1;
       letter-spacing:-.02em;
@@ -676,6 +684,43 @@
       display:inline-block;
       transition:transform 400ms cubic-bezier(.2,.7,.3,1);
     }
+    .project-status{
+      position:absolute;
+      right:var(--space-24);
+      bottom:var(--space-24);
+      z-index:2;
+      display:inline-flex;
+      align-items:center;
+      gap:var(--space-8);
+      padding:6px 12px 6px 10px;
+      border-radius:var(--radius-control);
+      background:rgba(255,255,255,.9);
+      color:var(--purple);
+      font-size:var(--fs-small);
+      letter-spacing:var(--tracking-caps);
+      text-transform:uppercase;
+    }
+    .project-status i{display:inline-grid;width:12px;height:12px;animation:star-twinkle 3.6s cubic-bezier(.45,0,.55,1) infinite}
+    .project-status svg{width:100%;height:100%;fill:currentColor}
+    @keyframes star-twinkle{0%,100%{transform:scale(.8) rotate(0)}50%{transform:scale(1.15) rotate(45deg)}}
+    .project-go{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      width:88px;
+      height:88px;
+      border-radius:50%;
+      background:rgba(255,255,255,.92);
+      color:var(--purple);
+      opacity:0;
+      transform:translate(-50%,-50%) scale(.82);
+      transition:opacity 350ms cubic-bezier(.2,.7,.3,1),transform 450ms cubic-bezier(.2,.7,.3,1);
+      pointer-events:none;
+    }
+    .project-go svg{width:28px;height:28px}
     @container (max-width:440px){
       .project-info{grid-template-columns:minmax(0,1fr)}
       .project-link{justify-self:start;margin-top:var(--space-16)}
@@ -684,6 +729,7 @@
       .project:hover .project-cover img,.project:focus-visible .project-cover img{transform:scale(1.035);transition-duration:1000ms}
       .project:hover .project-info,.project:focus-visible .project-info{border-top-color:var(--purple)}
       .project:hover .project-link i,.project:focus-visible .project-link i{transform:translate(3px,-3px)}
+      .project:hover .project-go,.project:focus-visible .project-go{opacity:1;transform:translate(-50%,-50%) scale(1)}
     }
     .projects-all{
       grid-column:1/-1;
@@ -797,6 +843,12 @@
       .logo-variants{grid-template-columns:repeat(8,minmax(0,1fr))}
       .logo-variant{grid-column:1/6}
       .logo-variant-symbol{grid-column:6/9}
+      .project:nth-child(6n+1){grid-column:1/6}
+      .project:nth-child(6n+2){grid-column:6/9}
+      .project:nth-child(6n+3){grid-column:1/7}
+      .project:nth-child(6n+4){grid-column:1/4}
+      .project:nth-child(6n+5){grid-column:4/9}
+      .project:nth-child(6n){grid-column:1/7}
       .rule-a{grid-column:1/6}
       .rule-b{grid-column:6/9}
       .logo-download{grid-column:6/9}
@@ -848,9 +900,11 @@
       .font-stack{grid-template-columns:1fr;gap:var(--space-16)}
       .font-stack>.guild-block,.font-stack>.hoves-block{grid-column:auto}
       .font-block{min-height:400px;padding:var(--space-24)}
-      .projects{grid-template-columns:1fr;row-gap:var(--space-40);--row-h:auto}
-      .project-wide,.project-l,.project-s{grid-column:1/-1}
-      .project-l .project-cover,.project-s .project-cover,.project-wide .project-cover{height:auto;aspect-ratio:4/3}
+      .projects{grid-template-columns:1fr;row-gap:var(--space-40)}
+      .project:nth-child(n){grid-column:1/-1}
+      .project-cover{height:auto;aspect-ratio:4/3}
+      .project-status{right:var(--space-16);bottom:var(--space-16)}
+      .project-go{display:none}
       .projects-all{grid-template-columns:1fr;gap:var(--space-24)}
       .projects-all .text-link{width:100%}
       .font-download{grid-template-columns:1fr;gap:var(--space-24)}
@@ -1076,78 +1130,89 @@
           </header>
 
           <div class="projects">
-            <a class="project project-wide" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A0%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D1%8F%20%D0%9E%D0%BC%D0%B5%D0%B3%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Резиденция Омега — рендеры на Яндекс Диске">
+            <a class="project" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%A0%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D1%8F%20%D0%9E%D0%BC%D0%B5%D0%B3%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Резиденция Омега — рендеры на Яндекс Диске">
               <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/omega-1600.webp" srcset="./assets/projects/omega-900.webp 900w, ./assets/projects/omega-1600.webp 1600w" sizes="(max-width:768px) 100vw, (max-width:1600px) calc(100vw - 80px), 1472px" width="1600" height="900" alt="Рендер проекта «Резиденция Омега»" loading="lazy" decoding="async" style="object-position:50% 62%"></div>
+                <div class="project-par"><img src="./assets/projects/omega-1600.webp" srcset="./assets/projects/omega-900.webp 900w, ./assets/projects/omega-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="900" alt="Рендер проекта «Резиденция Омега»" loading="lazy" decoding="async" style="object-position:50% 62%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>В продаже</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
               </figure>
               <div class="project-info">
                 <div class="project-text">
                   <h3>Резиденция Омега</h3>
-                  <span class="project-meta">Москва · В продаже</span>
-              <p class="project-desc">Пространство социального взаимодействия, где жизнь становится инструментом для развития.</p>
+                  <span class="project-meta">Москва</span>
+                  <p class="project-desc">Пространство социального взаимодействия, где жизнь становится инструментом для развития.</p>
                 </div>
                 <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
               </div>
             </a>
-            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D1%80%D0%B8%D0%B8%D0%BD%D0%BA%D0%B0%20%D0%94%D0%B5%D0%BB%D1%8E%D0%BA%D1%81" target="_blank" rel="noopener noreferrer" aria-label="Мариинка Делюкс — рендеры на Яндекс Диске">
+            <a class="project" href="https://drive.google.com/drive/folders/12uGw322rGHxaMiRHBAdWRgK4QKQ4Uq24" target="_blank" rel="noopener noreferrer" aria-label="ЛДМ — рендеры на Google Диске">
               <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/mariinka-1600.webp" srcset="./assets/projects/mariinka-900.webp 900w, ./assets/projects/mariinka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="900" alt="Рендер проекта «Мариинка Делюкс»" loading="lazy" decoding="async" style="object-position:50% 55%"></div>
-              </figure>
-              <div class="project-info">
-                <div class="project-text">
-                  <h3>Мариинка Делюкс</h3>
-                  <span class="project-meta">Санкт-Петербург · В продаже</span>
-              <p class="project-desc">Жилой дом премиум-класса в исторической части Адмиралтейского района.</p>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
-            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D0%BB%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%BA%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Малая Полянка 3 — рендеры на Яндекс Диске">
-              <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/polyanka-1600.webp" srcset="./assets/projects/polyanka-900.webp 900w, ./assets/projects/polyanka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="900" alt="Рендер проекта «Малая Полянка 3»" loading="lazy" decoding="async" style="object-position:62% 50%"></div>
-              </figure>
-              <div class="project-info">
-                <div class="project-text">
-                  <h3>Малая Полянка 3</h3>
-                  <span class="project-meta">Москва · Скоро</span>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
-            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9E%D1%80%D0%B4%D1%8B%D0%BD%D0%BA%D0%B0%2C%2025" target="_blank" rel="noopener noreferrer" aria-label="Большая Ордынка 25 — рендеры на Яндекс Диске">
-              <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/ordynka-1600.webp" srcset="./assets/projects/ordynka-900.webp 900w, ./assets/projects/ordynka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="1132" alt="Рендер проекта «Большая Ордынка 25»" loading="lazy" decoding="async" style="object-position:50% 60%"></div>
-              </figure>
-              <div class="project-info">
-                <div class="project-text">
-                  <h3>Большая Ордынка 25</h3>
-                  <span class="project-meta">Москва · Скоро</span>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
-            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%2C%2015" target="_blank" rel="noopener noreferrer" aria-label="Земледельческий 15 — рендеры на Яндекс Диске">
-              <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/zemled-1600.webp" srcset="./assets/projects/zemled-900.webp 900w, ./assets/projects/zemled-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="1066" alt="Рендер проекта «Земледельческий 15»" loading="lazy" decoding="async" style="object-position:50% 45%"></div>
-              </figure>
-              <div class="project-info">
-                <div class="project-text">
-                  <h3>Земледельческий 15</h3>
-                  <span class="project-meta">Москва · Скоро</span>
-                </div>
-                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
-              </div>
-            </a>
-
-            <a class="project project-wide" href="https://drive.google.com/drive/folders/12uGw322rGHxaMiRHBAdWRgK4QKQ4Uq24" target="_blank" rel="noopener noreferrer" aria-label="ЛДМ — рендеры на Google Диске">
-              <figure class="project-cover">
-                <div class="project-par"><img src="./assets/projects/ldm-1600.webp" srcset="./assets/projects/ldm-900.webp 900w, ./assets/projects/ldm-1600.webp 1600w" sizes="(max-width:768px) 100vw, (max-width:1600px) calc(100vw - 80px), 1472px" width="1600" height="900" alt="Рендер проекта «ЛДМ»" loading="lazy" decoding="async" style="object-position:50% 50%"></div>
+                <div class="project-par"><img src="./assets/projects/ldm-1600.webp" srcset="./assets/projects/ldm-900.webp 900w, ./assets/projects/ldm-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="900" alt="Рендер проекта «ЛДМ»" loading="lazy" decoding="async" style="object-position:58% 50%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>В продаже</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
               </figure>
               <div class="project-info">
                 <div class="project-text">
                   <h3>ЛДМ</h3>
-                  <span class="project-meta">Санкт-Петербург · В продаже</span>
+                  <span class="project-meta">Санкт-Петербург</span>
                   <p class="project-desc">Эксклюзивный проект премиум-класса на Аптекарском острове Петроградской стороны.</p>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D1%80%D0%B8%D0%B8%D0%BD%D0%BA%D0%B0%20%D0%94%D0%B5%D0%BB%D1%8E%D0%BA%D1%81" target="_blank" rel="noopener noreferrer" aria-label="Мариинка Делюкс — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <div class="project-par"><img src="./assets/projects/mariinka-1600.webp" srcset="./assets/projects/mariinka-900.webp 900w, ./assets/projects/mariinka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="900" alt="Рендер проекта «Мариинка Делюкс»" loading="lazy" decoding="async" style="object-position:50% 55%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>В продаже</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
+              </figure>
+              <div class="project-info">
+                <div class="project-text">
+                  <h3>Мариинка Делюкс</h3>
+                  <span class="project-meta">Санкт-Петербург</span>
+                  <p class="project-desc">Жилой дом премиум-класса в исторической части Адмиралтейского района.</p>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9E%D1%80%D0%B4%D1%8B%D0%BD%D0%BA%D0%B0%2C%2025" target="_blank" rel="noopener noreferrer" aria-label="Большая Ордынка 25 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <div class="project-par"><img src="./assets/projects/ordynka-1600.webp" srcset="./assets/projects/ordynka-900.webp 900w, ./assets/projects/ordynka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="1132" alt="Рендер проекта «Большая Ордынка 25»" loading="lazy" decoding="async" style="object-position:50% 60%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>Скоро</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
+              </figure>
+              <div class="project-info">
+                <div class="project-text">
+                  <h3>Большая Ордынка 25</h3>
+                  <span class="project-meta">Москва</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%2C%2015" target="_blank" rel="noopener noreferrer" aria-label="Земледельческий 15 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <div class="project-par"><img src="./assets/projects/zemled-1600.webp" srcset="./assets/projects/zemled-900.webp 900w, ./assets/projects/zemled-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="1066" alt="Рендер проекта «Земледельческий 15»" loading="lazy" decoding="async" style="object-position:50% 45%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>Скоро</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
+              </figure>
+              <div class="project-info">
+                <div class="project-text">
+                  <h3>Земледельческий 15</h3>
+                  <span class="project-meta">Москва</span>
+                </div>
+                <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
+              </div>
+            </a>
+            <a class="project" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9C%D0%B0%D0%BB%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%BA%D0%B0" target="_blank" rel="noopener noreferrer" aria-label="Малая Полянка 3 — рендеры на Яндекс Диске">
+              <figure class="project-cover">
+                <div class="project-par"><img src="./assets/projects/polyanka-1600.webp" srcset="./assets/projects/polyanka-900.webp 900w, ./assets/projects/polyanka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 70vw" width="1600" height="900" alt="Рендер проекта «Малая Полянка 3»" loading="lazy" decoding="async" style="object-position:62% 50%"></div>
+                <span class="project-status"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.3 5.2 9.8 10.5 10.5-5.3.7-9.8 5.2-10.5 10.5C11.3 17.2 6.8 12.7 1.5 12 6.8 11.3 11.3 6.8 12 1.5z"/></svg></i>Скоро</span>
+                <span class="project-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg></span>
+              </figure>
+              <div class="project-info">
+                <div class="project-text">
+                  <h3>Малая Полянка 3</h3>
+                  <span class="project-meta">Москва</span>
                 </div>
                 <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
               </div>

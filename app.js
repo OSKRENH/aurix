@@ -298,6 +298,7 @@ refinements.textContent=`
       transform:none!important;
     }
     .project .project-cover img,.project.reveal:not(.is-revealed) .project-cover img{transform:none!important;transition:none!important}
+    .project-status i{animation:none!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
@@ -626,7 +627,7 @@ if(!prefersReduced){
     [...document.querySelectorAll('.file-list a')]
   ].forEach(group=>group.forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,Math.min(index,3)*70)));
   /* Project covers arrive row by row: left card first, its neighbour a beat later. */
-  document.querySelectorAll('.projects .project').forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,el.classList.contains('project-wide')?0:((index+1)%2)*90));
+  document.querySelectorAll('.projects .project').forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,[1,4].includes(index%6)?90:0));
   document.querySelectorAll('.projects-all').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
   document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
   document.querySelectorAll('.section-heading').forEach(el=>addMotion(el,'line-reveal',CARD_TRIGGER,0));
