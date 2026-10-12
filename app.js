@@ -219,6 +219,18 @@ refinements.textContent=`
   }
   .reveal.is-revealed{opacity:1;transform:none}
 
+  /* Headings arrive letter by letter; project covers open like a curtain. */
+  .word{display:inline-block;white-space:nowrap}
+  .ch{display:inline-block}
+  .letters .ch{opacity:0;transform:translateY(.4em);transition:opacity 650ms ${EASE} calc(var(--i) * 30ms),transform 800ms ${EASE} calc(var(--i) * 30ms)}
+  .letters.is-revealed .ch{opacity:1;transform:none}
+
+  .project.reveal{opacity:1;transform:none;transition:none}
+  .project-cover{clip-path:inset(0);transition:clip-path 1200ms cubic-bezier(.77,0,.18,1) var(--reveal-delay,0ms)}
+  .project.reveal:not(.is-revealed) .project-cover{clip-path:inset(0 0 100% 0)}
+  .project.reveal .project-info{transition:opacity 700ms ${EASE} calc(var(--reveal-delay,0ms) + 450ms),transform 800ms ${EASE} calc(var(--reveal-delay,0ms) + 450ms)}
+  .project.reveal:not(.is-revealed) .project-info{opacity:0;transform:translateY(14px)}
+
   .line-reveal{position:relative}
   .line-reveal::after{
     content:"";
@@ -299,6 +311,7 @@ refinements.textContent=`
     }
     .project .project-cover img,.project.reveal:not(.is-revealed) .project-cover img{transform:none!important;transition:none!important}
     .project-status i{animation:none!important}
+    .project-cover{clip-path:none!important;transition:none!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
@@ -607,6 +620,58 @@ if(hovesSample&&!prefersReduced){
 /* Motion classes are added only when motion will actually run, so a page
    without JS — or with reduced motion — never ends up with hidden content. */
 const motionTargets=[];
+/* Letter-by-letter headings. Splitting a word into boxes drops the font's kerning, so the
+   pair adjustments are measured once per pair (in em) and put back as margins. */
+const kernCache=new Map();
+function kernOf(pair,probe){
+  if(kernCache.has(pair))return kernCache.get(pair);
+  const width=text=>{probe.textContent=text.toUpperCase();return probe.getBoundingClientRect().width};
+  const value=(width(pair)-width(pair[0])-width(pair[1]))/100;
+  kernCache.set(pair,value);
+  return value;
+}
+function splitLetters(el){
+  const label=[...el.childNodes].map(node=>node.nodeType===1&&node.tagName==='BR'?' ':node.textContent).join('').replace(/\s+/g,' ').trim();
+  el.setAttribute('aria-label',label);
+  let index=0;
+  const fragment=document.createDocumentFragment();
+  [...el.childNodes].forEach(node=>{
+    if(node.nodeType===1&&node.tagName==='BR'){fragment.appendChild(node.cloneNode());return}
+    node.textContent.split(/(\s+)/).forEach(part=>{
+      if(!part)return;
+      if(/^\s+$/.test(part)){fragment.appendChild(document.createTextNode(' '));return}
+      const word=document.createElement('span');
+      word.className='word';
+      word.setAttribute('aria-hidden','true');
+      [...part].forEach(char=>{
+        const box=document.createElement('span');
+        box.className='ch';
+        box.style.setProperty('--i',index++);
+        box.textContent=char;
+        word.appendChild(box);
+      });
+      fragment.appendChild(word);
+    });
+  });
+  el.textContent='';
+  el.appendChild(fragment);
+}
+function restoreKerning(el){
+  const style=getComputedStyle(el);
+  const probe=document.createElement('span');
+  probe.style.cssText=`position:absolute;visibility:hidden;white-space:pre;letter-spacing:0;text-transform:none;font:${style.fontWeight} 100px ${style.fontFamily}`;
+  document.body.appendChild(probe);
+  el.querySelectorAll('.word').forEach(word=>{
+    const boxes=[...word.children];
+    for(let i=1;i<boxes.length;i++){
+      const k=kernOf(boxes[i-1].textContent+boxes[i].textContent,probe);
+      if(Math.abs(k)>.0005)boxes[i].style.marginLeft=`${k}em`;
+    }
+  });
+  probe.remove();
+}
+const fontsReady=()=>Promise.race([document.fonts?.ready||Promise.resolve(),new Promise(resolve=>setTimeout(resolve,1500))]);
+
 function addMotion(el,className,trigger,delay){
   if(!el||el.dataset.motion)return;
   el.dataset.motion='1';
@@ -629,7 +694,15 @@ if(!prefersReduced){
   /* Project covers arrive row by row: left card first, its neighbour a beat later. */
   document.querySelectorAll('.projects .project').forEach((el,index)=>addMotion(el,'reveal',CARD_TRIGGER,[1,4].includes(index%6)?90:0));
   document.querySelectorAll('.projects-all').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
-  document.querySelectorAll('.section-heading h2,.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
+  document.querySelectorAll('.section-heading .section-intro,.font-download,.logo-rule').forEach(el=>addMotion(el,'reveal',CARD_TRIGGER,0));
+  const headings=[...document.querySelectorAll('.section-heading h2')];
+  headings.forEach(heading=>{splitLetters(heading);addMotion(heading,'letters',CARD_TRIGGER,0)});
+  const heroTitle=document.querySelector('.hero h1');
+  if(heroTitle){splitLetters(heroTitle);heroTitle.classList.add('letters')}
+  fontsReady().then(()=>{
+    headings.forEach(restoreKerning);
+    if(heroTitle){restoreKerning(heroTitle);requestAnimationFrame(()=>requestAnimationFrame(()=>heroTitle.classList.add('is-revealed')))}
+  });
   document.querySelectorAll('.section-heading').forEach(el=>addMotion(el,'line-reveal',CARD_TRIGGER,0));
   addMotion(guildSample,'type-reveal',TYPE_TRIGGER,0);
   addMotion(hovesSample,'type-reveal',TYPE_TRIGGER,0);
