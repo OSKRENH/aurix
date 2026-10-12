@@ -45,6 +45,8 @@
       --tracking-caps:.1em;
 
       --grid-cols:10;
+      --span-l:6;
+      --span-s:4;
       --grid-gap:24px;
       --page-pad:64px;
       --content-max:1600px;
@@ -192,7 +194,7 @@
     }
     .hero .eyebrow{grid-column:1/5}
     .hero h1{
-      grid-column:1/8;
+      grid-column:1/7;
       align-self:center;
       margin:0;
       font-family:"Guild A Display",Arial,sans-serif;
@@ -202,7 +204,7 @@
       letter-spacing:var(--tracking-display);
     }
     .hero-note{
-      grid-column:8/11;
+      grid-column:7/11;
       align-self:center;
       margin:0;
       max-width:360px;
@@ -410,8 +412,8 @@
       text-transform:uppercase;
     }
     .logo-rule p{margin:var(--space-16) 0 0;max-width:440px;font-size:var(--fs-body)}
-    .rule-a{grid-column:1/5}
-    .rule-b{grid-column:6/10}
+    .rule-a{grid-column:1/7}
+    .rule-b{grid-column:7/11}
     .logo-download{grid-column:7/11;justify-self:end}
 
     .text-link{
@@ -434,11 +436,14 @@
     .palette{
       grid-column:1/-1;
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(var(--grid-cols),minmax(0,1fr));
+      grid-template-rows:repeat(2,minmax(296px,auto));
       gap:var(--space-24);
     }
+    .palette .color-deep{grid-column:1/span var(--span-l);grid-row:1/3}
+    .palette .color-lilac,.palette .color-mist{grid-column:calc(var(--span-l) + 1)/-1}
     .color{
-      min-height:480px;
+      min-height:0;
       display:flex;
       flex-direction:column;
       padding:var(--space-40);
@@ -520,9 +525,11 @@
     .font-stack{
       grid-column:1/-1;
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(var(--grid-cols),minmax(0,1fr));
       gap:var(--space-24);
     }
+    .font-stack>.guild-block{grid-column:1/span var(--span-l)}
+    .font-stack>.hoves-block{grid-column:span var(--span-s)}
     .font-block{
       min-height:480px;
       display:flex;
@@ -579,7 +586,7 @@
     .projects{
       grid-column:1/-1;
       display:grid;
-      grid-template-columns:repeat(10,minmax(0,1fr));
+      grid-template-columns:repeat(var(--grid-cols),minmax(0,1fr));
       column-gap:var(--space-24);
       row-gap:var(--space-64);
       --row-h:clamp(300px,35vw,540px);
@@ -592,8 +599,8 @@
       container-type:inline-size;
     }
     .project-wide{grid-column:1/-1}
-    .project-l{grid-column:span 6}
-    .project-s{grid-column:span 4}
+    .project-l{grid-column:span var(--span-l)}
+    .project-s{grid-column:span var(--span-s)}
     .project-cover{
       position:relative;
       margin:0;
@@ -690,7 +697,7 @@
     .section-files{background:var(--purple);color:var(--white)}
     .section-files .section-heading .section-intro{color:inherit}
     .file-list{
-      grid-column:6/11;
+      grid-column:7/11;
     }
     .file-list a{
       display:grid;
@@ -765,6 +772,8 @@
     @media(max-width:1024px){
       :root{
         --grid-cols:8;
+        --span-l:5;
+        --span-s:3;
         --grid-gap:24px;
         --page-pad:40px;
         --fs-display:72px;
@@ -786,10 +795,10 @@
       .logo-variants{grid-template-columns:repeat(8,minmax(0,1fr))}
       .logo-variant{grid-column:1/6}
       .logo-variant-symbol{grid-column:6/9}
-      .rule-a{grid-column:1/5}
-      .rule-b{grid-column:5/9}
-      .logo-download{grid-column:5/9}
-      .file-list{grid-column:4/9}
+      .rule-a{grid-column:1/6}
+      .rule-b{grid-column:6/9}
+      .logo-download{grid-column:6/9}
+      .file-list{grid-column:6/9}
       .files-footer{grid-column:1/4}
     }
 
@@ -829,11 +838,13 @@
       .logo-variant-meta{padding:var(--space-16)}
       .rule-a,.rule-b,.logo-download{grid-column:1/5}
       .logo-download{justify-self:start}
-      .palette{grid-template-columns:1fr;gap:var(--space-16)}
+      .palette{grid-template-columns:1fr;grid-template-rows:none;gap:var(--space-16)}
+      .palette .color-deep,.palette .color-lilac,.palette .color-mist{grid-column:auto;grid-row:auto}
       .color{min-height:0;padding:20px}
       .codes{padding-top:var(--space-24)}
       .color-name{margin-top:var(--space-8)}
       .font-stack{grid-template-columns:1fr;gap:var(--space-16)}
+      .font-stack>.guild-block,.font-stack>.hoves-block{grid-column:auto}
       .font-block{min-height:400px;padding:var(--space-24)}
       .projects{grid-template-columns:1fr;row-gap:var(--space-40);--row-h:auto}
       .project-wide,.project-l,.project-s{grid-column:1/-1}
@@ -1101,7 +1112,7 @@
                 <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
               </div>
             </a>
-            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9E%D1%80%D0%B4%D1%8B%D0%BD%D0%BA%D0%B0%2C%2025" target="_blank" rel="noopener noreferrer" aria-label="Большая Ордынка 25 — рендеры на Яндекс Диске">
+            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%9E%D1%80%D0%B4%D1%8B%D0%BD%D0%BA%D0%B0%2C%2025" target="_blank" rel="noopener noreferrer" aria-label="Большая Ордынка 25 — рендеры на Яндекс Диске">
               <figure class="project-cover">
                 <div class="project-par"><img src="./assets/projects/ordynka-1600.webp" srcset="./assets/projects/ordynka-900.webp 900w, ./assets/projects/ordynka-1600.webp 1600w" sizes="(max-width:768px) 100vw, 40vw" width="1600" height="1132" alt="Рендер проекта «Большая Ордынка 25»" loading="lazy" decoding="async" style="object-position:50% 60%"></div>
               </figure>
@@ -1113,7 +1124,7 @@
                 <span class="project-link">Рендеры <i aria-hidden="true">↗</i></span>
               </div>
             </a>
-            <a class="project project-l" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%2C%2015" target="_blank" rel="noopener noreferrer" aria-label="Земледельческий 15 — рендеры на Яндекс Диске">
+            <a class="project project-s" href="https://disk.360.yandex.ru/d/PyOZiK40ofjkqg/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%2C%2015" target="_blank" rel="noopener noreferrer" aria-label="Земледельческий 15 — рендеры на Яндекс Диске">
               <figure class="project-cover">
                 <div class="project-par"><img src="./assets/projects/zemled-1600.webp" srcset="./assets/projects/zemled-900.webp 900w, ./assets/projects/zemled-1600.webp 1600w" sizes="(max-width:768px) 100vw, 60vw" width="1600" height="1066" alt="Рендер проекта «Земледельческий 15»" loading="lazy" decoding="async" style="object-position:50% 45%"></div>
               </figure>
