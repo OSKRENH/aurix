@@ -26,7 +26,7 @@ refinements.textContent=`
   }
 
   .hero h1,.section-heading h2,.guild-sample,.guild-block .alphabet{text-transform:uppercase}
-  .section-heading h2{font-size:70px!important;text-wrap:balance}
+  .section-heading h2{text-wrap:balance}
 
   .hero-note,.section-intro,.logo-rule p,.hoves-sample,.font-download strong,.material-copy small,.logo-variant-meta strong{
     text-wrap:pretty;
@@ -57,7 +57,7 @@ refinements.textContent=`
     align-self:start;
     margin-top:clamp(110px,13vh,150px);
     font-family:"Guild A Display",Arial,sans-serif;
-    font-size:88px;
+    font-size:var(--fs-display);
     line-height:.94;
     font-weight:400;
     letter-spacing:-.035em;
@@ -181,7 +181,7 @@ refinements.textContent=`
 
   .copy-value-stack{position:relative;display:grid;overflow:hidden;line-height:.9}
   .copy-value-stack>.color-hex,.copy-value-confirm{grid-area:1/1;display:block;transition:transform 250ms ${EASE},opacity 250ms ${EASE}}
-  .copy-value-confirm{align-self:center;justify-self:start;transform:translateY(100%);opacity:0;font-size:13px;line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
+  .copy-value-confirm{align-self:center;justify-self:start;transform:translateY(100%);opacity:0;font-size:var(--fs-small);line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
   .color-primary.is-copy-confirmed .color-hex{transform:translateY(-100%);opacity:0}
   .color-primary.is-copy-confirmed .copy-value-confirm{transform:translateY(0);opacity:1}
 
@@ -274,7 +274,6 @@ refinements.textContent=`
   .brand-section,.section-colors,.type-section,.section-projects,.files{position:relative;isolation:isolate}
   .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.section-projects>.shell,.files>.shell{position:relative;z-index:1}
 
-  @media(max-width:1024px){.section-heading h2{font-size:58px!important}}
   @media(max-width:900px){
     /* The box takes the proportions of the glyph itself (the mask is trimmed to its bounds,
        so it touches the top and bottom of the hero), so the mask is
@@ -294,7 +293,7 @@ refinements.textContent=`
       -webkit-mask-size:100% 100%;
       mask-size:100% 100%;
     }
-    .hero h1{grid-column:1/5;margin-top:64px;font-size:clamp(54px,15.5vw,72px);line-height:.92;position:relative;z-index:2}
+    .hero h1{grid-column:1/5;margin-top:64px;line-height:.92;position:relative;z-index:2}
     .hero .eyebrow,.hero-note,.hero-foot{position:relative;z-index:2}
     .hero-note{grid-column:1/5;align-self:start;margin:28px 0 0;max-width:300px}
     .hero-foot{grid-column:1/5;margin-top:72px}
@@ -303,8 +302,7 @@ refinements.textContent=`
     .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
   }
-  @media(max-width:768px){.section-heading h2{font-size:45px!important}.nav-active-indicator{display:none}}
-  @media(max-width:375px){.section-heading h2{font-size:38px!important}}
+  @media(max-width:768px){.nav-active-indicator{display:none}}
 
   @media(prefers-reduced-motion:reduce){
     .reveal,.reveal.is-revealed,

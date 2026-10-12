@@ -31,9 +31,10 @@
       --space-96:96px;
       --space-160:160px;
 
-      --fs-display:144px;
-      --fs-h2:88px;
+      --fs-display:88px;
+      --fs-h2:70px;
       --fs-h3:40px;
+      --fs-h4:28px;
       --fs-body:18px;
       --fs-small:12px;
 
@@ -374,7 +375,7 @@
       border-radius:var(--radius-control);
       background:none;
       color:inherit;
-      font-size:11px;
+      font-size:var(--fs-small);
       letter-spacing:.08em;
       text-transform:uppercase;
       cursor:pointer;
@@ -544,7 +545,7 @@
     .guild-sample{
       margin:auto 0;
       font-family:"Guild A Display",Arial,sans-serif;
-      font-size:var(--fs-h2);
+      font-size:var(--fs-display);
       line-height:var(--lh-heading);
       letter-spacing:var(--tracking-display);
     }
@@ -628,7 +629,7 @@
     .project-text h3{
       margin:0;
       font-family:"Guild A Display",Arial,sans-serif;
-      font-size:clamp(24px,2.1vw,32px);
+      font-size:var(--fs-h4);
       font-weight:400;
       line-height:1;
       letter-spacing:-.02em;
@@ -646,7 +647,7 @@
     .project-desc{
       margin:var(--space-16) 0 0;
       max-width:46ch;
-      font-size:15px;
+      font-size:var(--fs-body);
       line-height:var(--lh-body);
       text-wrap:pretty;
     }
@@ -766,9 +767,10 @@
         --grid-cols:8;
         --grid-gap:24px;
         --page-pad:40px;
-        --fs-display:112px;
-        --fs-h2:72px;
+        --fs-display:72px;
+        --fs-h2:58px;
         --fs-h3:36px;
+      --fs-h4:28px;
         --fs-body:18px;
         --fs-small:12px;
       }
@@ -797,9 +799,10 @@
         --grid-gap:16px;
         --page-pad:24px;
         --header-h:64px;
-        --fs-display:80px;
-        --fs-h2:56px;
+        --fs-display:60px;
+        --fs-h2:45px;
         --fs-h3:32px;
+      --fs-h4:24px;
         --fs-body:16px;
         --fs-small:11px;
       }
@@ -853,9 +856,10 @@
       :root{
         --grid-gap:16px;
         --page-pad:16px;
-        --fs-display:64px;
-        --fs-h2:48px;
+        --fs-display:54px;
+        --fs-h2:38px;
         --fs-h3:28px;
+      --fs-h4:24px;
         --fs-body:16px;
         --fs-small:11px;
       }
