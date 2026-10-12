@@ -194,6 +194,8 @@
       padding-bottom:var(--space-40);
     }
     .hero .eyebrow{grid-column:1/5}
+    /* Typographic basics live in the page itself, so the page reads correctly before (or without) app.js. */
+    .hero h1,.section-heading h2,.guild-sample{text-transform:uppercase}
     .hero h1{
       grid-column:1/7;
       align-self:center;
@@ -971,7 +973,7 @@
   <main id="main">
     <section class="hero" id="top">
       <div class="shell hero-inner">
-        <div class="eyebrow">00 / AURIX / ФИРМЕННЫЙ СТИЛЬ</div>
+        <div class="eyebrow">AURIX / ФИРМЕННЫЙ СТИЛЬ</div>
         <h1>Бренд<br>в деталях</h1>
         <p class="hero-note">Система логотипа, цвета и типографики для ежедневной работы с брендом.</p>
         <div class="hero-foot">BRAND GUIDE · 2026</div>
