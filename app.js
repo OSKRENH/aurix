@@ -194,7 +194,7 @@ refinements.textContent=`
   .scroll-progress{
     position:fixed;
     z-index:300;
-    top:0;
+    top:calc(var(--header-h) - 1px);
     left:0;
     width:100%;
     height:1px;
