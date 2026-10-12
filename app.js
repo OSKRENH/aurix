@@ -19,7 +19,7 @@ refinements.textContent=`
     background:rgba(31,0,72,.82)!important;
     -webkit-backdrop-filter:blur(8px);
     backdrop-filter:blur(8px);
-    border-bottom:1px solid rgba(255,255,255,.22)!important;
+    border-bottom:0!important;
   }
   .mobile-nav{
     background:rgba(31,0,72,.96)!important;
@@ -194,10 +194,10 @@ refinements.textContent=`
   .scroll-progress{
     position:fixed;
     z-index:300;
-    top:calc(var(--header-h) - 1px);
+    top:calc(var(--header-h) - 2px);
     left:0;
     width:100%;
-    height:1px;
+    height:2px;
     background:var(--lilac);
     transform:scaleX(0);
     transform-origin:left center;
