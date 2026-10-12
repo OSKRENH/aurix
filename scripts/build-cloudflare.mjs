@@ -167,6 +167,7 @@ async function buildStaticSite() {
   }
 
   await copyFile(path.join('assets', 'og-cover.jpg'));
+  await copyFile(path.join('assets', 'favicon.svg'));
   await ensureDir(path.join(DIST, 'assets', 'projects'));
   for (const name of await fs.readdir(PROJECTS)) {
     if (name.endsWith('.webp')) await copyFile(path.join('assets', 'projects', name));
@@ -188,6 +189,7 @@ async function buildStaticSite() {
   const required = [
     'index.html',
     'assets/og-cover.jpg',
+    'assets/favicon.svg',
     'assets/projects/omega-1600.webp',
     'assets/projects/zemled-1600.webp',
     'downloads/AURIX_Fonts.zip',
