@@ -19,10 +19,10 @@
 .map-canvas.is-dark-preview .map-tone-button::before{border-color:currentColor}
 .map-meta{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px;padding:18px 20px 20px}
 .map-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
-.map-copy span{font-size:var(--fs-small);letter-spacing:.1em;text-transform:uppercase;opacity:.62}
+.map-copy span{font-size:var(--fs-small);letter-spacing:var(--tracking-caps);text-transform:uppercase;opacity:.62}
 .map-copy strong{font-size:var(--fs-h4);font-weight:400;line-height:1;letter-spacing:-.02em}
 .map-downloads{display:flex;align-items:center;gap:14px}
-.map-downloads a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:7px 0;border-bottom:1px solid currentColor;font-size:var(--fs-small);line-height:1;letter-spacing:.08em;text-transform:uppercase;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
+.map-downloads a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:7px 0;border-bottom:1px solid currentColor;font-size:var(--fs-small);line-height:1;letter-spacing:var(--tracking-caps);text-transform:uppercase;transition:opacity 250ms cubic-bezier(.2,.7,.3,1)}
 .map-downloads a:hover{opacity:.58}
 .map-downloads svg{width:13px;height:13px;fill:currentColor}
 .section-maps .section-heading{position:relative}

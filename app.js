@@ -74,7 +74,7 @@ refinements.textContent=`
   .footer img,.footer span,.footer a{align-self:center}
 
   .guild-block .alphabet{font-family:"Guild A Display",Arial,sans-serif;font-weight:400}
-  .hoves-block .alphabet{line-height:1.8;letter-spacing:.015em}
+  .hoves-block .alphabet{line-height:1.8;letter-spacing:var(--tracking-caps)}
   .font-download{border-top:0!important;padding-top:0!important}
 
   .logo-color-switch{display:none!important}
@@ -181,7 +181,7 @@ refinements.textContent=`
 
   .copy-value-stack{position:relative;display:grid;overflow:hidden;line-height:.9}
   .copy-value-stack>.color-hex,.copy-value-confirm{grid-area:1/1;display:block;transition:transform 250ms ${EASE},opacity 250ms ${EASE}}
-  .copy-value-confirm{align-self:center;justify-self:start;transform:translateY(100%);opacity:0;font-size:var(--fs-small);line-height:1.1;letter-spacing:.04em;text-transform:uppercase}
+  .copy-value-confirm{align-self:center;justify-self:start;transform:translateY(100%);opacity:0;font-size:var(--fs-small);line-height:1.1;letter-spacing:var(--tracking-caps);text-transform:uppercase}
   .color-primary.is-copy-confirmed .color-hex{transform:translateY(-100%);opacity:0}
   .color-primary.is-copy-confirmed .copy-value-confirm{transform:translateY(0);opacity:1}
 
@@ -248,8 +248,8 @@ refinements.textContent=`
      The specimen tightens its tracking, which relayouts while it plays, so the
      block is contained and the reflow cannot escape the card. */
   .font-stack .font-block{contain:layout paint}
-  .guild-sample.type-reveal{letter-spacing:.06em;opacity:0;transform:translateY(16px);transition:letter-spacing 950ms ${EASE},opacity 950ms ${EASE},transform 950ms ${EASE}}
-  .guild-sample.type-reveal.is-revealed{letter-spacing:-.03em;opacity:1;transform:none}
+  .guild-sample.type-reveal{opacity:0;transform:translateY(16px);transition:opacity 950ms ${EASE},transform 950ms ${EASE}}
+  .guild-sample.type-reveal.is-revealed{opacity:1;transform:none}
 
   .type-line-mask{display:block;overflow:hidden}
   .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 950ms ${EASE} var(--line-delay,0ms),opacity 950ms ${EASE} var(--line-delay,0ms)}
@@ -298,7 +298,6 @@ refinements.textContent=`
       transform:none!important;
     }
     .project .project-cover img,.project.reveal:not(.is-revealed) .project-cover img{transform:none!important;transition:none!important}
-    .guild-sample.type-reveal{letter-spacing:-.03em!important}
     .line-reveal::after,.line-reveal.is-revealed::after{animation:none!important;transition:none!important;transform:none!important}
     .scroll-progress{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
