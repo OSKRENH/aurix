@@ -71,12 +71,6 @@
         if(!entry.isIntersecting)return;
         nav.querySelectorAll('a[href^="#"]').forEach(link=>link.removeAttribute('aria-current'));
         mapNav.setAttribute('aria-current','true');
-        const indicator=nav.querySelector('.nav-active-indicator');
-        if(indicator){
-          const x=mapNav.offsetLeft+(mapNav.offsetWidth-28)/2;
-          indicator.style.transform=`translateX(${Math.round(x)}px)`;
-          indicator.classList.add('is-visible');
-        }
       });
     },{rootMargin:'-20% 0px -65% 0px',threshold:0});
     activeObserver.observe(mapsSection);

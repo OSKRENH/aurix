@@ -255,22 +255,6 @@ refinements.textContent=`
   .type-line{display:block;transform:translateY(100%);opacity:0;transition:transform 950ms ${EASE} var(--line-delay,0ms),opacity 950ms ${EASE} var(--line-delay,0ms)}
   .hoves-sample.type-reveal.is-revealed .type-line{transform:none;opacity:1}
 
-  .nav{position:relative}
-  .nav-active-indicator{
-    position:absolute;
-    left:0;
-    bottom:8px;
-    width:28px;
-    height:1px;
-    background:currentColor;
-    opacity:0;
-    transform:translateX(0);
-    transform-origin:center;
-    pointer-events:none;
-    transition:transform 350ms ${EASE},opacity 250ms ${EASE};
-  }
-  .nav-active-indicator.is-visible{opacity:1}
-
   .brand-section,.section-colors,.type-section,.section-projects,.files{position:relative;isolation:isolate}
   .brand-section>.shell,.section-colors>.shell,.type-section>.shell,.section-projects>.shell,.files>.shell{position:relative;z-index:1}
 
@@ -302,7 +286,6 @@ refinements.textContent=`
     .logo-tone-button::before{width:12px;height:12px}
     .font-download .compact-zip-link{justify-self:start}
   }
-  @media(max-width:768px){.nav-active-indicator{display:none}}
 
   @media(prefers-reduced-motion:reduce){
     .reveal,.reveal.is-revealed,
@@ -652,26 +635,9 @@ if(!prefersReduced){
   addMotion(hovesSample,'type-reveal',TYPE_TRIGGER,0);
 }
 
-/* Single moving active navigation indicator. */
+/* The active section is marked with aria-current; the colour comes from CSS. */
 const nav=document.querySelector('.nav');
 const navLinks=nav?[...nav.querySelectorAll('a[href^="#"]')]:[];
-let navIndicator=null;
-if(nav&&navLinks.length){
-  navIndicator=document.createElement('span');
-  navIndicator.className='nav-active-indicator';
-  navIndicator.setAttribute('aria-hidden','true');
-  nav.appendChild(navIndicator);
-}
-function moveNavIndicator(link){
-  if(!nav||!navIndicator||!link){navIndicator?.classList.remove('is-visible');return}
-  const x=link.offsetLeft+(link.offsetWidth-28)/2;
-  navIndicator.style.transform=`translateX(${Math.round(x)}px)`;
-  navIndicator.classList.add('is-visible');
-}
-window.addEventListener('resize',()=>{
-  const current=navLinks.find(link=>link.getAttribute('aria-current')==='true');
-  if(current)moveNavIndicator(current);
-},{passive:true});
 
 /* Page progress: CSS scroll timeline when available, rAF scroll fallback otherwise. */
 const progress=document.createElement('span');
@@ -765,13 +731,13 @@ if(!prefersReduced){
   }
 }
 
-/* Keep aria-current in sync with the moving indicator. */
+/* Keep aria-current on the nav link of the section in view. */
 const currentSectionObserver=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(!entry.isIntersecting)return;
     navLinks.forEach(link=>link.removeAttribute('aria-current'));
     const active=navLinks.find(link=>link.getAttribute('href')===`#${entry.target.id}`);
-    if(active){active.setAttribute('aria-current','true');moveNavIndicator(active)}
+    if(active)active.setAttribute('aria-current','true');
   });
 },{rootMargin:'-20% 0px -65% 0px',threshold:0});
 ['logo','colors','type','projects','files'].forEach(id=>{const section=document.getElementById(id);if(section)currentSectionObserver.observe(section)});
