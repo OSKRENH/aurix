@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs",
-    "postinstall": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs",
+    "build": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs && node scripts/build-kit.mjs",
+    "postinstall": "node scripts/build-cloudflare.mjs && node scripts/build-maps.mjs && node scripts/build-kit.mjs",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "jszip": "3.10.1",
+    "opentype.js": "1.3.4",
     "pdf-lib": "1.17.1",
     "sharp": "0.34.3"
   },
