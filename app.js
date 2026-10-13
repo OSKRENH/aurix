@@ -573,12 +573,11 @@ document.querySelectorAll('.logo-variant').forEach(card=>{
 document.querySelector('.logo-color-switch')?.remove();
 document.querySelector('.logo-download')?.remove();
 
-const fontZipLink=document.querySelector('.font-download .text-link');
-if(fontZipLink){
-  fontZipLink.classList.add('compact-zip-link');
-  fontZipLink.innerHTML=`ZIP <span class="inline-download-icon" aria-hidden="true">${downloadIcon}</span>`;
-  fontZipLink.setAttribute('aria-label','Скачать шрифты ZIP');
-}
+document.querySelectorAll('.font-download .text-link').forEach(zipLink=>{
+  zipLink.classList.add('compact-zip-link');
+  zipLink.innerHTML=`ZIP <span class="inline-download-icon" aria-hidden="true">${downloadIcon}</span>`;
+  zipLink.setAttribute('aria-label',zipLink.dataset.zipLabel||'Скачать ZIP');
+});
 
 function formatFileSize(bytes){
   if(!Number.isFinite(bytes)||bytes<=0)return '—';
@@ -595,8 +594,8 @@ async function resolveFileSize(url){
 const materialDefinitions=[
   {match:'AURIX_Brand_Kit.zip',title:'Весь комплект',formats:'ZIP · логотипы, палитра, шрифты, обложки, карты'},
   {match:'AURIX_Logos',title:'Логотипы',formats:'ZIP · SVG, PNG, EPS, PDF · фиолетовый / белый'},
-  {match:'AURIX_Colors.zip',title:'Палитра',formats:'ZIP · карточки цветов SVG, PNG, PDF · ASE, CSS'},
-  {match:'AURIX_Fonts.zip',title:'Шрифты',formats:'ZIP · OTF, TTF · Regular'},
+  {match:'AURIX_Colors.zip',title:'Цвета',formats:'ZIP · карточки цветов SVG, PNG, PDF · ASE, CSS'},
+  {match:'AURIX_Fonts.zip',title:'Шрифт',formats:'ZIP · OTF, TTF · Regular'},
   {match:'AURIX_Project_Covers.zip',title:'Обложки проектов',formats:'ZIP · JPG'},
   {match:'AURIX_Maps.zip',title:'Карты',formats:'ZIP · Москва и Санкт-Петербург · JPG, SVG, PDF'}
 ];
