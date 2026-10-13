@@ -1,32 +1,19 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { brotliDecompressSync } from 'node:zlib';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 
 const ROOT=process.cwd();
 const DIST=path.join(ROOT,'dist-site');
-const PACKED=path.join(ROOT,'assets','maps-packed');
+const SOURCES=path.join(ROOT,'assets','maps');
 const OUT_ASSETS=path.join(DIST,'assets','maps');
 const OUT_DOWNLOADS=path.join(DIST,'downloads','maps');
 
-async function readMoscow(){
-  const names=['00','01','02','03','04','05','06','07','08','09'];
-  const parts=await Promise.all(names.map(name=>fs.readFile(path.join(PACKED,`moscow.${name}.b64`),'utf8')));
-  const encoded=parts.join('')+'h+irAA==';
-  return brotliDecompressSync(Buffer.from(encoded,'base64')).toString('utf8');
-}
-async function readSpb(){
-  const packed=await fs.readFile(path.join(PACKED,'spb-dark.svg.br'));
-  return brotliDecompressSync(packed).toString('utf8');
-}
-function lightVersion(svg){return svg.replaceAll('#1f0048','#e5e5f3').replaceAll('#3d226f','#ffffff')}
-
+const read=name=>fs.readFile(path.join(SOURCES,name),'utf8');
 const MAPS={
-  Moscow:{label:'Москва',dark:await readMoscow()},
-  Saint_Petersburg:{label:'Санкт-Петербург',dark:await readSpb()}
+  Moscow:{label:'Москва',slug:'moscow',light:await read('moscow-light.svg'),dark:await read('moscow-dark.svg')},
+  Saint_Petersburg:{label:'Санкт-Петербург',slug:'spb',light:await read('spb-light.svg'),dark:await read('spb-dark.svg')}
 };
-for(const cfg of Object.values(MAPS))cfg.light=lightVersion(cfg.dark);
 
 const SECTION=`
 <section class="brand-section section-maps theme-white" id="maps">
@@ -39,10 +26,10 @@ const SECTION=`
     <div class="map-grid" aria-label="Фирменные карты AURIX">
       <article class="map-card" data-city="moscow" data-label="Москва">
         <div class="map-canvas">
-          <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/moscow-light.svg" alt="Карта Москвы, светлая версия">
-          <img class="map-preview-layer" data-tone="dark" src="./assets/maps/moscow-dark.svg" alt="Карта Москвы, тёмная версия">
+          <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/moscow-light.webp" alt="Карта Москвы, светлая версия">
+          <img class="map-preview-layer" data-tone="dark" src="./assets/maps/moscow-dark.webp" alt="Карта Москвы, тёмная версия">
           <div class="map-tone-switch" role="group" aria-label="Цвет карты Москвы">
-            <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E5E5F3" aria-label="Светлая" aria-pressed="true"></button>
+            <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E9E9F5" aria-label="Светлая" aria-pressed="true"></button>
             <button class="map-tone-button" type="button" data-tone="dark" style="--tone:#1F0048" aria-label="Тёмная" aria-pressed="false"></button>
           </div>
         </div>
@@ -50,10 +37,10 @@ const SECTION=`
       </article>
       <article class="map-card" data-city="spb" data-label="Санкт-Петербург">
         <div class="map-canvas">
-          <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/spb-light.svg" alt="Карта Санкт-Петербурга, светлая версия">
-          <img class="map-preview-layer" data-tone="dark" src="./assets/maps/spb-dark.svg" alt="Карта Санкт-Петербурга, тёмная версия">
+          <img class="map-preview-layer is-active" data-tone="light" src="./assets/maps/spb-light.webp" alt="Карта Санкт-Петербурга, светлая версия">
+          <img class="map-preview-layer" data-tone="dark" src="./assets/maps/spb-dark.webp" alt="Карта Санкт-Петербурга, тёмная версия">
           <div class="map-tone-switch" role="group" aria-label="Цвет карты Санкт-Петербурга">
-            <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E5E5F3" aria-label="Светлая" aria-pressed="true"></button>
+            <button class="map-tone-button is-active" type="button" data-tone="light" style="--tone:#E9E9F5" aria-label="Светлая" aria-pressed="true"></button>
             <button class="map-tone-button" type="button" data-tone="dark" style="--tone:#1F0048" aria-label="Тёмная" aria-pressed="false"></button>
           </div>
         </div>
@@ -106,11 +93,10 @@ await Promise.all([
   fs.copyFile(path.join(ROOT,'maps.js'),path.join(DIST,'maps.js'))
 ]);
 for(const [cityKey,cfg] of Object.entries(MAPS)){
-  const cityFile=cityKey==='Moscow'?'moscow':'spb';
-  await fs.writeFile(path.join(OUT_ASSETS,`${cityFile}-light.svg`),cfg.light);
-  await fs.writeFile(path.join(OUT_ASSETS,`${cityFile}-dark.svg`),cfg.dark);
-  await exportMap(cityKey,'light',cfg.light);
-  await exportMap(cityKey,'dark',cfg.dark);
+  for(const tone of ['light','dark']){
+    await sharp(Buffer.from(cfg[tone],'utf8')).resize({width:1920}).webp({quality:82}).toFile(path.join(OUT_ASSETS,`${cfg.slug}-${tone}.webp`));
+    await exportMap(cityKey,tone,cfg[tone]);
+  }
 }
 for(const file of ['index.html','brandbook.html'])await inject(file);
 for(const file of [
