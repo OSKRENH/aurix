@@ -593,12 +593,12 @@ async function resolveFileSize(url){
 }
 
 const materialDefinitions=[
-  {match:'AURIX_Brand_Kit.zip',title:'Весь комплект',formats:'ZIP · логотипы, шрифты, палитра, карты, обложки'},
+  {match:'AURIX_Brand_Kit.zip',title:'Весь комплект',formats:'ZIP · логотипы, палитра, шрифты, обложки, карты'},
   {match:'AURIX_Logos',title:'Логотипы',formats:'ZIP · SVG, PNG, EPS, PDF · фиолетовый / белый'},
-  {match:'AURIX_Fonts.zip',title:'Шрифты',formats:'ZIP · OTF, TTF · Regular'},
   {match:'AURIX_Colors.zip',title:'Палитра',formats:'ZIP · карточки цветов SVG, PNG, PDF · ASE, CSS'},
-  {match:'AURIX_Maps.zip',title:'Карты',formats:'ZIP · Москва и Санкт-Петербург · JPG, SVG, PDF'},
-  {match:'AURIX_Project_Covers.zip',title:'Обложки проектов',formats:'ZIP · JPG'}
+  {match:'AURIX_Fonts.zip',title:'Шрифты',formats:'ZIP · OTF, TTF · Regular'},
+  {match:'AURIX_Project_Covers.zip',title:'Обложки проектов',formats:'ZIP · JPG'},
+  {match:'AURIX_Maps.zip',title:'Карты',formats:'ZIP · Москва и Санкт-Петербург · JPG, SVG, PDF'}
 ];
 document.querySelectorAll('.file-list a').forEach(link=>{
   const definition=materialDefinitions.find(item=>link.href.includes(item.match));

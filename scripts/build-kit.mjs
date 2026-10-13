@@ -64,7 +64,7 @@ function paletteSheet() {
     parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c.hex}"${border}/>`);
     parts.push(text(c.hex, x + inner, y + inner + 92, 120, ink));
     parts.push(text(c.name.toUpperCase(), x + inner, y + inner + 92 + 64, 28, ink));
-    const rows = [['PANTONE', c.pantone], ['CMYK', c.cmyk], ['RGB', c.rgb.join(' / ')]];
+    const rows = [['RGB', c.rgb.join(' / ')], ['CMYK', c.cmyk], ['PANTONE', c.pantone]];
     const rowH = 88;
     const top = y + h - inner - rows.length * rowH;
     rows.forEach(([label, value], i) => {
@@ -128,7 +128,7 @@ async function buildColors() {
   root.file('README.txt', [
     'AURIX — фирменная палитра',
     '',
-    ...COLORS.flatMap(c => [`${c.name}`, `  HEX      ${c.hex}`, `  PANTONE  ${c.pantone}`, `  CMYK     ${c.cmyk}`, `  RGB      ${c.rgb.join(' / ')}`, '']),
+    ...COLORS.flatMap(c => [`${c.name}`, `  HEX      ${c.hex}`, `  RGB      ${c.rgb.join(' / ')}`, `  CMYK     ${c.cmyk}`, `  PANTONE  ${c.pantone}`, '']),
     'Файлы: AURIX_Palette (SVG, PNG, PDF) — карточки цветов как на сайте;',
     'AURIX_Palette.ase — образцы для Adobe Photoshop, Illustrator, InDesign;',
     'AURIX_Palette.css — переменные для вёрстки; Swatches — плашки по одному цвету.',
@@ -174,20 +174,20 @@ async function buildKit() {
   const zip = new JSZip();
   const kit = zip.folder('AURIX_Brand_Kit');
   await copyInto(kit, '01_Logos', 'AURIX_Logos_All_Formats.zip', 'AURIX_Logos_All_Formats');
-  const fonts = kit.folder('02_Fonts');
+  await copyInto(kit, '02_Colors', 'AURIX_Colors.zip', 'AURIX_Colors');
+  const fonts = kit.folder('03_Fonts');
   const fontZip = await JSZip.loadAsync(await fs.readFile(path.join(DOWNLOADS, 'AURIX_Fonts.zip')));
   for (const [entry, file] of Object.entries(fontZip.files)) if (!file.dir) fonts.file(entry, await file.async('nodebuffer'));
-  await copyInto(kit, '03_Colors', 'AURIX_Colors.zip', 'AURIX_Colors');
-  await copyInto(kit, '04_Maps', 'AURIX_Maps.zip', 'AURIX_Maps');
-  await copyInto(kit, '05_Project_Covers', 'AURIX_Project_Covers.zip', 'AURIX_Project_Covers');
+  await copyInto(kit, '04_Project_Covers', 'AURIX_Project_Covers.zip', 'AURIX_Project_Covers');
+  await copyInto(kit, '05_Maps', 'AURIX_Maps.zip', 'AURIX_Maps');
   kit.file('README.txt', [
     'AURIX — комплект материалов бренда',
     '',
     '01_Logos           логотип с дескриптором, без него и символ: SVG, PNG, PDF, EPS; фиолетовый и белый',
-    '02_Fonts           Guild A Display и TT Hoves Pro (Regular)',
-    '03_Colors          палитра: карточки цветов, образцы ASE, CSS, значения HEX / PANTONE / CMYK / RGB',
-    '04_Maps           карты Москвы и Санкт-Петербурга: светлая и тёмная, JPG / SVG / PDF',
-    '05_Project_Covers обложки проектов, JPG',
+    '02_Colors          палитра: карточки цветов, образцы ASE, CSS, значения HEX / RGB / CMYK / PANTONE',
+    '03_Fonts           Guild A Display и TT Hoves Pro (Regular)',
+    '04_Project_Covers  обложки проектов, JPG',
+    '05_Maps            карты Москвы и Санкт-Петербурга: светлая и тёмная, JPG / SVG / PDF',
     '',
     'Руководство: https://aurix.ivankamaldinov.workers.dev',
     ''
