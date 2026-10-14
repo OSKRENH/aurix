@@ -26,7 +26,8 @@ const COVERS = {
   mariinka: 'Mariinka_Deluxe',
   ordynka: 'Bolshaya_Ordynka_25',
   zemled: 'Zemledelcheskiy_15',
-  polyanka: 'Malaya_Polyanka_3'
+  polyanka: 'Malaya_Polyanka_3',
+  arbat2: 'Arbat_2'
 };
 
 async function writeZip(fileName, zip) {
