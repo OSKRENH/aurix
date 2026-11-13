@@ -83,7 +83,7 @@ async function makeEps(png) {
   return Buffer.from(`%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 ${width} ${height}\n%%LanguageLevel: 2\n%%Pages: 1\n%%EndComments\n/picstr ${width * 3} string def\n${width} ${height} 8\n[${width} 0 0 -${height} 0 ${height}]\n{ currentfile picstr readhexstring pop }\nfalse 3 colorimage\n${hex}\nshowpage\n%%EOF\n`, 'ascii');
 }
 
-async function makeLogoAsset(svgText, pngWidth) {
+async function makeLogoAsset(svgText, pngWidth, includeEps = true) {
   const svg = Buffer.from(svgText, 'utf8');
   const rendered = await sharp(svg)
     .resize({ width: pngWidth, withoutEnlargement: false })
@@ -94,7 +94,7 @@ async function makeLogoAsset(svgText, pngWidth) {
   const height = rendered.info.height;
   const [pdf, eps] = await Promise.all([
     makePdf(png, width, height),
-    makeEps(png)
+    includeEps ? makeEps(png) : undefined
   ]);
   return { svg, png, pdf, eps };
 }
@@ -144,6 +144,52 @@ async function buildLogoDownloads() {
   await fs.writeFile(path.join(DOWNLOADS, 'AURIX_Logos.zip'), all);
 }
 
+async function buildProjectLogoDownloads() {
+  const all = new JSZip();
+  const root = all.folder('AURIX_Project_Logos');
+  const names = {
+    arbat2: 'Arbat_2',
+    ldm: 'LDM',
+    mariinka: 'Mariinka_Deluxe',
+    omega: 'Residence_Omega'
+  };
+
+  for (const [slug, name] of Object.entries(names)) {
+    const source = await fs.readFile(path.join(PROJECTS, `${slug}-logo.svg`), 'utf8');
+    const zip = new JSZip();
+    const project = root.folder(name);
+    for (const [tone, color] of [['Black', '#000000'], ['White', '#FFFFFF']]) {
+      const svgText = source.replace(/#fff\b/gi, color);
+      const { svg, png, pdf } = await makeLogoAsset(svgText, 2400, false);
+      const eps = await makeProjectEps(png, tone === 'White');
+      for (const [format, data] of Object.entries({ svg, png, pdf, eps })) {
+        const file = `AURIX_${name}_${tone}.${format}`;
+        zip.folder(tone).file(file, data);
+        project.folder(tone).file(file, data);
+      }
+    }
+    await writeZip(`AURIX_Project_Logo_${slug}.zip`, zip);
+  }
+  await writeZip('AURIX_Project_Logos.zip', all);
+}
+
+async function makeProjectEps(png, white) {
+  // A PostScript stencil leaves the area around either logo color transparent.
+  const { data, info: { width, height, channels } } = await sharp(png)
+    .ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const stride = Math.ceil(width / 8);
+  const mask = Buffer.alloc(stride * height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (data[(y * width + x) * channels + channels - 1] >= 128) {
+        mask[y * stride + (x >> 3)] |= 128 >> (x % 8);
+      }
+    }
+  }
+  const hex = mask.toString('hex').match(/.{1,120}/g).join('\n');
+  return Buffer.from(`%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 ${width} ${height}\n%%EndComments\n${white ? 1 : 0} setgray\n${width} ${height} scale\n/picstr ${stride} string def\n${width} ${height} true [${width} 0 0 -${height} 0 ${height}]\n{ currentfile picstr readhexstring pop } imagemask\n${hex}\nshowpage\n%%EOF\n`, 'ascii');
+}
+
 async function buildFontDownload() {
   const guildName = 'GuildA-Display-Regular-Desktop.otf';
   const hovesName = 'TT Hoves Pro Trial Regular.ttf';
@@ -170,7 +216,7 @@ async function buildStaticSite() {
   await copyFile(path.join('assets', 'favicon.svg'));
   await ensureDir(path.join(DIST, 'assets', 'projects'));
   for (const name of await fs.readdir(PROJECTS)) {
-    if (name.endsWith('.webp')) await copyFile(path.join('assets', 'projects', name));
+    if (name.endsWith('.webp') || name.endsWith('-logo.svg')) await copyFile(path.join('assets', 'projects', name));
   }
 
   await copyFile(
@@ -185,6 +231,7 @@ async function buildStaticSite() {
   await ensureDir(DOWNLOADS);
   await buildFontDownload();
   await buildLogoDownloads();
+  await buildProjectLogoDownloads();
 
   const required = [
     'index.html',
@@ -194,6 +241,7 @@ async function buildStaticSite() {
     'assets/projects/zemled-1600.webp',
     'downloads/AURIX_Fonts.zip',
     'downloads/AURIX_Logos.zip',
+    'downloads/AURIX_Project_Logos.zip',
     'downloads/AURIX_Logos_All_Formats.zip',
     'downloads/AURIX_With_Descriptor_Deep_Purple.zip',
     'downloads/AURIX_With_Descriptor_White.zip',

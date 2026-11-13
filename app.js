@@ -596,6 +596,7 @@ const materialDefinitions=[
   {match:'AURIX_Logos',title:'Логотипы',formats:'ZIP · SVG, PNG, EPS, PDF · фиолетовый / белый'},
   {match:'AURIX_Colors.zip',title:'Цвета',formats:'ZIP · карточки цветов SVG, PNG, PDF · ASE, CSS'},
   {match:'AURIX_Fonts.zip',title:'Шрифт',formats:'ZIP · OTF, TTF · Regular'},
+  {match:'AURIX_Project_Logos.zip',title:'Логотипы проектов',formats:'ZIP · SVG / PNG / PDF / EPS'},
   {match:'AURIX_Project_Covers.zip',title:'Обложки проектов',formats:'ZIP · JPG'},
   {match:'AURIX_Maps.zip',title:'Карты',formats:'ZIP · Москва и Санкт-Петербург · JPG, SVG, PDF'}
 ];

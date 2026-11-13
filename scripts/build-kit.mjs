@@ -181,6 +181,7 @@ async function buildKit() {
   for (const [entry, file] of Object.entries(fontZip.files)) if (!file.dir) fonts.file(entry, await file.async('nodebuffer'));
   await copyInto(kit, '04_Project_Covers', 'AURIX_Project_Covers.zip', 'AURIX_Project_Covers');
   await copyInto(kit, '05_Maps', 'AURIX_Maps.zip', 'AURIX_Maps');
+  await copyInto(kit, '06_Project_Logos', 'AURIX_Project_Logos.zip', 'AURIX_Project_Logos');
   kit.file('README.txt', [
     'AURIX — комплект материалов бренда',
     '',
@@ -189,6 +190,8 @@ async function buildKit() {
     '03_Fonts           Guild A Display и TT Hoves Pro (Regular)',
     '04_Project_Covers  обложки проектов, JPG',
     '05_Maps            карты Москвы и Санкт-Петербурга: светлая и тёмная, JPG / SVG / PDF',
+    '',
+    '06_Project_Logos   Логотипы проектов: SVG, PNG, PDF, EPS; чёрный и белый',
     '',
     'Руководство: https://aurix.ivankamaldinov.workers.dev',
     ''
