@@ -649,10 +649,12 @@
     .project.reveal:not(.is-revealed) .project-par img{transform:scale(1.07)}
     .project-mark{
       position:absolute;
-      inset:auto auto 0 0;
+      inset:0 0 auto;
       display:grid;
       place-items:start;
       padding:clamp(16px,4cqw,32px);
+      padding-bottom:clamp(32px,6cqw,64px);
+      background:linear-gradient(to bottom,rgba(18,9,26,.66),rgba(18,9,26,.34) 55%,transparent);
       pointer-events:none;
     }
     .project-mark img{
