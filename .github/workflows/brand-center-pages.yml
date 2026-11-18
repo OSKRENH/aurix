@@ -1,0 +1,63 @@
+name: Deploy brand center to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Prepare static HTML
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+
+          const path = 'dist-site/index.html';
+          const html = readFileSync(path, 'utf8');
+          const style = `<style>
+            .logo-art:not(.is-fading-out) { transition: none !important; }
+            .logo-art.is-fading-out { transition: opacity 250ms cubic-bezier(.2,.7,.3,1) !important; }
+          </style>`;
+          const script = `<script>
+            document.querySelectorAll('.color-primary [data-copy]').forEach((button) => {
+              button.dataset.copy = (button.dataset.copy || '').replace(/^#/, '');
+            });
+          </script>`;
+          writeFileSync(path, html
+            .replaceAll('https://aurix.ivankamaldinov.workers.dev/', 'https://oskrenh.github.io/aurix/')
+            .replace('</head>', style + '</head>')
+            .replace('</body>', script + '</body>'));
+          NODE
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
